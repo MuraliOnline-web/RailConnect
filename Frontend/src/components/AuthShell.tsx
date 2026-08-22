@@ -75,8 +75,13 @@ export function AuthShell({
             <div className="mt-6">{children}</div>
             <div className="mt-6 text-center text-sm text-muted-foreground">{footer}</div>
           </div>
-          <div className="mt-5 text-center text-xs text-muted-foreground">
-            <Link to="/" className="hover:text-foreground">← Back to home</Link>
+          <div className="mt-5 text-center">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 rounded-full border border-orange-200/80 bg-white px-4 py-2 text-xs font-semibold text-orange-600 shadow-sm transition-all duration-200 hover:border-orange-300 hover:bg-orange-50/60 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40 active:scale-[0.97]"
+            >
+              <span>←</span> Back to home
+            </Link>
           </div>
         </motion.div>
       </div>

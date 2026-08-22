@@ -53,12 +53,15 @@ function RegisterPage() {
       title="Create your account"
       subtitle="Free forever. No card required. Book your first ticket in seconds."
       footer={
-        <>
-          Already a member?{" "}
-          <Link to="/login" className="font-semibold text-orange-600 hover:underline">
+        <span className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+          <span>Already a member?</span>
+          <Link
+            to="/login"
+            className="inline-flex items-center justify-center rounded-full border border-orange-200/80 bg-white px-3.5 py-1.5 text-xs font-semibold text-orange-600 shadow-sm transition-all duration-200 hover:border-orange-300 hover:bg-orange-50/60 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40 active:scale-[0.97]"
+          >
             Log in
           </Link>
-        </>
+        </span>
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">
