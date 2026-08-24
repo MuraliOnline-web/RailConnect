@@ -19,7 +19,9 @@ function SettingsPage() {
     <DashboardShell>
       <div className="mb-6">
         <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">Settings</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Personalize your RailConnect experience.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Personalize your RailConnect experience.
+        </p>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -34,7 +36,9 @@ function SettingsPage() {
                 key={o.v}
                 onClick={() => setLanguage(o.v)}
                 className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition ${
-                  language === o.v ? "border-orange-400 bg-orange-50 text-orange-700" : "border-orange-100 bg-white/80 text-foreground/70"
+                  language === o.v
+                    ? "border-orange-400 bg-orange-50 text-orange-700"
+                    : "border-orange-100 bg-white/80 text-foreground/70"
                 }`}
               >
                 {o.l}
@@ -44,9 +48,21 @@ function SettingsPage() {
         </Section>
 
         <Section icon={<FaBell />} title="Notifications">
-          <Toggle label="Booking confirmations" checked={notif.booking} onChange={(v) => setNotif({ ...notif, booking: v })} />
-          <Toggle label="Offers & promotions" checked={notif.offers} onChange={(v) => setNotif({ ...notif, offers: v })} />
-          <Toggle label="Journey reminders" checked={notif.journey} onChange={(v) => setNotif({ ...notif, journey: v })} />
+          <Toggle
+            label="Booking confirmations"
+            checked={notif.booking}
+            onChange={(v) => setNotif({ ...notif, booking: v })}
+          />
+          <Toggle
+            label="Offers & promotions"
+            checked={notif.offers}
+            onChange={(v) => setNotif({ ...notif, offers: v })}
+          />
+          <Toggle
+            label="Journey reminders"
+            checked={notif.journey}
+            onChange={(v) => setNotif({ ...notif, journey: v })}
+          />
         </Section>
 
         <Section icon={<FaShieldHalved />} title="Security">
@@ -56,8 +72,16 @@ function SettingsPage() {
         </Section>
 
         <Section icon={<FaEye />} title="Privacy">
-          <Toggle label="Share usage analytics" checked={privacy.analytics} onChange={(v) => setPrivacy({ ...privacy, analytics: v })} />
-          <Toggle label="Personalized recommendations" checked={privacy.personalize} onChange={(v) => setPrivacy({ ...privacy, personalize: v })} />
+          <Toggle
+            label="Share usage analytics"
+            checked={privacy.analytics}
+            onChange={(v) => setPrivacy({ ...privacy, analytics: v })}
+          />
+          <Toggle
+            label="Personalized recommendations"
+            checked={privacy.personalize}
+            onChange={(v) => setPrivacy({ ...privacy, personalize: v })}
+          />
         </Section>
 
         <Section icon={<FaSliders />} title="App preferences">
@@ -67,7 +91,9 @@ function SettingsPage() {
                 key={t}
                 onClick={() => setTheme(t)}
                 className={`rounded-xl border px-3 py-2.5 text-sm font-semibold capitalize transition ${
-                  theme === t ? "border-orange-400 bg-orange-50 text-orange-700" : "border-orange-100 bg-white/80 text-foreground/70"
+                  theme === t
+                    ? "border-orange-400 bg-orange-50 text-orange-700"
+                    : "border-orange-100 bg-white/80 text-foreground/70"
                 }`}
               >
                 {t}
@@ -75,14 +101,23 @@ function SettingsPage() {
             ))}
           </div>
           <div className="mt-3 space-y-1">
-            <Toggle label="Reduced motion" checked={pref.reducedMotion} onChange={(v) => setPref({ ...pref, reducedMotion: v })} />
-            <Toggle label="Larger text" checked={pref.largeText} onChange={(v) => setPref({ ...pref, largeText: v })} />
+            <Toggle
+              label="Reduced motion"
+              checked={pref.reducedMotion}
+              onChange={(v) => setPref({ ...pref, reducedMotion: v })}
+            />
+            <Toggle
+              label="Larger text"
+              checked={pref.largeText}
+              onChange={(v) => setPref({ ...pref, largeText: v })}
+            />
           </div>
         </Section>
 
         <Section icon={<FaGear />} title="Accessibility">
           <p className="text-sm text-muted-foreground">
-            RailConnect supports screen readers, high-contrast mode, and keyboard navigation across every page.
+            RailConnect supports screen readers, high-contrast mode, and keyboard navigation across
+            every page.
           </p>
         </Section>
       </div>
@@ -90,11 +125,21 @@ function SettingsPage() {
   );
 }
 
-function Section({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+function Section({
+  icon,
+  title,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="glass rounded-3xl p-6 shadow-soft">
       <div className="flex items-center gap-2">
-        <span className="bg-railway-gradient flex h-8 w-8 items-center justify-center rounded-xl text-white">{icon}</span>
+        <span className="bg-railway-gradient flex h-8 w-8 items-center justify-center rounded-xl text-white">
+          {icon}
+        </span>
         <h2 className="font-[Sora] text-lg font-bold">{title}</h2>
       </div>
       <div className="mt-4 space-y-2">{children}</div>
@@ -102,7 +147,15 @@ function Section({ icon, title, children }: { icon: React.ReactNode; title: stri
   );
 }
 
-function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
+function Toggle({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
   return (
     <label className="flex cursor-pointer items-center justify-between rounded-xl bg-white/80 px-4 py-3">
       <span className="text-sm font-medium">{label}</span>

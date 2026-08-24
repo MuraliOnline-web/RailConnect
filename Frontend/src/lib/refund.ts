@@ -46,7 +46,7 @@ export function computeRefund(ticket: Ticket): RefundQuote {
     percent = 90;
     reason = "Cancelled within 30 minutes of booking.";
   }
-  const refundAmount = Math.round((fare * percent) / 100 * 100) / 100;
+  const refundAmount = Math.round(((fare * percent) / 100) * 100) / 100;
   const cancellationCharge = Math.round((fare - refundAmount) * 100) / 100;
   return {
     eligible: true,

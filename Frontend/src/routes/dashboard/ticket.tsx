@@ -13,12 +13,7 @@ import {
 } from "react-icons/fa6";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";
-import {
-  CATEGORY_LABEL,
-  cancelTicket,
-  getTicket,
-  type Ticket,
-} from "../../lib/tickets";
+import { CATEGORY_LABEL, cancelTicket, getTicket, type Ticket } from "../../lib/tickets";
 import { downloadTicketAndNotify } from "../../lib/ticketPdf";
 import { computeRefund } from "../../lib/refund";
 import { getWallet, makeRef, saveTxn, setWallet } from "../../lib/wallet";
@@ -56,10 +51,7 @@ function TicketDetailPage() {
     () => (user && id ? getTicket(user.id, id) : null),
     [user, id, version],
   );
-  const quote = useMemo(
-    () => (ticket ? computeRefund(ticket) : null),
-    [ticket, confirmOpen],
-  );
+  const quote = useMemo(() => (ticket ? computeRefund(ticket) : null), [ticket, confirmOpen]);
 
   if (!ticket) {
     return (
@@ -192,16 +184,22 @@ function TicketDetailPage() {
         <div className="glass overflow-hidden rounded-3xl p-1 shadow-soft lg:col-span-2">
           <div className="rounded-[1.4rem] bg-white p-6">
             <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
-              <span className="font-semibold">{ticket.type} · {ticket.line}</span>
+              <span className="font-semibold">
+                {ticket.type} · {ticket.line}
+              </span>
               <span className="font-mono">{ticket.pnr}</span>
             </div>
 
             <div className="mt-4 flex items-end justify-between">
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">From</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  From
+                </div>
                 <div className="font-[Sora] text-2xl font-extrabold">{ticket.from}</div>
                 {ticket.fromCode && (
-                  <div className="text-[11px] font-mono text-muted-foreground">{ticket.fromCode}</div>
+                  <div className="text-[11px] font-mono text-muted-foreground">
+                    {ticket.fromCode}
+                  </div>
                 )}
               </div>
               <div className="bg-railway-gradient flex h-11 w-11 items-center justify-center rounded-full text-white">
@@ -221,7 +219,10 @@ function TicketDetailPage() {
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <KV k="Ticket ID" v={ticket.id.slice(0, 8).toUpperCase()} mono />
               <KV k="Transaction ID" v={ticket.txnId || "—"} mono />
-              <KV k="Train category" v={ticket.category ? CATEGORY_LABEL[ticket.category] : "Passenger"} />
+              <KV
+                k="Train category"
+                v={ticket.category ? CATEGORY_LABEL[ticket.category] : "Passenger"}
+              />
               <KV k="Ticket type" v={ticket.type} />
               <KV k="Passengers" v={`${ticket.adults} adult · ${ticket.children} child`} />
               <KV k="Issued" v={new Date(ticket.createdAt).toLocaleString()} />
@@ -232,8 +233,12 @@ function TicketDetailPage() {
 
             <div className="mt-5 flex items-center justify-between rounded-2xl bg-orange-50 p-4">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">Amount paid</div>
-                <div className="font-[Sora] text-3xl font-extrabold text-railway-gradient">{formatINR(ticket.fare)}</div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">
+                  Amount paid
+                </div>
+                <div className="font-[Sora] text-3xl font-extrabold text-railway-gradient">
+                  {formatINR(ticket.fare)}
+                </div>
               </div>
               <StatusBadge status={ticket.status} />
             </div>
@@ -314,7 +319,9 @@ function TicketDetailPage() {
               onClick={confirmCancel}
               className="bg-railway-gradient rounded-full text-white"
             >
-              {quote?.eligible ? `Cancel & refund ${formatINR(quote.refundAmount)}` : "Cancel ticket"}
+              {quote?.eligible
+                ? `Cancel & refund ${formatINR(quote.refundAmount)}`
+                : "Cancel ticket"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -326,8 +333,14 @@ function TicketDetailPage() {
 function BreakdownRow({ k, v, strong }: { k: string; v: string; strong?: boolean }) {
   return (
     <div className="flex items-center justify-between py-1">
-      <span className={strong ? "font-semibold text-foreground" : "text-muted-foreground"}>{k}</span>
-      <span className={`font-[Sora] ${strong ? "text-base font-extrabold text-orange-700" : "text-sm font-bold"}`}>{v}</span>
+      <span className={strong ? "font-semibold text-foreground" : "text-muted-foreground"}>
+        {k}
+      </span>
+      <span
+        className={`font-[Sora] ${strong ? "text-base font-extrabold text-orange-700" : "text-sm font-bold"}`}
+      >
+        {v}
+      </span>
     </div>
   );
 }
@@ -336,7 +349,9 @@ function KV({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
     <div className="rounded-xl bg-orange-50/60 px-3 py-2">
       <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{k}</div>
-      <div className={`truncate text-sm font-bold capitalize ${mono ? "font-mono uppercase" : ""}`}>{v}</div>
+      <div className={`truncate text-sm font-bold capitalize ${mono ? "font-mono uppercase" : ""}`}>
+        {v}
+      </div>
     </div>
   );
 }
@@ -353,7 +368,11 @@ function StatusBadge({ status }: { status: Ticket["status"] }) {
     >
       <span
         className={`h-1.5 w-1.5 rounded-full ${
-          status === "active" ? "bg-emerald-500" : status === "expired" ? "bg-gray-400" : "bg-rose-500"
+          status === "active"
+            ? "bg-emerald-500"
+            : status === "expired"
+              ? "bg-gray-400"
+              : "bg-rose-500"
         }`}
       />
       {status}

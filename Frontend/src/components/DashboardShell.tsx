@@ -27,15 +27,45 @@ import { useScrollLock } from "../hooks/use-scroll-lock";
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: FaHouse, exact: true, group: "main" },
   { to: "/dashboard/journey", label: "Journey ticket", icon: FaTrain, exact: false, group: "book" },
-  { to: "/dashboard/platform", label: "Platform ticket", icon: FaTrainSubway, exact: false, group: "book" },
+  {
+    to: "/dashboard/platform",
+    label: "Platform ticket",
+    icon: FaTrainSubway,
+    exact: false,
+    group: "book",
+  },
   { to: "/dashboard/qr", label: "QR ticket", icon: FaQrcode, exact: false, group: "book" },
   { to: "/dashboard/tickets", label: "My tickets", icon: FaTicket, exact: false, group: "manage" },
-  { to: "/dashboard/history", label: "Booking history", icon: FaClockRotateLeft, exact: false, group: "manage" },
-  { to: "/dashboard/transactions", label: "Transactions", icon: FaReceipt, exact: false, group: "manage" },
+  {
+    to: "/dashboard/history",
+    label: "Booking history",
+    icon: FaClockRotateLeft,
+    exact: false,
+    group: "manage",
+  },
+  {
+    to: "/dashboard/transactions",
+    label: "Transactions",
+    icon: FaReceipt,
+    exact: false,
+    group: "manage",
+  },
   { to: "/dashboard/refunds", label: "Refunds", icon: FaRotateLeft, exact: false, group: "manage" },
   { to: "/dashboard/wallet", label: "Wallet", icon: FaWallet, exact: false, group: "manage" },
-  { to: "/dashboard/notifications", label: "Notifications", icon: FaBell, exact: false, group: "manage" },
-  { to: "/dashboard/favorites", label: "Favorite routes", icon: FaHeart, exact: false, group: "manage" },
+  {
+    to: "/dashboard/notifications",
+    label: "Notifications",
+    icon: FaBell,
+    exact: false,
+    group: "manage",
+  },
+  {
+    to: "/dashboard/favorites",
+    label: "Favorite routes",
+    icon: FaHeart,
+    exact: false,
+    group: "manage",
+  },
   { to: "/dashboard/profile", label: "Profile", icon: FaUser, exact: false, group: "account" },
   { to: "/dashboard/settings", label: "Settings", icon: FaGear, exact: false, group: "account" },
 ] as const;
@@ -62,7 +92,12 @@ export function DashboardShell({ children }: { children: ReactNode }) {
     );
   }
 
-  const initials = user.name.split(" ").map((s) => s[0]).slice(0, 2).join("").toUpperCase();
+  const initials = user.name
+    .split(" ")
+    .map((s) => s[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
     <div className="relative min-h-screen bg-[#fff8f1]">
@@ -97,7 +132,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
               </Link>
               <NotificationBell />
             </div>
-          <nav className="mt-6 flex-1 space-y-1 overflow-y-auto pr-1">
+            <nav className="mt-6 flex-1 space-y-1 overflow-y-auto pr-1">
               {NAV.map((n) => {
                 const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
                 const Icon = n.icon;
@@ -133,7 +168,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                     logout();
                     navigate({ to: "/" });
                   }}
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-orange-200 bg-white px-3 py-2 text-xs font-semibold text-orange-700 transition hover:bg-orange-50"
+                  className="mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-orange-200 bg-white px-3 py-2 text-xs font-semibold text-orange-700 transition-all duration-200 hover:scale-[1.02] hover:border-orange-300 hover:bg-orange-50 hover:text-orange-800 active:scale-[0.98]"
                 >
                   <FaArrowRightFromBracket /> Log out
                 </button>
@@ -198,7 +233,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                     logout();
                     navigate({ to: "/" });
                   }}
-                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-orange-200 px-3 py-2.5 text-xs font-semibold text-orange-700"
+                  className="mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-orange-200 bg-white px-3 py-2.5 text-xs font-semibold text-orange-700 transition-all duration-200 hover:scale-[1.02] hover:border-orange-300 hover:bg-orange-50 hover:text-orange-800 active:scale-[0.98]"
                 >
                   <FaArrowRightFromBracket /> Log out
                 </button>

@@ -41,7 +41,10 @@ function RefundSuccessPage() {
       <DashboardShell>
         <div className="glass rounded-3xl p-10 text-center shadow-soft">
           <h1 className="font-[Sora] text-xl font-bold">No recent refund</h1>
-          <Link to="/dashboard/tickets" className="mt-4 inline-block text-sm font-semibold text-orange-700 hover:underline">
+          <Link
+            to="/dashboard/tickets"
+            className="mt-4 inline-block text-sm font-semibold text-orange-700 hover:underline"
+          >
             Go to my tickets
           </Link>
         </div>
@@ -61,11 +64,11 @@ function RefundSuccessPage() {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
               <FaCircleCheck className="h-8 w-8" />
             </div>
-            <h1 className="mt-4 font-[Sora] text-2xl font-extrabold">Ticket cancelled successfully</h1>
+            <h1 className="mt-4 font-[Sora] text-2xl font-extrabold">
+              Ticket cancelled successfully
+            </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {r.eligible
-                ? "Your refund has been credited to your RailConnect Wallet."
-                : r.reason}
+              {r.eligible ? "Your refund has been credited to your RailConnect Wallet." : r.reason}
             </p>
 
             <div className="mt-6 rounded-2xl bg-orange-50 p-5 text-left">
@@ -74,7 +77,10 @@ function RefundSuccessPage() {
               <Row k="Route" v={`${r.from} → ${r.to}`} />
               <div className="my-3 h-px bg-orange-200" />
               <Row k="Original fare" v={formatINR(r.originalFare)} />
-              <Row k={`Cancellation charge (${100 - r.refundPercent}%)`} v={`− ${formatINR(r.cancellationCharge)}`} />
+              <Row
+                k={`Cancellation charge (${100 - r.refundPercent}%)`}
+                v={`− ${formatINR(r.cancellationCharge)}`}
+              />
               <Row k={`Refund (${r.refundPercent}%)`} v={formatINR(r.refundAmount)} strong />
               <div className="my-3 h-px bg-orange-200" />
               <Row k="Refund transaction ID" v={r.refundTxnId} mono />
@@ -87,7 +93,9 @@ function RefundSuccessPage() {
                 <div className="text-[10px] font-semibold uppercase tracking-wider text-emerald-700">
                   Updated wallet balance
                 </div>
-                <div className="font-[Sora] text-3xl font-extrabold text-emerald-700">{formatINR(r.balance)}</div>
+                <div className="font-[Sora] text-3xl font-extrabold text-emerald-700">
+                  {formatINR(r.balance)}
+                </div>
               </div>
             )}
 
@@ -122,7 +130,11 @@ function Row({ k, v, mono, strong }: { k: string; v: string; mono?: boolean; str
   return (
     <div className="flex items-center justify-between py-1 text-sm">
       <span className="text-muted-foreground">{k}</span>
-      <span className={`font-bold ${mono ? "font-mono text-xs uppercase" : ""} ${strong ? "text-orange-700" : ""}`}>{v}</span>
+      <span
+        className={`font-bold ${mono ? "font-mono text-xs uppercase" : ""} ${strong ? "text-orange-700" : ""}`}
+      >
+        {v}
+      </span>
     </div>
   );
 }

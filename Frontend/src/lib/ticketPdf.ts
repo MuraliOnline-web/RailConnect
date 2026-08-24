@@ -122,10 +122,7 @@ function drawPseudoQr(doc: jsPDF, seed: string, x: number, y: number, size: numb
   doc.setFillColor(20, 20, 20);
   for (let gy = 0; gy < grid; gy++) {
     for (let gx = 0; gx < grid; gx++) {
-      const finder =
-        (gx < 7 && gy < 7) ||
-        (gx >= grid - 7 && gy < 7) ||
-        (gx < 7 && gy >= grid - 7);
+      const finder = (gx < 7 && gy < 7) || (gx >= grid - 7 && gy < 7) || (gx < 7 && gy >= grid - 7);
       if (finder) continue;
       h = (h * 1103515245 + 12345) >>> 0;
       if ((h & 1) === 1) {

@@ -75,10 +75,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "RailConnect — Modern Commuter Rail Tickets" },
-      { name: "description", content: "Book unreserved suburban rail tickets, season passes and platform tickets in seconds. A modern, premium commuter experience." },
+      {
+        name: "description",
+        content:
+          "Book unreserved suburban rail tickets, season passes and platform tickets in seconds. A modern, premium commuter experience.",
+      },
       { name: "author", content: "RailConnect" },
       { property: "og:title", content: "RailConnect — Modern Commuter Rail Tickets" },
-      { property: "og:description", content: "Premium, mobile-first commuter rail booking. Tickets, season passes and live journey planning." },
+      {
+        property: "og:description",
+        content:
+          "Premium, mobile-first commuter rail booking. Tickets, season passes and live journey planning.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@RailConnect" },
@@ -90,7 +98,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,

@@ -28,38 +28,95 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About RailConnect — Modern Digital Rail Ticketing" },
-      { name: "description", content: "RailConnect is a modern digital railway ticketing platform inspired by India's UTS." },
+      {
+        name: "description",
+        content:
+          "RailConnect is a modern digital railway ticketing platform inspired by India's UTS.",
+      },
       { property: "og:title", content: "About RailConnect" },
-      { property: "og:description", content: "A modern digital railway ticket booking platform for millions of commuters." },
+      {
+        property: "og:description",
+        content: "A modern digital railway ticket booking platform for millions of commuters.",
+      },
     ],
   }),
   component: AboutPage,
 });
 
 const SERVICES = [
-  { icon: <FaTrainSubway />, t: "Journey Ticket", d: "Book unreserved journey tickets between any two stations." },
+  {
+    icon: <FaTrainSubway />,
+    t: "Journey Ticket",
+    d: "Book unreserved journey tickets between any two stations.",
+  },
   { icon: <FaTicket />, t: "Platform Ticket", d: "Instant platform tickets for station entry." },
   { icon: <FaQrcode />, t: "QR Ticket", d: "Paperless QR-based tickets scanned at the gate." },
   { icon: <FaWallet />, t: "Digital Wallet", d: "Recharge, pay and manage balances in one place." },
-  { icon: <FaArrowsRotate />, t: "Refund Management", d: "Automated refunds credited back to your wallet." },
-  { icon: <FaBell />, t: "Notification Center", d: "Real-time updates on bookings, payments and refunds." },
-  { icon: <FaShieldHalved />, t: "Secure Authentication", d: "JWT-based auth with OTP and CAPTCHA protection." },
+  {
+    icon: <FaArrowsRotate />,
+    t: "Refund Management",
+    d: "Automated refunds credited back to your wallet.",
+  },
+  {
+    icon: <FaBell />,
+    t: "Notification Center",
+    d: "Real-time updates on bookings, payments and refunds.",
+  },
+  {
+    icon: <FaShieldHalved />,
+    t: "Secure Authentication",
+    d: "JWT-based auth with OTP and CAPTCHA protection.",
+  },
 ];
 
 const FRONTEND_TECH = [
   { name: "React", category: "UI Library", icon: <FaReact className="h-5 w-5 text-cyan-500" /> },
-  { name: "TypeScript", category: "Type Safety", icon: <span className="flex h-5 w-5 items-center justify-center rounded bg-blue-600 text-[10px] font-extrabold text-white">TS</span> },
-  { name: "Tailwind CSS", category: "Styling Engine", icon: <FaWind className="h-5 w-5 text-teal-500" /> },
+  {
+    name: "TypeScript",
+    category: "Type Safety",
+    icon: (
+      <span className="flex h-5 w-5 items-center justify-center rounded bg-blue-600 text-[10px] font-extrabold text-white">
+        TS
+      </span>
+    ),
+  },
+  {
+    name: "Tailwind CSS",
+    category: "Styling Engine",
+    icon: <FaWind className="h-5 w-5 text-teal-500" />,
+  },
 ];
 
 const BACKEND_TECH = [
-  { name: "Spring Boot", category: "Core Framework", icon: <FaLeaf className="h-5 w-5 text-emerald-500" /> },
-  { name: "PostgreSQL", category: "Database", icon: <FaDatabase className="h-5 w-5 text-blue-500" /> },
-  { name: "Spring Security", category: "Security", icon: <FaShieldHalved className="h-5 w-5 text-amber-500" /> },
-  { name: "JWT Authentication", category: "Auth Token", icon: <FaKey className="h-5 w-5 text-purple-500" /> },
+  {
+    name: "Spring Boot",
+    category: "Core Framework",
+    icon: <FaLeaf className="h-5 w-5 text-emerald-500" />,
+  },
+  {
+    name: "PostgreSQL",
+    category: "Database",
+    icon: <FaDatabase className="h-5 w-5 text-blue-500" />,
+  },
+  {
+    name: "Spring Security",
+    category: "Security",
+    icon: <FaShieldHalved className="h-5 w-5 text-amber-500" />,
+  },
+  {
+    name: "JWT Authentication",
+    category: "Auth Token",
+    icon: <FaKey className="h-5 w-5 text-purple-500" />,
+  },
 ];
 
-const TIMELINE = ["Planning", "UI / UX Design", "Frontend Development", "Backend Development", "Deployment"];
+const TIMELINE = [
+  "Planning",
+  "UI / UX Design",
+  "Frontend Development",
+  "Backend Development",
+  "Deployment",
+];
 
 function AboutPage() {
   return (
@@ -70,86 +127,97 @@ function AboutPage() {
       </div>
       <SiteNav />
       <PageTransition>
-
-      <section className="relative z-10 mx-auto max-w-5xl px-5 pt-10 pb-14 text-center sm:px-8 md:pt-16">
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-orange-700">About</span>
-          <h1 className="mt-5 font-[Sora] text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-            About <span className="text-railway-gradient">RailConnect</span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
-            A modern digital railway ticket booking platform inspired by India's UTS
-            (Unreserved Ticketing System).
-          </p>
-        </motion.div>
-      </section>
-
-      <section className="relative z-10 mx-auto max-w-7xl px-5 pb-14 sm:px-8">
-        <div className="grid gap-5 md:grid-cols-2">
-          <div className="glass rounded-3xl p-8 shadow-soft">
-            <div className="text-xs font-semibold uppercase tracking-widest text-orange-700">Our Mission</div>
-            <p className="mt-3 text-base text-foreground/80">
-              Simplify railway ticket booking through a fast, secure and paperless
-              digital experience.
+        <section className="relative z-10 mx-auto max-w-5xl px-5 pt-10 pb-14 text-center sm:px-8 md:pt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-orange-700">
+              About
+            </span>
+            <h1 className="mt-5 font-[Sora] text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+              About <span className="text-railway-gradient">RailConnect</span>
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
+              A modern digital railway ticket booking platform inspired by India's UTS (Unreserved
+              Ticketing System).
             </p>
-          </div>
-          <div className="glass rounded-3xl p-8 shadow-soft">
-            <div className="text-xs font-semibold uppercase tracking-widest text-orange-700">Our Vision</div>
-            <p className="mt-3 text-base text-foreground/80">
-              Build an accessible and user-friendly railway ticketing platform that
-              enhances the travel experience for millions of commuters.
-            </p>
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </section>
 
-      <section className="relative z-10 mx-auto max-w-7xl px-5 pb-16 sm:px-8">
-        <div className="mb-6 flex items-end justify-between">
-          <h2 className="font-[Sora] text-2xl font-bold tracking-tight sm:text-3xl">Services</h2>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((s, i) => (
-            <motion.div
-              key={s.t}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: (i % 6) * 0.05 }}
-              className="glass rounded-3xl p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
-            >
-              <div className="bg-railway-gradient mb-4 flex h-11 w-11 items-center justify-center rounded-xl text-white">
-                {s.icon}
+        <section className="relative z-10 mx-auto max-w-7xl px-5 pb-14 sm:px-8">
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="glass rounded-3xl p-8 shadow-soft">
+              <div className="text-xs font-semibold uppercase tracking-widest text-orange-700">
+                Our Mission
               </div>
-              <div className="text-lg font-semibold">{s.t}</div>
-              <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Technology Stack — Tree Architecture */}
-      <section className="relative z-10 mx-auto max-w-7xl px-5 pb-20 sm:px-8">
-        <TechStackTree />
-      </section>
-
-      {/* Project Development Journey — Refactored Timeline */}
-      <section className="relative z-10 mx-auto max-w-7xl px-5 pb-20 sm:px-8">
-        <DevelopmentJourney />
-      </section>
-
-      <section className="relative z-10 mx-auto max-w-7xl px-5 pb-16 sm:px-8">
-        <div className="glass flex flex-col items-center justify-between gap-4 rounded-3xl p-8 text-center shadow-soft sm:flex-row sm:text-left">
-          <div>
-            <div className="font-[Sora] text-lg font-bold">RailConnect</div>
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">Version 1.0</div>
+              <p className="mt-3 text-base text-foreground/80">
+                Simplify railway ticket booking through a fast, secure and paperless digital
+                experience.
+              </p>
+            </div>
+            <div className="glass rounded-3xl p-8 shadow-soft">
+              <div className="text-xs font-semibold uppercase tracking-widest text-orange-700">
+                Our Vision
+              </div>
+              <p className="mt-3 text-base text-foreground/80">
+                Build an accessible and user-friendly railway ticketing platform that enhances the
+                travel experience for millions of commuters.
+              </p>
+            </div>
           </div>
-          <div className="text-xs text-muted-foreground">
-            Built using <span className="font-semibold text-orange-700">React + Spring Boot</span>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <SiteFooter />
+        <section className="relative z-10 mx-auto max-w-7xl px-5 pb-16 sm:px-8">
+          <div className="mb-6 flex items-end justify-between">
+            <h2 className="font-[Sora] text-2xl font-bold tracking-tight sm:text-3xl">Services</h2>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {SERVICES.map((s, i) => (
+              <motion.div
+                key={s.t}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: (i % 6) * 0.05 }}
+                className="glass rounded-3xl p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
+              >
+                <div className="bg-railway-gradient mb-4 flex h-11 w-11 items-center justify-center rounded-xl text-white">
+                  {s.icon}
+                </div>
+                <div className="text-lg font-semibold">{s.t}</div>
+                <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Technology Stack — Tree Architecture */}
+        <section className="relative z-10 mx-auto max-w-7xl px-5 pb-20 sm:px-8">
+          <TechStackTree />
+        </section>
+
+        {/* Project Development Journey — Refactored Timeline */}
+        <section className="relative z-10 mx-auto max-w-7xl px-5 pb-20 sm:px-8">
+          <DevelopmentJourney />
+        </section>
+
+        <section className="relative z-10 mx-auto max-w-7xl px-5 pb-16 sm:px-8">
+          <div className="glass flex flex-col items-center justify-between gap-4 rounded-3xl p-8 text-center shadow-soft sm:flex-row sm:text-left">
+            <div>
+              <div className="font-[Sora] text-lg font-bold">RailConnect</div>
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                Version 1.0
+              </div>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Built using <span className="font-semibold text-orange-700">React + Spring Boot</span>
+            </div>
+          </div>
+        </section>
+
+        <SiteFooter />
       </PageTransition>
     </div>
   );
@@ -162,7 +230,9 @@ function TechStackTree() {
         <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100/80 px-3 py-1 text-xs font-semibold text-orange-700">
           <FaCode className="h-3.5 w-3.5" /> System Architecture
         </span>
-        <h2 className="mt-3 font-[Sora] text-2xl sm:text-3xl font-bold tracking-tight">Technology Stack</h2>
+        <h2 className="mt-3 font-[Sora] text-2xl sm:text-3xl font-bold tracking-tight">
+          Technology Stack
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           A modern, high-performance fullstack architecture built for suburban commuter scale.
         </p>
@@ -183,15 +253,23 @@ function TechStackTree() {
                 <FaCode className="h-5 w-5" />
               </div>
               <div>
-                <div className="font-[Sora] font-extrabold text-base tracking-tight">Technology Stack</div>
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-orange-700">Root Node</div>
+                <div className="font-[Sora] font-extrabold text-base tracking-tight">
+                  Technology Stack
+                </div>
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-orange-700">
+                  Root Node
+                </div>
               </div>
             </motion.div>
           </div>
 
           {/* Root -> Branches SVG Connectors */}
           <div className="relative h-16 w-full">
-            <svg className="absolute inset-0 h-full w-full pointer-events-none overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <svg
+              className="absolute inset-0 h-full w-full pointer-events-none overflow-visible"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+            >
               <defs>
                 <linearGradient id="treeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#ff8a3d" />
@@ -201,9 +279,23 @@ function TechStackTree() {
               </defs>
 
               {/* Static Lines */}
-              <path d="M 50 0 L 50 50 L 25 50 L 25 100 M 50 50 L 75 50 L 75 100" stroke="rgba(255, 138, 61, 0.4)" strokeWidth="2.5" fill="none" vectorEffect="non-scaling-stroke" />
+              <path
+                d="M 50 0 L 50 50 L 25 50 L 25 100 M 50 50 L 75 50 L 75 100"
+                stroke="rgba(255, 138, 61, 0.4)"
+                strokeWidth="2.5"
+                fill="none"
+                vectorEffect="non-scaling-stroke"
+              />
               {/* Traveling Pulse Lines */}
-              <path d="M 50 0 L 50 50 L 25 50 L 25 100 M 50 50 L 75 50 L 75 100" stroke="url(#treeGrad)" strokeWidth="2.5" strokeDasharray="8 12" className="animate-tree-dash" fill="none" vectorEffect="non-scaling-stroke" />
+              <path
+                d="M 50 0 L 50 50 L 25 50 L 25 100 M 50 50 L 75 50 L 75 100"
+                stroke="url(#treeGrad)"
+                strokeWidth="2.5"
+                strokeDasharray="8 12"
+                className="animate-tree-dash"
+                fill="none"
+                vectorEffect="non-scaling-stroke"
+              />
             </svg>
           </div>
 
@@ -220,15 +312,35 @@ function TechStackTree() {
                 </div>
                 <div className="text-left">
                   <div className="font-[Sora] font-bold text-sm tracking-wide">FRONTEND</div>
-                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Client Layer</div>
+                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                    Client Layer
+                  </div>
                 </div>
               </motion.div>
 
               {/* Branch -> Children SVG Connector */}
               <div className="relative h-14 w-full">
-                <svg className="absolute inset-0 h-full w-full pointer-events-none overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                  <path d="M 50 0 L 50 50 L 16.66 50 L 16.66 100 M 50 50 L 50 100 M 50 50 L 83.33 50 L 83.33 100" stroke="rgba(255, 138, 61, 0.4)" strokeWidth="2.5" fill="none" vectorEffect="non-scaling-stroke" />
-                  <path d="M 50 0 L 50 50 L 16.66 50 L 16.66 100 M 50 50 L 50 100 M 50 50 L 83.33 50 L 83.33 100" stroke="url(#treeGrad)" strokeWidth="2.5" strokeDasharray="8 12" className="animate-tree-dash" fill="none" vectorEffect="non-scaling-stroke" />
+                <svg
+                  className="absolute inset-0 h-full w-full pointer-events-none overflow-visible"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M 50 0 L 50 50 L 16.66 50 L 16.66 100 M 50 50 L 50 100 M 50 50 L 83.33 50 L 83.33 100"
+                    stroke="rgba(255, 138, 61, 0.4)"
+                    strokeWidth="2.5"
+                    fill="none"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                  <path
+                    d="M 50 0 L 50 50 L 16.66 50 L 16.66 100 M 50 50 L 50 100 M 50 50 L 83.33 50 L 83.33 100"
+                    stroke="url(#treeGrad)"
+                    strokeWidth="2.5"
+                    strokeDasharray="8 12"
+                    className="animate-tree-dash"
+                    fill="none"
+                    vectorEffect="non-scaling-stroke"
+                  />
                 </svg>
               </div>
 
@@ -244,8 +356,12 @@ function TechStackTree() {
                     <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50/80 shrink-0">
                       {t.icon}
                     </div>
-                    <div className="font-semibold text-xs text-foreground leading-tight px-1">{t.name}</div>
-                    <div className="mt-0.5 text-[10px] text-muted-foreground leading-tight px-1">{t.category}</div>
+                    <div className="font-semibold text-xs text-foreground leading-tight px-1">
+                      {t.name}
+                    </div>
+                    <div className="mt-0.5 text-[10px] text-muted-foreground leading-tight px-1">
+                      {t.category}
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -262,15 +378,35 @@ function TechStackTree() {
                 </div>
                 <div className="text-left">
                   <div className="font-[Sora] font-bold text-sm tracking-wide">BACKEND</div>
-                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Server Layer</div>
+                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                    Server Layer
+                  </div>
                 </div>
               </motion.div>
 
               {/* Branch -> Children SVG Connector */}
               <div className="relative h-14 w-full">
-                <svg className="absolute inset-0 h-full w-full pointer-events-none overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                  <path d="M 50 0 L 50 50 L 12.5 50 L 12.5 100 M 50 50 L 37.5 50 L 37.5 100 M 50 50 L 62.5 50 L 62.5 100 M 50 50 L 87.5 50 L 87.5 100" stroke="rgba(255, 138, 61, 0.4)" strokeWidth="2.5" fill="none" vectorEffect="non-scaling-stroke" />
-                  <path d="M 50 0 L 50 50 L 12.5 50 L 12.5 100 M 50 50 L 37.5 50 L 37.5 100 M 50 50 L 62.5 50 L 62.5 100 M 50 50 L 87.5 50 L 87.5 100" stroke="url(#treeGrad)" strokeWidth="2.5" strokeDasharray="8 12" className="animate-tree-dash" fill="none" vectorEffect="non-scaling-stroke" />
+                <svg
+                  className="absolute inset-0 h-full w-full pointer-events-none overflow-visible"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M 50 0 L 50 50 L 12.5 50 L 12.5 100 M 50 50 L 37.5 50 L 37.5 100 M 50 50 L 62.5 50 L 62.5 100 M 50 50 L 87.5 50 L 87.5 100"
+                    stroke="rgba(255, 138, 61, 0.4)"
+                    strokeWidth="2.5"
+                    fill="none"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                  <path
+                    d="M 50 0 L 50 50 L 12.5 50 L 12.5 100 M 50 50 L 37.5 50 L 37.5 100 M 50 50 L 62.5 50 L 62.5 100 M 50 50 L 87.5 50 L 87.5 100"
+                    stroke="url(#treeGrad)"
+                    strokeWidth="2.5"
+                    strokeDasharray="8 12"
+                    className="animate-tree-dash"
+                    fill="none"
+                    vectorEffect="non-scaling-stroke"
+                  />
                 </svg>
               </div>
 
@@ -286,8 +422,12 @@ function TechStackTree() {
                     <div className="mb-1.5 flex h-8 w-8 items-center justify-center rounded-xl bg-orange-50/80 shrink-0">
                       {t.icon}
                     </div>
-                    <div className="font-semibold text-[11px] sm:text-xs text-foreground leading-tight px-0.5">{t.name}</div>
-                    <div className="mt-0.5 text-[9.5px] sm:text-[10px] text-muted-foreground leading-tight px-0.5">{t.category}</div>
+                    <div className="font-semibold text-[11px] sm:text-xs text-foreground leading-tight px-0.5">
+                      {t.name}
+                    </div>
+                    <div className="mt-0.5 text-[9.5px] sm:text-[10px] text-muted-foreground leading-tight px-0.5">
+                      {t.category}
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -305,7 +445,9 @@ function TechStackTree() {
               </div>
               <div>
                 <div className="font-[Sora] font-bold text-sm">Technology Stack</div>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-orange-700">Root Architecture</div>
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-orange-700">
+                  Root Architecture
+                </div>
               </div>
             </div>
           </div>
@@ -331,10 +473,15 @@ function TechStackTree() {
 
             <div className="grid grid-cols-3 gap-2">
               {FRONTEND_TECH.map((t) => (
-                <div key={t.name} className="glass border border-orange-200 bg-white/90 p-2.5 rounded-2xl text-center flex flex-col items-center justify-center">
+                <div
+                  key={t.name}
+                  className="glass border border-orange-200 bg-white/90 p-2.5 rounded-2xl text-center flex flex-col items-center justify-center"
+                >
                   <div className="mb-1 flex justify-center">{t.icon}</div>
                   <div className="font-semibold text-[11px] leading-tight">{t.name}</div>
-                  <div className="text-[9px] text-muted-foreground leading-tight mt-0.5">{t.category}</div>
+                  <div className="text-[9px] text-muted-foreground leading-tight mt-0.5">
+                    {t.category}
+                  </div>
                 </div>
               ))}
             </div>
@@ -361,10 +508,15 @@ function TechStackTree() {
 
             <div className="grid grid-cols-2 gap-2.5">
               {BACKEND_TECH.map((t) => (
-                <div key={t.name} className="glass border border-orange-200 bg-white/90 p-3 rounded-2xl text-center flex flex-col items-center justify-center">
+                <div
+                  key={t.name}
+                  className="glass border border-orange-200 bg-white/90 p-3 rounded-2xl text-center flex flex-col items-center justify-center"
+                >
                   <div className="mb-1 flex justify-center">{t.icon}</div>
                   <div className="font-semibold text-xs leading-tight">{t.name}</div>
-                  <div className="text-[9.5px] text-muted-foreground leading-tight mt-0.5">{t.category}</div>
+                  <div className="text-[9.5px] text-muted-foreground leading-tight mt-0.5">
+                    {t.category}
+                  </div>
                 </div>
               ))}
             </div>
@@ -380,31 +532,36 @@ const JOURNEY_STAGES = [
     num: "01",
     title: "Planning",
     icon: <FaClipboardList className="h-5 w-5 text-orange-600" />,
-    description: "Defining product scope, commuter workflows, requirements, and system architecture.",
+    description:
+      "Defining product scope, commuter workflows, requirements, and system architecture.",
   },
   {
     num: "02",
     title: "UI / UX Design",
     icon: <FaPaintbrush className="h-5 w-5 text-amber-600" />,
-    description: "Crafting intuitive digital ticketing interfaces, glassmorphism design system & micro-interactions.",
+    description:
+      "Crafting intuitive digital ticketing interfaces, glassmorphism design system & micro-interactions.",
   },
   {
     num: "03",
     title: "Frontend Development",
     icon: <FaCode className="h-5 w-5 text-cyan-600" />,
-    description: "Building a responsive TanStack Start + React 19 web app with Tailwind CSS styling.",
+    description:
+      "Building a responsive TanStack Start + React 19 web app with Tailwind CSS styling.",
   },
   {
     num: "04",
     title: "Backend Development",
     icon: <FaServer className="h-5 w-5 text-emerald-600" />,
-    description: "Architecting Spring Boot REST APIs, PostgreSQL database, and Spring Security JWT auth.",
+    description:
+      "Architecting Spring Boot REST APIs, PostgreSQL database, and Spring Security JWT auth.",
   },
   {
     num: "05",
     title: "Deployment",
     icon: <FaRocket className="h-5 w-5 text-purple-600" />,
-    description: "Production deployment, automated Cloudflare/Vite pipeline, and performance tuning.",
+    description:
+      "Production deployment, automated Cloudflare/Vite pipeline, and performance tuning.",
   },
 ];
 
@@ -420,7 +577,8 @@ function DevelopmentJourney() {
           Project Development <span className="text-railway-gradient">Journey</span>
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          A structured, agile approach that turns ideas into a reliable and scalable real-world solution.
+          A structured, agile approach that turns ideas into a reliable and scalable real-world
+          solution.
         </p>
       </div>
 
@@ -428,9 +586,31 @@ function DevelopmentJourney() {
       <div className="hidden md:block relative">
         {/* Horizontal Connector Line */}
         <div className="absolute top-7 left-[8%] right-[8%] h-1 pointer-events-none z-0">
-          <svg className="h-full w-full overflow-visible" viewBox="0 0 100 10" preserveAspectRatio="none">
-            <line x1="0" y1="5" x2="100" y2="5" stroke="rgba(255, 138, 61, 0.35)" strokeWidth="3" vectorEffect="non-scaling-stroke" />
-            <line x1="0" y1="5" x2="100" y2="5" stroke="url(#treeGrad)" strokeWidth="3" strokeDasharray="6 10" className="animate-tree-dash" vectorEffect="non-scaling-stroke" />
+          <svg
+            className="h-full w-full overflow-visible"
+            viewBox="0 0 100 10"
+            preserveAspectRatio="none"
+          >
+            <line
+              x1="0"
+              y1="5"
+              x2="100"
+              y2="5"
+              stroke="rgba(255, 138, 61, 0.35)"
+              strokeWidth="3"
+              vectorEffect="non-scaling-stroke"
+            />
+            <line
+              x1="0"
+              y1="5"
+              x2="100"
+              y2="5"
+              stroke="url(#treeGrad)"
+              strokeWidth="3"
+              strokeDasharray="6 10"
+              className="animate-tree-dash"
+              vectorEffect="non-scaling-stroke"
+            />
           </svg>
         </div>
 
@@ -454,13 +634,18 @@ function DevelopmentJourney() {
               </div>
 
               {/* Title & Description */}
-              <h3 className="font-[Sora] font-bold text-xs lg:text-sm text-foreground leading-snug">{s.title}</h3>
-              <p className="mt-2 text-[11px] text-muted-foreground leading-relaxed flex-grow">{s.description}</p>
+              <h3 className="font-[Sora] font-bold text-xs lg:text-sm text-foreground leading-snug">
+                {s.title}
+              </h3>
+              <p className="mt-2 text-[11px] text-muted-foreground leading-relaxed flex-grow">
+                {s.description}
+              </p>
 
               {/* CENTERED CTA LINK */}
               <div className="mt-4 pt-3 border-t border-orange-100/80 flex items-center justify-center w-full">
                 <span className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-orange-600 group-hover:text-orange-700 transition-colors text-center w-full">
-                  Learn more <FaArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" />
+                  Learn more{" "}
+                  <FaArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" />
                 </span>
               </div>
             </motion.div>

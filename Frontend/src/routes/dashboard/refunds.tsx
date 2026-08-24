@@ -13,7 +13,10 @@ export const Route = createFileRoute("/dashboard/refunds")({
 
 function RefundsPage() {
   const { user } = useAuth();
-  const txns = useMemo(() => (user ? loadTxns(user.id).filter((t) => t.type === "refund") : []), [user]);
+  const txns = useMemo(
+    () => (user ? loadTxns(user.id).filter((t) => t.type === "refund") : []),
+    [user],
+  );
   const [status, setStatus] = useState<"all" | "success" | "pending" | "failed">("all");
   const [range, setRange] = useState<"all" | "today" | "7d" | "30d" | "custom">("all");
   const [from, setFrom] = useState("");
@@ -22,10 +25,16 @@ function RefundsPage() {
   const filtered = useMemo(() => {
     const now = Date.now();
     const day = 86400000;
-    const fromTs = range === "today" ? now - day
-      : range === "7d" ? now - 7 * day
-      : range === "30d" ? now - 30 * day
-      : range === "custom" && from ? new Date(from).getTime() : null;
+    const fromTs =
+      range === "today"
+        ? now - day
+        : range === "7d"
+          ? now - 7 * day
+          : range === "30d"
+            ? now - 30 * day
+            : range === "custom" && from
+              ? new Date(from).getTime()
+              : null;
     const toTs = range === "custom" && to ? new Date(to).getTime() + day : null;
     return txns.filter((t) => {
       if (status !== "all" && t.status !== status) return false;
@@ -43,9 +52,14 @@ function RefundsPage() {
       <div className="mb-6 flex items-end justify-between">
         <div>
           <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">Refunds</h1>
-          <p className="mt-1 text-sm text-muted-foreground">All cancellation refunds credited to your wallet.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            All cancellation refunds credited to your wallet.
+          </p>
         </div>
-        <Link to="/dashboard/wallet" className="text-xs font-semibold text-orange-700 hover:underline">
+        <Link
+          to="/dashboard/wallet"
+          className="text-xs font-semibold text-orange-700 hover:underline"
+        >
           Wallet <FaArrowRight className="inline h-2.5 w-2.5" />
         </Link>
       </div>
@@ -58,13 +72,17 @@ function RefundsPage() {
 
       <div className="glass rounded-3xl p-5 shadow-soft">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Status</span>
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Status
+          </span>
           {(["all", "success", "pending", "failed"] as const).map((s) => (
             <button
               key={s}
               onClick={() => setStatus(s)}
               className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider transition ${
-                status === s ? "bg-railway-gradient text-white shadow-soft" : "bg-white/80 text-foreground/70 hover:bg-white"
+                status === s
+                  ? "bg-railway-gradient text-white shadow-soft"
+                  : "bg-white/80 text-foreground/70 hover:bg-white"
               }`}
             >
               {s}
@@ -73,19 +91,25 @@ function RefundsPage() {
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Date</span>
-          {([
-            ["all", "All time"],
-            ["today", "Today"],
-            ["7d", "Last 7d"],
-            ["30d", "Last 30d"],
-            ["custom", "Custom"],
-          ] as const).map(([k, label]) => (
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Date
+          </span>
+          {(
+            [
+              ["all", "All time"],
+              ["today", "Today"],
+              ["7d", "Last 7d"],
+              ["30d", "Last 30d"],
+              ["custom", "Custom"],
+            ] as const
+          ).map(([k, label]) => (
             <button
               key={k}
               onClick={() => setRange(k)}
               className={`rounded-full px-3 py-1 text-[11px] font-semibold transition ${
-                range === k ? "bg-orange-500 text-white shadow-soft" : "bg-white/80 text-foreground/70 hover:bg-white"
+                range === k
+                  ? "bg-orange-500 text-white shadow-soft"
+                  : "bg-white/80 text-foreground/70 hover:bg-white"
               }`}
             >
               {label}
@@ -118,7 +142,10 @@ function RefundsPage() {
             </div>
           ) : (
             filtered.map((t) => (
-              <div key={t.id} className="flex flex-col gap-3 rounded-2xl bg-white/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div
+                key={t.id}
+                className="flex flex-col gap-3 rounded-2xl bg-white/80 p-4 sm:flex-row sm:items-center sm:justify-between"
+              >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500 text-white">
                     <FaArrowDown />
@@ -130,14 +157,16 @@ function RefundsPage() {
                     </div>
                     {(t.originalFare || t.refundPercent) && (
                       <div className="mt-1 text-[11px] text-muted-foreground">
-                        Original {formatINR(t.originalFare ?? 0)} · charge {formatINR(t.cancellationCharge ?? 0)} ·{" "}
-                        {t.refundPercent ?? 0}% refund
+                        Original {formatINR(t.originalFare ?? 0)} · charge{" "}
+                        {formatINR(t.cancellationCharge ?? 0)} · {t.refundPercent ?? 0}% refund
                       </div>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center justify-between gap-4 sm:flex-col sm:items-end sm:gap-1">
-                  <div className="font-[Sora] text-sm font-bold text-emerald-600">{formatSignedINR(t.amount)}</div>
+                  <div className="font-[Sora] text-sm font-bold text-emerald-600">
+                    {formatSignedINR(t.amount)}
+                  </div>
                   <span
                     className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
                       t.status === "success"
@@ -171,8 +200,14 @@ function RefundsPage() {
 function Stat({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
     <div className="glass rounded-2xl p-4 shadow-soft">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className={`mt-1 font-[Sora] text-2xl font-extrabold ${accent ? "text-emerald-600" : ""}`}>{value}</div>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </div>
+      <div
+        className={`mt-1 font-[Sora] text-2xl font-extrabold ${accent ? "text-emerald-600" : ""}`}
+      >
+        {value}
+      </div>
     </div>
   );
 }

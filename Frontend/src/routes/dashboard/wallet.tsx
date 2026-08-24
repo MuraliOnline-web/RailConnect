@@ -103,7 +103,13 @@ function WalletPage() {
     const ref = makeRef();
     const m = PAYMENT_METHODS.find((p) => p.id === method)!;
     const apiMethod =
-      m.group === "upi" ? "UPI" : m.group === "card" ? "Card" : m.group === "netbanking" ? "NetBanking" : "Wallet";
+      m.group === "upi"
+        ? "UPI"
+        : m.group === "card"
+          ? "Card"
+          : m.group === "netbanking"
+            ? "NetBanking"
+            : "Wallet";
     saveTxn({
       id: crypto.randomUUID(),
       userId: user.id,
@@ -161,7 +167,8 @@ function WalletPage() {
             <div>
               <div className="font-[Sora] text-sm font-bold text-amber-900">Low wallet balance</div>
               <div className="text-xs text-amber-800">
-                You have only {formatINR(balance)} left. Recharge now to avoid booking interruptions.
+                You have only {formatINR(balance)} left. Recharge now to avoid booking
+                interruptions.
               </div>
             </div>
           </div>
@@ -180,11 +187,16 @@ function WalletPage() {
           layout
           className="bg-railway-gradient relative overflow-hidden rounded-3xl p-7 text-white shadow-glow lg:col-span-2"
         >
-          <div aria-hidden className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/15 blur-2xl" />
+          <div
+            aria-hidden
+            className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/15 blur-2xl"
+          />
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/85">
             <FaWallet /> RailConnect wallet
           </div>
-          <div className="mt-3 font-[Sora] text-5xl font-extrabold tracking-tight">{formatINR(balance)}</div>
+          <div className="mt-3 font-[Sora] text-5xl font-extrabold tracking-tight">
+            {formatINR(balance)}
+          </div>
           <div className="mt-1 text-xs text-white/80">Available balance</div>
 
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -270,7 +282,12 @@ function WalletPage() {
             </div>
             <MethodGroup title="UPI" group="upi" method={method} setMethod={setMethod} />
             <MethodGroup title="Cards" group="card" method={method} setMethod={setMethod} />
-            <MethodGroup title="Net banking" group="netbanking" method={method} setMethod={setMethod} />
+            <MethodGroup
+              title="Net banking"
+              group="netbanking"
+              method={method}
+              setMethod={setMethod}
+            />
           </div>
 
           <div className="rounded-2xl border border-orange-100 bg-white/80 p-5">
@@ -284,8 +301,12 @@ function WalletPage() {
             </div>
             <div className="my-3 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
             <div className="flex items-end justify-between">
-              <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">Total</div>
-              <div className="font-[Sora] text-2xl font-extrabold text-railway-gradient">{formatINR(amount || 0)}</div>
+              <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">
+                Total
+              </div>
+              <div className="font-[Sora] text-2xl font-extrabold text-railway-gradient">
+                {formatINR(amount || 0)}
+              </div>
             </div>
             <button
               onClick={recharge}
@@ -303,7 +324,10 @@ function WalletPage() {
               )}
             </button>
             <div className="mt-3 text-center text-[10px] text-muted-foreground">
-              Updated balance after recharge: <span className="font-semibold text-foreground">{formatINR(balance + (amount || 0))}</span>
+              Updated balance after recharge:{" "}
+              <span className="font-semibold text-foreground">
+                {formatINR(balance + (amount || 0))}
+              </span>
             </div>
           </div>
         </div>
@@ -312,7 +336,10 @@ function WalletPage() {
       <div className="glass mt-6 rounded-3xl p-6 shadow-soft">
         <div className="flex items-center justify-between">
           <h2 className="font-[Sora] text-lg font-bold">Recent activity</h2>
-          <Link to="/dashboard/transactions" className="text-xs font-semibold text-orange-600 hover:underline">
+          <Link
+            to="/dashboard/transactions"
+            className="text-xs font-semibold text-orange-600 hover:underline"
+          >
             View all <FaArrowRight className="inline h-2.5 w-2.5" />
           </Link>
         </div>
@@ -323,7 +350,10 @@ function WalletPage() {
             </div>
           ) : (
             recent.map((t) => (
-              <div key={t.id} className="flex items-center justify-between rounded-xl bg-white/80 px-4 py-3 text-sm">
+              <div
+                key={t.id}
+                className="flex items-center justify-between rounded-xl bg-white/80 px-4 py-3 text-sm"
+              >
                 <div className="flex items-center gap-3">
                   <div
                     className={`flex h-9 w-9 items-center justify-center rounded-xl text-white ${
@@ -339,7 +369,9 @@ function WalletPage() {
                     </div>
                   </div>
                 </div>
-                <div className={`font-[Sora] font-bold ${t.amount >= 0 ? "text-emerald-600" : "text-foreground"}`}>
+                <div
+                  className={`font-[Sora] font-bold ${t.amount >= 0 ? "text-emerald-600" : "text-foreground"}`}
+                >
                   {formatSignedINR(t.amount)}
                 </div>
               </div>
@@ -354,7 +386,9 @@ function WalletPage() {
 function SummaryStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl bg-white/15 px-3 py-2 backdrop-blur">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-white/80">{label}</div>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-white/80">
+        {label}
+      </div>
       <div className="mt-0.5 truncate font-[Sora] text-sm font-bold">{value}</div>
     </div>
   );

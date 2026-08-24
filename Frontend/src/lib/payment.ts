@@ -18,14 +18,7 @@ export type PaymentDraft = {
 };
 
 export type PaymentMethodId =
-  | "gpay"
-  | "phonepe"
-  | "paytm"
-  | "bhim"
-  | "wallet"
-  | "credit"
-  | "debit"
-  | "netbanking";
+  "gpay" | "phonepe" | "paytm" | "bhim" | "wallet" | "credit" | "debit" | "netbanking";
 
 export type PaymentGroup = "upi" | "wallet" | "card" | "netbanking";
 

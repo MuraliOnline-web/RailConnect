@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import { FaHeart, FaTrash, FaPlus, FaArrowRight, FaTrain } from "react-icons/fa6";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";
-import { addFavorite, loadFavorites, removeFavorite, type FavoriteRoute } from "../../lib/favorites";
+import {
+  addFavorite,
+  loadFavorites,
+  removeFavorite,
+  type FavoriteRoute,
+} from "../../lib/favorites";
 import { STATIONS } from "../../lib/tickets";
 
 export const Route = createFileRoute("/dashboard/favorites")({
@@ -20,11 +25,19 @@ function FavoritesPage() {
   const refresh = () => {
     if (user) setFavs(loadFavorites(user.id));
   };
-  useEffect(() => { refresh(); }, [user]);
+  useEffect(() => {
+    refresh();
+  }, [user]);
 
   const add = () => {
     if (!user || from === to) return;
-    addFavorite({ id: crypto.randomUUID(), userId: user.id, fromCode: from, toCode: to, createdAt: new Date().toISOString() });
+    addFavorite({
+      id: crypto.randomUUID(),
+      userId: user.id,
+      fromCode: from,
+      toCode: to,
+      createdAt: new Date().toISOString(),
+    });
     refresh();
   };
 
@@ -32,7 +45,9 @@ function FavoritesPage() {
     <DashboardShell>
       <div className="mb-6">
         <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">Favorite routes</h1>
-        <p className="mt-1 text-sm text-muted-foreground">One-tap booking for the routes you ride most.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          One-tap booking for the routes you ride most.
+        </p>
       </div>
 
       <div className="glass rounded-3xl p-6 shadow-soft">
@@ -43,7 +58,11 @@ function FavoritesPage() {
               onChange={(e) => setFrom(e.target.value)}
               className="w-full rounded-xl border border-orange-100 bg-white/90 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
             >
-              {STATIONS.map((s) => <option key={s.code} value={s.code}>{s.name} ({s.code})</option>)}
+              {STATIONS.map((s) => (
+                <option key={s.code} value={s.code}>
+                  {s.name} ({s.code})
+                </option>
+              ))}
             </select>
           </Field>
           <Field label="To">
@@ -52,7 +71,11 @@ function FavoritesPage() {
               onChange={(e) => setTo(e.target.value)}
               className="w-full rounded-xl border border-orange-100 bg-white/90 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
             >
-              {STATIONS.filter((s) => s.code !== from).map((s) => <option key={s.code} value={s.code}>{s.name} ({s.code})</option>)}
+              {STATIONS.filter((s) => s.code !== from).map((s) => (
+                <option key={s.code} value={s.code}>
+                  {s.name} ({s.code})
+                </option>
+              ))}
             </select>
           </Field>
           <button
@@ -71,26 +94,40 @@ function FavoritesPage() {
               <FaHeart />
             </div>
             <h2 className="mt-4 font-[Sora] text-xl font-bold">No favorites yet</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Add the routes you ride most for one-tap bookings.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Add the routes you ride most for one-tap bookings.
+            </p>
           </div>
         ) : (
           favs.map((f) => {
             const fromS = STATIONS.find((s) => s.code === f.fromCode)!;
             const toS = STATIONS.find((s) => s.code === f.toCode)!;
             return (
-              <div key={f.id} className="glass rounded-3xl p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-glow">
+              <div
+                key={f.id}
+                className="glass rounded-3xl p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-glow"
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="bg-railway-gradient flex h-10 w-10 items-center justify-center rounded-xl text-white">
                       <FaTrain />
                     </div>
                     <div>
-                      <div className="font-[Sora] text-lg font-bold">{fromS.name} → {toS.name}</div>
-                      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{fromS.line} line</div>
+                      <div className="font-[Sora] text-lg font-bold">
+                        {fromS.name} → {toS.name}
+                      </div>
+                      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                        {fromS.line} line
+                      </div>
                     </div>
                   </div>
                   <button
-                    onClick={() => { if (user) { removeFavorite(user.id, f.id); refresh(); } }}
+                    onClick={() => {
+                      if (user) {
+                        removeFavorite(user.id, f.id);
+                        refresh();
+                      }
+                    }}
                     className="rounded-full bg-rose-50 p-2 text-rose-600 hover:bg-rose-100"
                     aria-label="Remove"
                   >
@@ -117,7 +154,9 @@ function FavoritesPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70">{label}</div>
+      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70">
+        {label}
+      </div>
       {children}
     </div>
   );

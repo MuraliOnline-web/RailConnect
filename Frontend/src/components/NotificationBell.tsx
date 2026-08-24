@@ -9,11 +9,7 @@ import {
   FaCircleXmark,
   FaCircleInfo,
 } from "react-icons/fa6";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   loadNotifications,
   markAllAsRead,

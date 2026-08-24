@@ -95,7 +95,9 @@ function BookPage() {
                 className="w-full rounded-xl border border-orange-100 bg-white/90 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
               >
                 {STATIONS.map((s) => (
-                  <option key={s.code} value={s.code}>{s.name} ({s.code})</option>
+                  <option key={s.code} value={s.code}>
+                    {s.name} ({s.code})
+                  </option>
                 ))}
               </select>
             </Field>
@@ -107,7 +109,9 @@ function BookPage() {
                   className="w-full rounded-xl border border-orange-100 bg-white/90 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
                 >
                   {STATIONS.filter((s) => s.code !== from).map((s) => (
-                    <option key={s.code} value={s.code}>{s.name} ({s.code})</option>
+                    <option key={s.code} value={s.code}>
+                      {s.name} ({s.code})
+                    </option>
                   ))}
                 </select>
               </Field>
@@ -141,17 +145,16 @@ function BookPage() {
         </div>
 
         {/* Summary */}
-        <motion.div
-          layout
-          className="glass relative overflow-hidden rounded-3xl p-6 shadow-soft"
-        >
+        <motion.div layout className="glass relative overflow-hidden rounded-3xl p-6 shadow-soft">
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Booking summary
           </div>
           <div className="mt-4 flex items-center justify-between">
             <div>
               <div className="font-[Sora] text-xl font-bold">{fromS.name}</div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{fromS.code}</div>
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                {fromS.code}
+              </div>
             </div>
             <div className="bg-railway-gradient flex h-9 w-9 items-center justify-center rounded-full text-white">
               <FaTrain />
@@ -171,8 +174,12 @@ function BookPage() {
           {type !== "platform" && <Row k="Passengers" v={`${adults} adult · ${children} child`} />}
           <Row k="Line" v={fromS.line} />
           <div className="mt-5 rounded-2xl bg-orange-50 p-4">
-            <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">Total fare</div>
-            <div className="font-[Sora] text-3xl font-extrabold text-railway-gradient">{formatINR(fare)}</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">
+              Total fare
+            </div>
+            <div className="font-[Sora] text-3xl font-extrabold text-railway-gradient">
+              {formatINR(fare)}
+            </div>
           </div>
           <button
             onClick={onBook}
@@ -190,7 +197,9 @@ function BookPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70">{label}</div>
+      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70">
+        {label}
+      </div>
       {children}
     </div>
   );
@@ -205,7 +214,17 @@ function Row({ k, v }: { k: string; v: string }) {
   );
 }
 
-function Counter({ label, value, setValue, min = 0 }: { label: string; value: number; setValue: (n: number) => void; min?: number }) {
+function Counter({
+  label,
+  value,
+  setValue,
+  min = 0,
+}: {
+  label: string;
+  value: number;
+  setValue: (n: number) => void;
+  min?: number;
+}) {
   return (
     <div className="flex flex-1 items-center justify-between rounded-xl border border-orange-100 bg-white/80 px-3 py-2">
       <div>
@@ -213,8 +232,18 @@ function Counter({ label, value, setValue, min = 0 }: { label: string; value: nu
         <div className="font-[Sora] text-lg font-bold leading-none">{value}</div>
       </div>
       <div className="flex gap-1">
-        <button onClick={() => setValue(Math.max(min, value - 1))} className="h-7 w-7 rounded-full bg-orange-50 text-orange-700">−</button>
-        <button onClick={() => setValue(value + 1)} className="bg-railway-gradient h-7 w-7 rounded-full text-white">+</button>
+        <button
+          onClick={() => setValue(Math.max(min, value - 1))}
+          className="h-7 w-7 rounded-full bg-orange-50 text-orange-700"
+        >
+          −
+        </button>
+        <button
+          onClick={() => setValue(value + 1)}
+          className="bg-railway-gradient h-7 w-7 rounded-full text-white"
+        >
+          +
+        </button>
       </div>
     </div>
   );

@@ -67,9 +67,7 @@ export function pushNotification(
 
 export function markAsRead(userId: string, id: string) {
   const all = readAll();
-  const next = all.map((n) =>
-    n.userId === userId && n.id === id ? { ...n, read: true } : n,
-  );
+  const next = all.map((n) => (n.userId === userId && n.id === id ? { ...n, read: true } : n));
   writeAll(next);
 }
 

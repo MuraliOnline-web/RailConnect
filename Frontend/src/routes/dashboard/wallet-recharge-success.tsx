@@ -85,7 +85,8 @@ function RechargeSuccess() {
           </div>
 
           <div className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
-            <FaWallet className="h-3 w-3 text-orange-500" /> Receipt saved to your transaction history
+            <FaWallet className="h-3 w-3 text-orange-500" /> Receipt saved to your transaction
+            history
           </div>
         </motion.div>
       </div>
@@ -97,7 +98,9 @@ function Row({ k, v, highlight }: { k: string; v: string; highlight?: boolean })
   return (
     <div className="flex items-center justify-between py-1.5 text-sm">
       <span className="text-muted-foreground">{k}</span>
-      <span className={`font-semibold ${highlight ? "font-[Sora] text-base text-railway-gradient" : ""}`}>
+      <span
+        className={`font-semibold ${highlight ? "font-[Sora] text-base text-railway-gradient" : ""}`}
+      >
         {v}
       </span>
     </div>

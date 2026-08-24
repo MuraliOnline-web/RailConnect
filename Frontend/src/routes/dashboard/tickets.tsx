@@ -15,12 +15,7 @@ import {
 import { SearchField } from "../../components/SearchField";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";
-import {
-  loadTickets,
-  CATEGORY_LABEL,
-  type Ticket,
-  type TrainCategory,
-} from "../../lib/tickets";
+import { loadTickets, CATEGORY_LABEL, type Ticket, type TrainCategory } from "../../lib/tickets";
 import { downloadTicketAndNotify } from "../../lib/ticketPdf";
 import { formatINR } from "../../lib/currency";
 
@@ -38,10 +33,7 @@ function TicketsPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [version, setVersion] = useState(0);
-  const tickets = useMemo(
-    () => (user ? loadTickets(user.id) : []),
-    [user, version],
-  );
+  const tickets = useMemo(() => (user ? loadTickets(user.id) : []), [user, version]);
 
   const [tab, setTab] = useState<TabKey>("active");
   const [query, setQuery] = useState("");
@@ -88,7 +80,8 @@ function TicketsPage() {
       }
       const created = new Date(t.createdAt).getTime();
       if (fRange === "today") {
-        const start = new Date(); start.setHours(0, 0, 0, 0);
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
         if (created < start.getTime()) return false;
       } else if (fRange === "7d") {
         if (created < now - 7 * 86400000) return false;
@@ -125,18 +118,22 @@ function TicketsPage() {
 
       {/* Tabs */}
       <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-        {([
-          { key: "active", label: "Active" },
-          { key: "expired", label: "Expired" },
-          { key: "cancelled", label: "Cancelled" },
-        ] as { key: TabKey; label: string }[]).map((t) => {
+        {(
+          [
+            { key: "active", label: "Active" },
+            { key: "expired", label: "Expired" },
+            { key: "cancelled", label: "Cancelled" },
+          ] as { key: TabKey; label: string }[]
+        ).map((t) => {
           const selected = tab === t.key;
           return (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
               className={`relative shrink-0 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
-                selected ? "bg-railway-gradient text-white shadow-soft" : "bg-white/80 text-foreground/70 hover:bg-white"
+                selected
+                  ? "bg-railway-gradient text-white shadow-soft"
+                  : "bg-white/80 text-foreground/70 hover:bg-white"
               }`}
             >
               {t.label}
@@ -164,7 +161,9 @@ function TicketsPage() {
           <button
             onClick={() => setShowFilters((v) => !v)}
             className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold uppercase tracking-wider transition ${
-              showFilters ? "bg-railway-gradient text-white shadow-soft" : "border border-orange-200 bg-white text-orange-700"
+              showFilters
+                ? "bg-railway-gradient text-white shadow-soft"
+                : "border border-orange-200 bg-white text-orange-700"
             }`}
           >
             <FaSliders className="h-3 w-3" /> Filters
@@ -217,7 +216,10 @@ function TicketsPage() {
       {/* List */}
       <div className="mt-5">
         {filtered.length === 0 ? (
-          <EmptyState tab={tab} hasQuery={!!debounced || fCategory !== "all" || fType !== "all" || fRange !== "all"} />
+          <EmptyState
+            tab={tab}
+            hasQuery={!!debounced || fCategory !== "all" || fType !== "all" || fRange !== "all"}
+          />
         ) : (
           <>
             <div className="grid gap-4 md:grid-cols-2">
@@ -266,7 +268,9 @@ function StatusBadge({ status }: { status: Ticket["status"] }) {
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ring-1 ${map[status]}`}
     >
-      <span className={`h-1.5 w-1.5 rounded-full ${status === "active" ? "bg-emerald-500" : status === "expired" ? "bg-gray-400" : "bg-rose-500"}`} />
+      <span
+        className={`h-1.5 w-1.5 rounded-full ${status === "active" ? "bg-emerald-500" : status === "expired" ? "bg-gray-400" : "bg-rose-500"}`}
+      />
       {status}
     </span>
   );
@@ -277,7 +281,9 @@ function TicketCard({ t, onOpen }: { t: Ticket; onOpen: () => void }) {
     <div className="glass overflow-hidden rounded-3xl p-1 shadow-soft transition hover:shadow-glow">
       <div className="rounded-[1.4rem] bg-white p-5">
         <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
-          <span className="font-semibold">{t.type} · {t.line}</span>
+          <span className="font-semibold">
+            {t.type} · {t.line}
+          </span>
           <span className="font-mono">{t.pnr}</span>
         </div>
         {t.category && (
@@ -289,7 +295,9 @@ function TicketCard({ t, onOpen }: { t: Ticket; onOpen: () => void }) {
           <div>
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground">From</div>
             <div className="font-[Sora] text-xl font-bold">{t.from}</div>
-            {t.fromCode && <div className="text-[10px] font-mono text-muted-foreground">{t.fromCode}</div>}
+            {t.fromCode && (
+              <div className="text-[10px] font-mono text-muted-foreground">{t.fromCode}</div>
+            )}
           </div>
           <div className="bg-railway-gradient flex h-9 w-9 items-center justify-center rounded-full text-white">
             <FaTrain />
@@ -297,7 +305,9 @@ function TicketCard({ t, onOpen }: { t: Ticket; onOpen: () => void }) {
           <div className="text-right">
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground">To</div>
             <div className="font-[Sora] text-xl font-bold">{t.to}</div>
-            {t.toCode && <div className="text-[10px] font-mono text-muted-foreground">{t.toCode}</div>}
+            {t.toCode && (
+              <div className="text-[10px] font-mono text-muted-foreground">{t.toCode}</div>
+            )}
           </div>
         </button>
         <div className="my-4 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
@@ -357,18 +367,30 @@ function TicketCard({ t, onOpen }: { t: Ticket; onOpen: () => void }) {
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-foreground/70">{label}</div>
+      <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-foreground/70">
+        {label}
+      </div>
       <div className="flex flex-wrap gap-1.5">{children}</div>
     </div>
   );
 }
 
-function Chip({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) {
+function Chip({
+  selected,
+  onClick,
+  children,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <button
       onClick={onClick}
       className={`rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider capitalize transition ${
-        selected ? "bg-railway-gradient text-white shadow-soft" : "border border-orange-100 bg-white text-foreground/70 hover:bg-orange-50"
+        selected
+          ? "bg-railway-gradient text-white shadow-soft"
+          : "border border-orange-100 bg-white text-foreground/70 hover:bg-orange-50"
       }`}
     >
       {children}
@@ -376,10 +398,20 @@ function Chip({ selected, onClick, children }: { selected: boolean; onClick: () 
   );
 }
 
-function DateField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function DateField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
   return (
     <div>
-      <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground/70">{label}</div>
+      <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground/70">
+        {label}
+      </div>
       <input
         type="date"
         value={value}
@@ -417,7 +449,9 @@ function EmptyState({ tab, hasQuery }: { tab: TabKey; hasQuery: boolean }) {
       <h2 className="mt-4 font-[Sora] text-xl font-bold">
         {hasQuery ? "No tickets match your filters." : m.title}
       </h2>
-      <p className="mt-1 text-sm text-muted-foreground">{hasQuery ? "Try clearing search or filters." : m.desc}</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {hasQuery ? "Try clearing search or filters." : m.desc}
+      </p>
       {tab === "active" && !hasQuery && (
         <Link
           to="/dashboard/journey"

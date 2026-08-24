@@ -105,11 +105,11 @@ export function StationSearch({
   return (
     <div ref={wrapRef} className="relative">
       <div
-        className={`premium-border flex items-center gap-2 rounded-xl bg-white/90 px-3 py-2.5 transition ${
-          open ? "ring-2 ring-orange-300/40" : ""
+        className={`static-search-box w-full ${
+          open ? "ring-4 ring-orange-500/15 border-orange-500/70 shadow-md" : ""
         }`}
       >
-        <FaMagnifyingGlass className="h-3.5 w-3.5 shrink-0 text-orange-500" />
+        <FaMagnifyingGlass className="search-icon" />
         <input
           ref={inputRef}
           value={open ? query : selected ? `${selected.name} (${selected.code})` : query}
@@ -123,7 +123,6 @@ export function StationSearch({
           }}
           onKeyDown={onKey}
           placeholder={placeholder}
-          className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
         />
         {(open ? query : selected) && (
           <button
@@ -166,7 +165,9 @@ export function StationSearch({
                     <div className="flex min-w-0 items-center gap-3">
                       <span
                         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs ${
-                          active === i ? "bg-railway-gradient text-white" : "bg-orange-50 text-orange-700"
+                          active === i
+                            ? "bg-railway-gradient text-white"
+                            : "bg-orange-50 text-orange-700"
                         }`}
                       >
                         <FaTrainSubway />

@@ -100,10 +100,7 @@ function NotificationsPage() {
       <div className="-mx-1 mb-4 flex gap-2 overflow-x-auto px-1 pb-1">
         {TABS.map((t) => {
           const active = tab === t.id;
-          const c =
-            t.id === "all"
-              ? items.length
-              : items.filter((n) => n.category === t.id).length;
+          const c = t.id === "all" ? items.length : items.filter((n) => n.category === t.id).length;
           return (
             <button
               key={t.id}
@@ -167,17 +164,12 @@ function NotificationsPage() {
                       {CATEGORY_LABEL[n.category]}
                     </span>
                   </div>
-                  {n.body && (
-                    <p className="mt-1 text-xs text-muted-foreground">{n.body}</p>
-                  )}
+                  {n.body && <p className="mt-1 text-xs text-muted-foreground">{n.body}</p>}
                   <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted-foreground">
                     <span>{new Date(n.createdAt).toLocaleString()}</span>
                     <div className="flex items-center gap-3">
                       {n.href && (
-                        <a
-                          href={n.href}
-                          className="font-semibold text-orange-700 hover:underline"
-                        >
+                        <a href={n.href} className="font-semibold text-orange-700 hover:underline">
                           Open →
                         </a>
                       )}

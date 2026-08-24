@@ -28,7 +28,9 @@ function QrPage() {
     <DashboardShell>
       <div className="mb-6">
         <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">QR ticket</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Show this QR at the gate to scan and board.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Show this QR at the gate to scan and board.
+        </p>
       </div>
 
       {!t ? (
@@ -54,7 +56,9 @@ function QrPage() {
           <div className="glass overflow-hidden rounded-3xl p-1 shadow-glow">
             <div className="rounded-[1.4rem] bg-white p-6 text-center">
               <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
-                <span className="font-semibold">{t.type} · {t.line}</span>
+                <span className="font-semibold">
+                  {t.type} · {t.line}
+                </span>
                 <span>{t.pnr}</span>
               </div>
 
@@ -88,9 +92,13 @@ function QrPage() {
               <div className="mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-orange-700">
                   <FaTrain />
-                  <span className="text-xs font-semibold uppercase tracking-wider">Ready to board</span>
+                  <span className="text-xs font-semibold uppercase tracking-wider">
+                    Ready to board
+                  </span>
                 </div>
-                <div className="font-[Sora] text-lg font-bold text-railway-gradient">{formatINR(t.fare)}</div>
+                <div className="font-[Sora] text-lg font-bold text-railway-gradient">
+                  {formatINR(t.fare)}
+                </div>
               </div>
             </div>
           </div>
@@ -120,8 +128,7 @@ function QrSvg({ seed }: { seed: string }) {
     cells.push((h & 1) === 1);
   }
   const isFinder = (x: number, y: number) => {
-    const inBox = (cx: number, cy: number) =>
-      x >= cx && x < cx + 7 && y >= cy && y < cy + 7;
+    const inBox = (cx: number, cy: number) => x >= cx && x < cx + 7 && y >= cy && y < cy + 7;
     return inBox(0, 0) || inBox(size - 7, 0) || inBox(0, size - 7);
   };
   return (
@@ -134,7 +141,11 @@ function QrSvg({ seed }: { seed: string }) {
         if (!cells[i]) return null;
         return <rect key={i} x={x} y={y} width={1} height={1} fill="#1a1a1a" />;
       })}
-      {[[0, 0], [size - 7, 0], [0, size - 7]].map(([fx, fy], i) => (
+      {[
+        [0, 0],
+        [size - 7, 0],
+        [0, size - 7],
+      ].map(([fx, fy], i) => (
         <g key={i}>
           <rect x={fx} y={fy} width={7} height={7} fill="#e8470e" />
           <rect x={fx + 1} y={fy + 1} width={5} height={5} fill="white" />

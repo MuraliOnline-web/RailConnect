@@ -16,7 +16,11 @@ const USERS_KEY = "railconnect.auth.users";
 
 function readUsers(): Array<User & { password: string }> {
   if (typeof window === "undefined") return [];
-  try { return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch { return []; }
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+  } catch {
+    return [];
+  }
 }
 function writeUsers(u: Array<User & { password: string }>) {
   localStorage.setItem(USERS_KEY, JSON.stringify(u));
@@ -43,10 +47,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     await new Promise((r) => setTimeout(r, 500));
     const users = readUsers();
-    const found = users.find((u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    const found = users.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password,
+    );
     if (!found) {
       // Demo convenience: allow any login if account does not exist yet
-      const demo: User = { id: crypto.randomUUID(), name: email.split("@")[0] || "Commuter", email };
+      const demo: User = {
+        id: crypto.randomUUID(),
+        name: email.split("@")[0] || "Commuter",
+        email,
+      };
       persist(demo);
       return;
     }

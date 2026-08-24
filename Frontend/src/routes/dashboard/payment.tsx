@@ -70,8 +70,7 @@ function PaymentPage() {
     if (!draft) return { base: 0, categoryCharges: 0, conv: 0, total: 0 };
     const surcharge = CATEGORY_SURCHARGE[draft.category];
     const categoryCharges =
-      surcharge * Math.max(1, draft.adults) +
-      Math.round(surcharge * 0.5) * draft.children;
+      surcharge * Math.max(1, draft.adults) + Math.round(surcharge * 0.5) * draft.children;
     const seasonMult = draft.type === "season" ? 22 : 1;
     const base = draft.fare - categoryCharges * seasonMult;
     const conv = CONVENIENCE_FEE;
@@ -258,14 +257,26 @@ function PaymentPage() {
               </button>
             )}
             <MethodGroup title="UPI" group="upi" method={method} setMethod={setMethod} />
-            <MethodGroup title="Wallet" group="wallet" method={method} setMethod={setMethod} balance={balance} />
+            <MethodGroup
+              title="Wallet"
+              group="wallet"
+              method={method}
+              setMethod={setMethod}
+              balance={balance}
+            />
             <MethodGroup title="Cards" group="card" method={method} setMethod={setMethod} />
-            <MethodGroup title="Net banking" group="netbanking" method={method} setMethod={setMethod} />
+            <MethodGroup
+              title="Net banking"
+              group="netbanking"
+              method={method}
+              setMethod={setMethod}
+            />
           </div>
 
           {walletShort && (
             <div className="mt-4 rounded-xl border border-orange-200 bg-orange-50 p-3 text-xs text-orange-800">
-              Wallet balance {formatINR(balance)} is short by {formatINR(summary.total - balance)}. Recharge or pick another method.
+              Wallet balance {formatINR(balance)} is short by {formatINR(summary.total - balance)}.
+              Recharge or pick another method.
             </div>
           )}
         </div>
@@ -280,7 +291,9 @@ function PaymentPage() {
           </div>
           <div className="my-4 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
           <div className="flex items-end justify-between">
-            <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">Total</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">
+              Total
+            </div>
             <div className="font-[Sora] text-3xl font-extrabold text-railway-gradient">
               {formatINR(summary.total)}
             </div>

@@ -131,7 +131,9 @@ export function calcFare(opts: {
   const distance = Math.max(1, Math.abs(from - to));
   const base = opts.classType === "1st" ? 35 : 10;
   const perStation = opts.classType === "1st" ? 12 : 4;
-  let fare = (base + perStation * distance) * Math.max(1, opts.adults) + (opts.classType === "1st" ? 18 : 5) * opts.children;
+  let fare =
+    (base + perStation * distance) * Math.max(1, opts.adults) +
+    (opts.classType === "1st" ? 18 : 5) * opts.children;
   const surcharge = CATEGORY_SURCHARGE[opts.category ?? "passenger"];
   fare += surcharge * Math.max(1, opts.adults) + Math.round(surcharge * 0.5) * opts.children;
   if (opts.type === "season") fare = fare * 22; // monthly multiplier

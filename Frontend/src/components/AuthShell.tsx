@@ -33,11 +33,14 @@ export function AuthShell({
         </div>
         <div className="relative max-w-md">
           <h2 className="font-[Sora] text-4xl font-extrabold leading-tight tracking-tight">
-            Your platform.<br />Your train. <br />One tap away.
+            Your platform.
+            <br />
+            Your train. <br />
+            One tap away.
           </h2>
           <p className="mt-4 text-white/85">
-            Paperless commuter tickets, season passes and live journey planning —
-            engineered for the daily ride.
+            Paperless commuter tickets, season passes and live journey planning — engineered for the
+            daily ride.
           </p>
           <div className="mt-8 grid grid-cols-3 gap-3 text-xs">
             {[

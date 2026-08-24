@@ -5,12 +5,7 @@ import { FaArrowRight, FaTrain, FaHeart } from "react-icons/fa6";
 import { FaQrcode, FaFilePdf } from "react-icons/fa6";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";
-import {
-  STATIONS,
-  calcFare,
-  CATEGORY_LABEL,
-  type TrainCategory,
-} from "../../lib/tickets";
+import { STATIONS, calcFare, CATEGORY_LABEL, type TrainCategory } from "../../lib/tickets";
 import { StationSearch } from "../../components/StationSearch";
 import { addFavorite } from "../../lib/favorites";
 import { getWallet } from "../../lib/wallet";
@@ -97,7 +92,9 @@ function JourneyPage() {
           </p>
         </div>
         <div className="hidden rounded-2xl bg-white/80 px-4 py-2 text-right shadow-soft sm:block">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Wallet</div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Wallet
+          </div>
           <div className="font-[Sora] text-lg font-bold text-orange-700">{formatINR(balance)}</div>
         </div>
       </div>
@@ -108,7 +105,9 @@ function JourneyPage() {
             <button
               onClick={() => setSeason(false)}
               className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
-                !season ? "bg-railway-gradient text-white shadow-soft" : "bg-white/80 text-foreground/70"
+                !season
+                  ? "bg-railway-gradient text-white shadow-soft"
+                  : "bg-white/80 text-foreground/70"
               }`}
             >
               Single journey
@@ -116,7 +115,9 @@ function JourneyPage() {
             <button
               onClick={() => setSeason(true)}
               className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
-                season ? "bg-railway-gradient text-white shadow-soft" : "bg-white/80 text-foreground/70"
+                season
+                  ? "bg-railway-gradient text-white shadow-soft"
+                  : "bg-white/80 text-foreground/70"
               }`}
             >
               Monthly season
@@ -168,10 +169,20 @@ function JourneyPage() {
               </div>
             </div>
             <Field label="From">
-              <StationSearch value={from} onChange={setFrom} exclude={to} placeholder="Search source station…" />
+              <StationSearch
+                value={from}
+                onChange={setFrom}
+                exclude={to}
+                placeholder="Search source station…"
+              />
             </Field>
             <Field label="To">
-              <StationSearch value={to} onChange={setTo} exclude={from} placeholder="Search destination station…" />
+              <StationSearch
+                value={to}
+                onChange={setTo}
+                exclude={from}
+                placeholder="Search destination station…"
+              />
             </Field>
             <Field label="Passengers">
               <div className="flex gap-2">
@@ -196,14 +207,18 @@ function JourneyPage() {
           <div className="mt-4 flex items-center justify-between">
             <div>
               <div className="font-[Sora] text-xl font-bold">{fromS?.name ?? "—"}</div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{fromS?.code ?? ""}</div>
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                {fromS?.code ?? ""}
+              </div>
             </div>
             <div className="bg-railway-gradient flex h-9 w-9 items-center justify-center rounded-full text-white">
               <FaTrain />
             </div>
             <div className="text-right">
               <div className="font-[Sora] text-xl font-bold">{toS?.name ?? "—"}</div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{toS?.code ?? ""}</div>
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                {toS?.code ?? ""}
+              </div>
             </div>
           </div>
           <div className="my-5 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
@@ -212,8 +227,12 @@ function JourneyPage() {
           <Row k="Passengers" v={`${adults} adult · ${children} child`} />
           <Row k="Line" v={fromS?.line ?? "—"} />
           <div className="mt-5 rounded-2xl bg-orange-50 p-4">
-            <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">Total fare</div>
-            <div className="font-[Sora] text-3xl font-extrabold text-railway-gradient">{formatINR(fare)}</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">
+              Total fare
+            </div>
+            <div className="font-[Sora] text-3xl font-extrabold text-railway-gradient">
+              {formatINR(fare)}
+            </div>
           </div>
           <button
             onClick={onBook}
@@ -231,7 +250,9 @@ function JourneyPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70">{label}</div>
+      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70">
+        {label}
+      </div>
       {children}
     </div>
   );
@@ -244,7 +265,17 @@ function Row({ k, v }: { k: string; v: string }) {
     </div>
   );
 }
-function Counter({ label, value, setValue, min = 0 }: { label: string; value: number; setValue: (n: number) => void; min?: number }) {
+function Counter({
+  label,
+  value,
+  setValue,
+  min = 0,
+}: {
+  label: string;
+  value: number;
+  setValue: (n: number) => void;
+  min?: number;
+}) {
   return (
     <div className="flex flex-1 items-center justify-between rounded-xl border border-orange-100 bg-white/80 px-3 py-2">
       <div>
@@ -252,8 +283,18 @@ function Counter({ label, value, setValue, min = 0 }: { label: string; value: nu
         <div className="font-[Sora] text-lg font-bold leading-none">{value}</div>
       </div>
       <div className="flex gap-1">
-        <button onClick={() => setValue(Math.max(min, value - 1))} className="h-7 w-7 rounded-full bg-orange-50 text-orange-700">−</button>
-        <button onClick={() => setValue(value + 1)} className="bg-railway-gradient h-7 w-7 rounded-full text-white">+</button>
+        <button
+          onClick={() => setValue(Math.max(min, value - 1))}
+          className="h-7 w-7 rounded-full bg-orange-50 text-orange-700"
+        >
+          −
+        </button>
+        <button
+          onClick={() => setValue(value + 1)}
+          className="bg-railway-gradient h-7 w-7 rounded-full text-white"
+        >
+          +
+        </button>
       </div>
     </div>
   );
@@ -275,7 +316,9 @@ function CategoryOption({
       type="button"
       onClick={onSelect}
       className={`group relative flex items-start gap-3 rounded-2xl border p-3.5 text-left transition shadow-soft ${
-        selected ? "border-orange-400 bg-orange-50/80" : "border-orange-100 bg-white/80 hover:bg-white"
+        selected
+          ? "border-orange-400 bg-orange-50/80"
+          : "border-orange-100 bg-white/80 hover:bg-white"
       }`}
     >
       <span
@@ -283,7 +326,9 @@ function CategoryOption({
           selected ? "border-orange-500" : "border-orange-200"
         }`}
       >
-        <span className={`h-2 w-2 rounded-full ${selected ? "bg-railway-gradient" : "bg-transparent"}`} />
+        <span
+          className={`h-2 w-2 rounded-full ${selected ? "bg-railway-gradient" : "bg-transparent"}`}
+        />
       </span>
       <div className="min-w-0 flex-1">
         <div className="font-[Sora] text-sm font-bold">{title}</div>

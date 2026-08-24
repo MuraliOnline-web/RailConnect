@@ -24,10 +24,16 @@ function TxnPage() {
   const filtered = useMemo(() => {
     const now = Date.now();
     const day = 86400000;
-    const fromTs = range === "today" ? now - day
-      : range === "7d" ? now - 7 * day
-      : range === "30d" ? now - 30 * day
-      : range === "custom" && from ? new Date(from).getTime() : null;
+    const fromTs =
+      range === "today"
+        ? now - day
+        : range === "7d"
+          ? now - 7 * day
+          : range === "30d"
+            ? now - 30 * day
+            : range === "custom" && from
+              ? new Date(from).getTime()
+              : null;
     const toTs = range === "custom" && to ? new Date(to).getTime() + day : null;
     const s = q.trim().toLowerCase();
     return txns.filter((t) => {
@@ -45,7 +51,8 @@ function TxnPage() {
   }, [txns, filter, range, from, to, q]);
 
   const totals = useMemo(() => {
-    let credit = 0, debit = 0;
+    let credit = 0,
+      debit = 0;
     for (const t of filtered) {
       if (t.amount >= 0) credit += t.amount;
       else debit += Math.abs(t.amount);
@@ -57,20 +64,30 @@ function TxnPage() {
     <DashboardShell>
       <div className="mb-6">
         <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">Transactions</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Every rupee in and out of your RailConnect account.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Every rupee in and out of your RailConnect account.
+        </p>
       </div>
 
       <div className="mb-5 grid gap-3 sm:grid-cols-3">
         <div className="glass rounded-2xl p-4 shadow-soft">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">In view</div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            In view
+          </div>
           <div className="mt-1 font-[Sora] text-2xl font-extrabold">{filtered.length}</div>
         </div>
         <div className="glass rounded-2xl p-4 shadow-soft">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Credits</div>
-          <div className="mt-1 font-[Sora] text-2xl font-extrabold text-emerald-600">+{formatINR(totals.credit)}</div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Credits
+          </div>
+          <div className="mt-1 font-[Sora] text-2xl font-extrabold text-emerald-600">
+            +{formatINR(totals.credit)}
+          </div>
         </div>
         <div className="glass rounded-2xl p-4 shadow-soft">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Debits</div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Debits
+          </div>
           <div className="mt-1 font-[Sora] text-2xl font-extrabold">−{formatINR(totals.debit)}</div>
         </div>
       </div>
@@ -89,7 +106,9 @@ function TxnPage() {
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
-                  filter === f ? "bg-railway-gradient text-white shadow-soft" : "bg-white/80 text-foreground/70"
+                  filter === f
+                    ? "bg-railway-gradient text-white shadow-soft"
+                    : "bg-white/80 text-foreground/70"
                 }`}
               >
                 {f}
@@ -149,7 +168,10 @@ function TxnPage() {
             </div>
           ) : (
             filtered.map((t) => (
-              <div key={t.id} className="flex items-center justify-between rounded-2xl bg-white/80 p-4">
+              <div
+                key={t.id}
+                className="flex items-center justify-between rounded-2xl bg-white/80 p-4"
+              >
                 <div className="flex items-center gap-3">
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-xl text-white ${
@@ -175,7 +197,9 @@ function TxnPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className={`font-[Sora] text-sm font-bold ${t.amount >= 0 ? "text-emerald-600" : "text-foreground"}`}>
+                  <div
+                    className={`font-[Sora] text-sm font-bold ${t.amount >= 0 ? "text-emerald-600" : "text-foreground"}`}
+                  >
                     {formatSignedINR(t.amount)}
                   </div>
                   <span
