@@ -19,8 +19,8 @@ export const Route = createFileRoute("/dashboard/favorites")({
 function FavoritesPage() {
   const { user } = useAuth();
   const [favs, setFavs] = useState<FavoriteRoute[]>([]);
-  const [from, setFrom] = useState("AD");
-  const [to, setTo] = useState("CCG");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
 
   const refresh = () => {
     if (user) setFavs(loadFavorites(user.id));
@@ -30,7 +30,7 @@ function FavoritesPage() {
   }, [user]);
 
   const add = () => {
-    if (!user || from === to) return;
+    if (!user || !from || !to || from === to) return;
     addFavorite({
       id: crypto.randomUUID(),
       userId: user.id,
@@ -38,6 +38,8 @@ function FavoritesPage() {
       toCode: to,
       createdAt: new Date().toISOString(),
     });
+    setFrom("");
+    setTo("");
     refresh();
   };
 
@@ -55,9 +57,15 @@ function FavoritesPage() {
           <Field label="From">
             <select
               value={from}
-              onChange={(e) => setFrom(e.target.value)}
+              onChange={(e) => {
+                setFrom(e.target.value);
+                if (e.target.value === to) setTo("");
+              }}
               className="w-full rounded-xl border border-orange-100 bg-white/90 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
             >
+              <option value="" disabled hidden>
+                Select source station
+              </option>
               {STATIONS.map((s) => (
                 <option key={s.code} value={s.code}>
                   {s.name} ({s.code})
@@ -71,7 +79,10 @@ function FavoritesPage() {
               onChange={(e) => setTo(e.target.value)}
               className="w-full rounded-xl border border-orange-100 bg-white/90 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
             >
-              {STATIONS.filter((s) => s.code !== from).map((s) => (
+              <option value="" disabled hidden>
+                Select destination station
+              </option>
+              {STATIONS.filter((s) => !from || s.code !== from).map((s) => (
                 <option key={s.code} value={s.code}>
                   {s.name} ({s.code})
                 </option>
@@ -80,7 +91,8 @@ function FavoritesPage() {
           </Field>
           <button
             onClick={add}
-            className="bg-railway-gradient inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-soft"
+            disabled={!from || !to || from === to}
+            className="bg-railway-gradient inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-soft disabled:opacity-60 disabled:cursor-not-allowed transition hover:shadow-glow active:scale-[0.98]"
           >
             <FaPlus /> Add route
           </button>
@@ -90,10 +102,10 @@ function FavoritesPage() {
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         {favs.length === 0 ? (
           <div className="glass col-span-full rounded-3xl p-10 text-center shadow-soft">
-            <div className="bg-railway-gradient mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-white">
+            <div className="bg-railway-gradient mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-sm">
               <FaHeart />
             </div>
-            <h2 className="mt-4 font-[Sora] text-xl font-bold">No favorites yet</h2>
+            <h2 className="mt-4 font-[Sora] text-xl font-bold text-orange-950">No favorites yet</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Add the routes you ride most for one-tap bookings.
             </p>
@@ -109,11 +121,11 @@ function FavoritesPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="bg-railway-gradient flex h-10 w-10 items-center justify-center rounded-xl text-white">
+                    <div className="bg-railway-gradient flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-sm">
                       <FaTrain />
                     </div>
                     <div>
-                      <div className="font-[Sora] text-lg font-bold">
+                      <div className="font-[Sora] text-lg font-bold text-orange-950">
                         {fromS.name} → {toS.name}
                       </div>
                       <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -128,7 +140,7 @@ function FavoritesPage() {
                         refresh();
                       }
                     }}
-                    className="rounded-full bg-rose-50 p-2 text-rose-600 hover:bg-rose-100"
+                    className="rounded-full bg-rose-50 p-2 text-rose-600 hover:bg-rose-100 transition active:scale-95"
                     aria-label="Remove"
                   >
                     <FaTrash className="h-3 w-3" />
@@ -137,9 +149,10 @@ function FavoritesPage() {
                 <div className="mt-4 flex gap-2">
                   <Link
                     to="/dashboard/journey"
-                    className="bg-railway-gradient inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold text-white shadow-soft"
+                    search={{ from: f.fromCode, to: f.toCode }}
+                    className="bg-railway-gradient inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-white shadow-soft transition hover:shadow-glow active:scale-[0.98]"
                   >
-                    Book again <FaArrowRight className="h-3 w-3" />
+                    Book Again
                   </Link>
                 </div>
               </div>

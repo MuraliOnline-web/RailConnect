@@ -74,6 +74,9 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const matches = useRouterState({ select: (s) => s.matches });
+  const activeMatch = matches[matches.length - 1];
+  const matchKey = activeMatch?.id ?? pathname;
   const [open, setOpen] = useState(false);
 
   useScrollLock(open);
@@ -245,7 +248,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         {/* Content */}
         <main className="relative min-w-0 flex-1">
           <motion.div
-            key={pathname}
+            key={matchKey}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}

@@ -13,8 +13,14 @@ import { savePaymentDraft } from "../../lib/payment";
 import { formatINR } from "../../lib/currency";
 
 export const Route = createFileRoute("/dashboard/journey")({
-  head: () => ({ meta: [{ title: "Journey ticket · RailConnect" }] }),
-  validateSearch: (s: Record<string, unknown>) => ({
+  head: () => ({ meta: [{ title: "Journey Ticket · RailConnect" }] }),
+  validateSearch: (s: Record<string, unknown>): {
+    from?: string;
+    to?: string;
+    category?: TrainCategory;
+    adults?: number;
+    children?: number;
+  } => ({
     from: typeof s.from === "string" ? s.from : undefined,
     to: typeof s.to === "string" ? s.to : undefined,
     category: typeof s.category === "string" ? (s.category as TrainCategory) : undefined,
@@ -28,21 +34,23 @@ function JourneyPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const prefill = Route.useSearch();
-  const [from, setFrom] = useState(prefill.from ?? "AD");
-  const [to, setTo] = useState(prefill.to ?? "CCG");
+  const isValidStation = (code: string) => STATIONS.some((s) => s.code === code);
+  const [from, setFrom] = useState(prefill.from && isValidStation(prefill.from) ? prefill.from : "");
+  const [to, setTo] = useState(prefill.to && isValidStation(prefill.to) ? prefill.to : "");
   const [category, setCategory] = useState<TrainCategory>(prefill.category ?? "passenger");
   const [adults, setAdults] = useState(prefill.adults ?? 1);
   const [children, setChildren] = useState(prefill.children ?? 0);
   const [season, setSeason] = useState(false);
   const [delivery, setDelivery] = useState<"digital" | "print">("digital");
   const [loading, setLoading] = useState(false);
+  const [favSaved, setFavSaved] = useState(false);
 
   const type = season ? "season" : "journey";
   const classType: "1st" | "2nd" = "2nd";
-  const fare = useMemo(
-    () => calcFare({ fromCode: from, toCode: to, type, classType, adults, children, category }),
-    [from, to, type, adults, children, category],
-  );
+  const fare = useMemo(() => {
+    if (!from || !to) return 0;
+    return calcFare({ fromCode: from, toCode: to, type, classType, adults, children, category });
+  }, [from, to, type, adults, children, category]);
 
   const fromS = STATIONS.find((s) => s.code === from);
   const toS = STATIONS.find((s) => s.code === to);
@@ -78,6 +86,10 @@ function JourneyPage() {
       toCode: to,
       createdAt: new Date().toISOString(),
     });
+    setFavSaved(true);
+    setTimeout(() => {
+      setFavSaved(false);
+    }, 2000);
   };
 
   const balance = user ? getWallet(user.id) : 0;
@@ -86,16 +98,10 @@ function JourneyPage() {
     <DashboardShell>
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">Journey ticket</h1>
+          <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">Journey Ticket</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Single trip or monthly season pass — instantly issued.
           </p>
-        </div>
-        <div className="hidden rounded-2xl bg-white/80 px-4 py-2 text-right shadow-soft sm:block">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Wallet
-          </div>
-          <div className="font-[Sora] text-lg font-bold text-orange-700">{formatINR(balance)}</div>
         </div>
       </div>
 
@@ -104,30 +110,30 @@ function JourneyPage() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSeason(false)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
+              className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition ${
                 !season
                   ? "bg-railway-gradient text-white shadow-soft"
                   : "bg-white/80 text-foreground/70"
               }`}
             >
-              Single journey
+              Single Journey
             </button>
             <button
               onClick={() => setSeason(true)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
+              className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition ${
                 season
                   ? "bg-railway-gradient text-white shadow-soft"
                   : "bg-white/80 text-foreground/70"
               }`}
             >
-              Monthly season
+              Monthly Season
             </button>
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-foreground/70">
-                Choose ticket type
+              <div className="mb-2 text-xs font-bold uppercase tracking-wider text-orange-950/70">
+                Choose Ticket Type
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <DeliveryOption
@@ -147,8 +153,8 @@ function JourneyPage() {
               </div>
             </div>
             <div className="sm:col-span-2">
-              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-foreground/70">
-                Train category
+              <div className="mb-2 text-xs font-bold uppercase tracking-wider text-orange-950/70">
+                Train Category
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
                 {(["passenger", "mail_express", "superfast"] as const).map((c) => (
@@ -194,9 +200,15 @@ function JourneyPage() {
 
           <button
             onClick={onFav}
-            className="mt-5 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white px-4 py-2 text-xs font-semibold text-orange-700 hover:bg-orange-50"
+            disabled={!from || !to}
+            className={`mt-5 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition ${
+              favSaved
+                ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                : "border-orange-200 bg-white text-orange-700 hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            }`}
           >
-            <FaHeart /> Save as favorite
+            <FaHeart />
+            {favSaved ? "Saved as favorite!" : "Save as favorite"}
           </button>
         </div>
 
@@ -204,28 +216,51 @@ function JourneyPage() {
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Booking summary
           </div>
-          <div className="mt-4 flex items-center justify-between">
-            <div>
-              <div className="font-[Sora] text-xl font-bold">{fromS?.name ?? "—"}</div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                {fromS?.code ?? ""}
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="truncate font-[Sora] text-lg font-bold text-foreground">
+                {fromS ? `${fromS.name} (${fromS.code})` : "—"}
               </div>
             </div>
-            <div className="bg-railway-gradient flex h-9 w-9 items-center justify-center rounded-full text-white">
+            <div className="bg-railway-gradient flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white shadow-soft">
               <FaTrain />
             </div>
-            <div className="text-right">
-              <div className="font-[Sora] text-xl font-bold">{toS?.name ?? "—"}</div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                {toS?.code ?? ""}
+            <div className="min-w-0 flex-1 text-right">
+              <div className="truncate font-[Sora] text-lg font-bold text-foreground">
+                {toS ? `${toS.name} (${toS.code})` : "—"}
               </div>
             </div>
           </div>
           <div className="my-5 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
-          <Row k="Type" v={type} />
-          <Row k="Category" v={CATEGORY_LABEL[category]} />
-          <Row k="Passengers" v={`${adults} adult · ${children} child`} />
-          <Row k="Line" v={fromS?.line ?? "—"} />
+          
+          <div className="space-y-[18px]">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Type</span>
+              <span className="font-semibold capitalize text-foreground">
+                {type === "season" ? "Season" : "Journey"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Category</span>
+              <span className="font-semibold text-foreground">
+                {CATEGORY_LABEL[category]}
+              </span>
+            </div>
+            <div className="flex items-start justify-between text-sm">
+              <span className="text-muted-foreground">Passengers</span>
+              <div className="flex flex-col items-end text-right font-semibold text-foreground">
+                <span>{adults} Adult</span>
+                <span>{children} Child</span>
+              </div>
+            </div>
+            <div className="pt-1 flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Line</span>
+              <span className="font-semibold capitalize text-foreground">
+                {fromS?.line ?? "—"}
+              </span>
+            </div>
+          </div>
+
           <div className="mt-5 rounded-2xl bg-orange-50 p-4">
             <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">
               Total fare
@@ -236,8 +271,8 @@ function JourneyPage() {
           </div>
           <button
             onClick={onBook}
-            disabled={loading}
-            className="bg-railway-gradient mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-soft transition hover:shadow-glow disabled:opacity-70"
+            disabled={loading || !from || !to}
+            className="bg-railway-gradient mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-soft transition hover:shadow-glow disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? "Issuing ticket…" : "Confirm & pay"} <FaArrowRight className="h-3.5 w-3.5" />
           </button>
@@ -250,7 +285,7 @@ function JourneyPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70">
+      <div className="mb-1.5 text-xs font-bold uppercase tracking-wider text-orange-950/70">
         {label}
       </div>
       {children}

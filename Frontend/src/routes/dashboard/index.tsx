@@ -86,15 +86,15 @@ function DashboardHome() {
       </section>
 
       <section className="mt-6 grid grid-cols-2 gap-3 auto-rows-fr sm:grid-cols-3 sm:gap-4">
-        <StatCard icon={<FaTicket />} label="Active tickets" value={active.length.toString()} />
+        <StatCard icon={<FaTicket />} label="Active Tickets" value={active.length.toString()} />
         <StatCard
           icon={<FaCalendarCheck />}
-          label="Total bookings"
+          label="Total Bookings"
           value={tickets.length.toString()}
         />
         <StatCard
           icon={<FaClockRotateLeft />}
-          label="Spent this month"
+          label="Spent This Month"
           value={formatINR(monthSpent)}
         />
         <WalletCard balance={balance} lastRecharge={lastRecharge} className="sm:hidden" />
@@ -104,36 +104,37 @@ function DashboardHome() {
       <section className="mt-6 grid gap-5 lg:grid-cols-3">
         <div className="glass relative overflow-hidden rounded-3xl p-6 shadow-soft lg:col-span-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              <FaTicket /> Active ticket
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-orange-950/70">
+              <FaTicket className="text-orange-500" /> Active Ticket
             </div>
-            <Link to="/dashboard/qr" className="btn-premium-action">
-              Open QR →
+            <Link to="/dashboard/tickets" className="btn-premium-action">
+              Open QR
             </Link>
           </div>
           {activeTicket ? (
             <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
-                <div className="bg-railway-gradient flex h-12 w-12 items-center justify-center rounded-2xl text-white">
+                <div className="bg-railway-gradient flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-sm">
                   <FaQrcode />
                 </div>
                 <div>
-                  <div className="font-[Sora] text-xl font-bold">
+                  <div className="font-[Sora] text-xl font-bold text-orange-950">
                     {activeTicket.from} → {activeTicket.to}
                   </div>
                   <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                     {activeTicket.type} · {activeTicket.line} · {activeTicket.pnr}
                   </div>
-                  <div className="mt-0.5 text-xs text-emerald-700">
+                  <div className="mt-0.5 text-xs font-semibold text-emerald-700">
                     Valid until {new Date(activeTicket.validUntil).toLocaleString()}
                   </div>
                 </div>
               </div>
               <Link
                 to="/dashboard/qr"
-                className="bg-railway-gradient inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-soft"
+                search={{ id: activeTicket.id } as never}
+                className="bg-railway-gradient inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:shadow-glow"
               >
-                Show QR <FaArrowRight className="h-3 w-3" />
+                Show QR
               </Link>
             </div>
           ) : (
@@ -157,9 +158,9 @@ function DashboardHome() {
       <section className="mt-6 grid gap-5">
         <div className="glass rounded-3xl p-6 shadow-soft">
           <div className="flex items-center justify-between">
-            <h2 className="font-[Sora] text-lg font-bold">Recent routes</h2>
+            <h2 className="font-[Sora] text-lg font-bold text-orange-950">Recent Routes</h2>
             <Link to="/dashboard/history" className="btn-premium-action">
-              View all →
+              View All
             </Link>
           </div>
           <div className="mt-4 space-y-3">
@@ -169,11 +170,11 @@ function DashboardHome() {
                 className="flex items-center justify-between rounded-2xl bg-white/80 p-3.5 transition hover:bg-white"
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-railway-gradient flex h-10 w-10 items-center justify-center rounded-xl text-white">
+                  <div className="bg-railway-gradient flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-sm">
                     <FaTrain />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold">
+                    <div className="text-sm font-bold text-orange-950">
                       {t.from} → {t.to}
                     </div>
                     <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -181,12 +182,19 @@ function DashboardHome() {
                     </div>
                   </div>
                 </div>
-                <Link
-                  to="/dashboard/journey"
-                  className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 hover:bg-orange-100"
-                >
-                  Book again
-                </Link>
+                {(() => {
+                  const fromCode = t.fromCode || STATIONS.find((s) => s.name === t.from)?.code || "";
+                  const toCode = t.toCode || STATIONS.find((s) => s.name === t.to)?.code || "";
+                  return (
+                    <Link
+                      to="/dashboard/journey"
+                      search={{ from: fromCode, to: toCode }}
+                      className="rounded-full bg-orange-50 px-3.5 py-1.5 text-xs font-bold text-orange-700 transition hover:bg-orange-100 hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      Book Again
+                    </Link>
+                  );
+                })()}
               </div>
             ))}
             {recentRoutes.length === 0 && (
@@ -198,13 +206,13 @@ function DashboardHome() {
         </div>
       </section>
 
-      {/* Recent transactions */}
+      {/* Recent Transactions */}
       <section className="mt-6 grid gap-5 lg:grid-cols-3">
         <div className="glass rounded-3xl p-6 shadow-soft lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="font-[Sora] text-lg font-bold">Recent transactions</h2>
+            <h2 className="font-[Sora] text-lg font-bold text-orange-950">Recent Transactions</h2>
             <Link to="/dashboard/transactions" className="btn-premium-action">
-              View all →
+              View All
             </Link>
           </div>
           <div className="mt-4 space-y-3">
@@ -215,22 +223,22 @@ function DashboardHome() {
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl text-white ${t.amount >= 0 ? "bg-emerald-500" : "bg-railway-gradient"}`}
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-sm ${t.amount >= 0 ? "bg-emerald-500" : "bg-railway-gradient"}`}
                   >
                     <FaReceipt />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold capitalize">{t.note}</div>
+                    <div className="text-sm font-bold text-orange-950 capitalize">{t.note}</div>
                     <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                       {t.method} · {t.ref}
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className={`text-sm font-bold ${t.amount >= 0 ? "text-emerald-600" : ""}`}>
+                  <div className={`text-sm font-extrabold ${t.amount >= 0 ? "text-emerald-600" : "text-orange-950"}`}>
                     {formatSignedINR(t.amount)}
                   </div>
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-emerald-700">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
                     {t.status}
                   </div>
                 </div>
@@ -246,9 +254,9 @@ function DashboardHome() {
 
         <div className="glass rounded-3xl p-6 shadow-soft">
           <div className="flex items-center justify-between">
-            <h2 className="font-[Sora] text-lg font-bold">Favorites</h2>
+            <h2 className="font-[Sora] text-lg font-bold text-orange-950">Favorites</h2>
             <Link to="/dashboard/favorites" className="btn-premium-action">
-              Manage →
+              Manage
             </Link>
           </div>
           <div className="mt-4 space-y-3">
@@ -257,19 +265,17 @@ function DashboardHome() {
               const b = STATIONS.find((s) => s.code === f.toCode);
               if (!a || !b) return null;
               return (
-                <Link
+                <div
                   key={f.id}
-                  to="/dashboard/journey"
-                  className="flex items-center justify-between rounded-2xl bg-white/80 p-3 transition hover:bg-white"
+                  className="flex items-center rounded-2xl bg-white/80 p-3.5"
                 >
-                  <div className="flex items-center gap-2">
-                    <FaHeart className="text-rose-500" />
-                    <div className="text-sm font-semibold">
+                  <div className="flex items-center gap-2.5">
+                    <FaHeart className="text-rose-500 shrink-0" />
+                    <div className="text-sm font-bold text-orange-950">
                       {a.name} → {b.name}
                     </div>
                   </div>
-                  <FaArrowRight className="h-3 w-3 text-orange-500" />
-                </Link>
+                </div>
               );
             })}
             {favs.length === 0 && (
@@ -295,44 +301,60 @@ function WalletCard({
 }) {
   return (
     <div
-      className={`bg-railway-gradient relative flex h-full flex-col justify-between overflow-hidden rounded-3xl p-4 text-white shadow-glow sm:p-6 ${className}`}
+      className={`bg-railway-gradient relative flex h-full flex-col justify-between overflow-hidden rounded-3xl p-5 text-white shadow-glow sm:p-6 ${className}`}
     >
       <div
         aria-hidden
-        className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/15 blur-2xl"
+        className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/15 blur-2xl pointer-events-none"
       />
-      <div className="flex flex-col sm:flex-row sm:items-stretch sm:justify-between h-full gap-4">
-        <div className="flex flex-col justify-between flex-1">
-          <div>
-            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-white/85 sm:text-xs">
-              <FaWallet /> Wallet balance
-            </div>
-            <div className="mt-2 flex flex-wrap items-baseline gap-2.5">
+      <div className="flex flex-col justify-between h-full gap-4">
+        {/* Header Row */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-white/90 sm:text-xs">
+            <FaWallet className="opacity-95" /> Wallet Balance
+          </div>
+        </div>
+
+        {/* Middle Content Row: Balance and Large Icon */}
+        <div className="flex items-center justify-between my-auto py-1">
+          <div className="flex flex-col gap-1 sm:gap-1.5">
+            <div className="flex flex-wrap items-baseline gap-2">
               <span className="font-[Sora] text-3xl font-extrabold leading-none sm:text-4xl">
                 {formatINR(balance)}
               </span>
               {balance < 50 && (
-                <span className="inline-block rounded-full bg-amber-400/90 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-950">
+                <span className="inline-block rounded-full bg-amber-400/90 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-950 shadow-sm">
                   Low balance
                 </span>
               )}
             </div>
+            <div className="hidden sm:block text-[11px] text-white/80 font-medium">
+              {lastRecharge
+                ? `Last recharge +${formatINR(lastRecharge.amount)} · ${new Date(lastRecharge.createdAt).toLocaleDateString()}`
+                : "No recharges yet"}
+            </div>
           </div>
-          <div className="mt-3 text-[10px] text-white/80 sm:mt-4 sm:text-[11px]">
+
+          {/* Large glassmorphic wallet icon container on right */}
+          <div className="hidden sm:flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 shadow-inner shrink-0 transition-transform duration-300 hover:scale-105">
+            <FaWallet className="h-6 w-6 text-white/95" />
+          </div>
+        </div>
+
+        {/* Footer/Action Row with border separation on desktop */}
+        <div className="flex flex-col items-center justify-center gap-3 sm:border-t sm:border-white/10 sm:pt-3.5 w-full">
+          {/* Supporting info shown here on mobile */}
+          <div className="sm:hidden text-[10px] text-white/80 font-medium text-center">
             {lastRecharge
               ? `Last recharge +${formatINR(lastRecharge.amount)} · ${new Date(lastRecharge.createdAt).toLocaleDateString()}`
               : "No recharges yet"}
           </div>
-        </div>
-        <div className="flex flex-row items-center justify-between sm:flex-col sm:items-end sm:justify-between shrink-0 gap-3">
-          <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 shadow-inner">
-            <FaWallet className="h-5 w-5 text-white/90" />
-          </div>
+          
           <Link
             to="/dashboard/wallet"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-white px-4 py-2 text-[10px] font-bold text-orange-700 shadow-soft hover:bg-orange-50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 sm:text-xs"
+            className="w-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[10px] font-bold text-orange-700 shadow-soft hover:bg-orange-50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 sm:text-xs"
           >
-            <FaPlus className="h-3 w-3" /> Recharge wallet
+            <FaPlus className="h-3 w-3" /> Recharge Wallet
           </Link>
         </div>
       </div>
@@ -344,14 +366,14 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
   return (
     <div className="glass flex h-full flex-col justify-between rounded-3xl p-3.5 shadow-soft sm:p-5">
       <div className="flex items-center justify-between">
-        <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-normal text-muted-foreground sm:whitespace-normal sm:text-xs sm:tracking-wider">
+        <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-orange-950/70 sm:whitespace-normal sm:text-xs">
           {label}
         </span>
-        <span className="bg-railway-gradient flex h-7 w-7 items-center justify-center rounded-xl text-white sm:h-9 sm:w-9">
+        <span className="bg-railway-gradient flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-white sm:h-9 sm:w-9 shadow-sm">
           {icon}
         </span>
       </div>
-      <div className="mt-2 font-[Sora] text-2xl font-extrabold tracking-tight sm:mt-3 sm:text-3xl">
+      <div className="mt-2 font-[Sora] text-2xl font-extrabold tracking-tight text-orange-950 sm:mt-3 sm:text-3xl">
         {value}
       </div>
     </div>

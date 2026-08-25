@@ -10,7 +10,7 @@ import { downloadTicketAndNotify } from "../../lib/ticketPdf";
 import { formatINR } from "../../lib/currency";
 
 export const Route = createFileRoute("/dashboard/payment-success")({
-  head: () => ({ meta: [{ title: "Payment successful · RailConnect" }] }),
+  head: () => ({ meta: [{ title: "Payment Successful · RailConnect" }] }),
   component: SuccessPage,
 });
 
@@ -47,8 +47,8 @@ function SuccessPage() {
           >
             <FaCheck className="h-7 w-7" />
           </motion.div>
-          <h1 className="mt-4 font-[Sora] text-3xl font-extrabold tracking-tight">
-            Payment successful
+          <h1 className="mt-4 font-[Sora] text-3xl font-extrabold tracking-tight text-orange-950">
+            Payment Successful
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Your RailConnect ticket has been issued. Have a safe journey.
@@ -79,11 +79,11 @@ function SuccessPage() {
               <KV k="Method" v={methodLabel} />
               <KV k="Category" v={CATEGORY_LABEL[receipt.category]} />
               <KV k="Passengers" v={`${receipt.adults}A · ${receipt.children}C`} />
-              <KV k="Paid at" v={paidAt.toLocaleString()} />
+              <KV k="Paid At" v={paidAt.toLocaleString()} />
             </div>
             <div className="mt-5 rounded-xl bg-orange-50 p-4">
-              <div className="text-xs font-semibold uppercase tracking-wider text-orange-700">
-                Amount paid
+              <div className="text-xs font-bold uppercase tracking-wider text-orange-700">
+                Amount Paid
               </div>
               <div className="font-[Sora] text-3xl font-extrabold text-railway-gradient">
                 {formatINR(receipt.amount)}
@@ -96,7 +96,7 @@ function SuccessPage() {
               to={receipt.delivery === "digital" ? "/dashboard/qr" : "/dashboard/tickets"}
               className="bg-railway-gradient flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-soft hover:shadow-glow"
             >
-              <FaTicket /> View ticket
+              <FaTicket /> View Ticket
             </Link>
             <button
               onClick={() => ticket && downloadTicketAndNotify(ticket, user?.id)}
