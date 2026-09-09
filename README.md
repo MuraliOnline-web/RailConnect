@@ -1,4 +1,4 @@
-﻿# RailConnect
+# RailConnect
 
 **RailConnect** is a modern, mobile-first commuter rail ticketing platform that lets passengers book unreserved suburban rail tickets, season passes, and platform tickets — all in seconds. The project is structured as a monorepo with a single `Frontend` directory containing the complete web application.
 
