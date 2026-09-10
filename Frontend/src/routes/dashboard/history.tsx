@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { FaMagnifyingGlass, FaTrain, FaArrowRight } from "react-icons/fa6";
+import { FaTrain, FaArrowRight } from "react-icons/fa6";
 import { SearchField } from "../../components/SearchField";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";

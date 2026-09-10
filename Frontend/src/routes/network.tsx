@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { FaMagnifyingGlass, FaMapLocationDot } from "react-icons/fa6";
+import { FaMapLocationDot } from "react-icons/fa6";
 import { SearchField } from "../components/SearchField";
 import { SiteNav, SiteFooter, PageTransition } from "../components/SiteChrome";
 

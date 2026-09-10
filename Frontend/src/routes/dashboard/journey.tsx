@@ -1,8 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { FaArrowRight, FaTrain, FaHeart } from "react-icons/fa6";
-import { FaQrcode, FaFilePdf } from "react-icons/fa6";
+import { FaArrowRight, FaTrain, FaHeart, FaQrcode, FaFilePdf } from "react-icons/fa6";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";
 import { STATIONS, calcFare, CATEGORY_LABEL, type TrainCategory } from "../../lib/tickets";
@@ -289,14 +288,6 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
         {label}
       </div>
       {children}
-    </div>
-  );
-}
-function Row({ k, v }: { k: string; v: string }) {
-  return (
-    <div className="flex items-center justify-between py-1 text-sm">
-      <span className="text-muted-foreground">{k}</span>
-      <span className="font-semibold capitalize">{v}</span>
     </div>
   );
 }

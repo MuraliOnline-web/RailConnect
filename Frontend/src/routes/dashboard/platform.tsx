@@ -25,7 +25,7 @@ function PlatformPage() {
       toCode: station,
       type: "platform",
       classType: "2nd",
-      adults: count,
+      adults: 1,
       children: 0,
     }) * count;
 

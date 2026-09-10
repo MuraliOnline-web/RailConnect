@@ -1,10 +1,7 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { FaTrain, FaShieldHalved, FaBoltLightning, FaArrowRight } from "react-icons/fa6";
-import { RailLogo } from "../components/RailLogo";
 import { SiteNav, SiteFooter, PageTransition } from "../components/SiteChrome";
-import { useEffect } from "react";
-import { useAuth } from "../lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,12 +18,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Landing() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  useEffect(() => {
-    if (user) navigate({ to: "/dashboard" });
-  }, [user, navigate]);
-
   return (
     <div className="relative min-h-screen overflow-x-clip bg-background">
       {/* Ambient gradient blobs */}

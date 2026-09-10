@@ -1,8 +1,7 @@
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
 /**
- * Shared search input. Every search box in the app uses this so they all
- * inherit the same premium animated orange border (see .premium-border).
+ * Shared search input used across the entire app. Uses .static-search-box — no animated border.
  */
 export function SearchField({
   value,
