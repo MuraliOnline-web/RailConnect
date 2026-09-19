@@ -26,19 +26,19 @@ import { useScrollLock } from "../hooks/use-scroll-lock";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: FaHouse, exact: true, group: "main" },
-  { to: "/dashboard/journey", label: "Journey ticket", icon: FaTrain, exact: false, group: "book" },
+  { to: "/dashboard/journey", label: "Journey Ticket", icon: FaTrain, exact: false, group: "book" },
   {
     to: "/dashboard/platform",
-    label: "Platform ticket",
+    label: "Platform Ticket",
     icon: FaTrainSubway,
     exact: false,
     group: "book",
   },
-  { to: "/dashboard/qr", label: "QR ticket", icon: FaQrcode, exact: false, group: "book" },
-  { to: "/dashboard/tickets", label: "My tickets", icon: FaTicket, exact: false, group: "manage" },
+  { to: "/dashboard/qr", label: "QR Ticket", icon: FaQrcode, exact: false, group: "book" },
+  { to: "/dashboard/tickets", label: "My Tickets", icon: FaTicket, exact: false, group: "manage" },
   {
     to: "/dashboard/history",
-    label: "Booking history",
+    label: "Booking History",
     icon: FaClockRotateLeft,
     exact: false,
     group: "manage",
@@ -61,7 +61,7 @@ const NAV = [
   },
   {
     to: "/dashboard/favorites",
-    label: "Favorite routes",
+    label: "Favorite Routes",
     icon: FaHeart,
     exact: false,
     group: "manage",

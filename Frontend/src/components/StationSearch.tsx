@@ -104,11 +104,7 @@ export function StationSearch({
 
   return (
     <div ref={wrapRef} className="relative">
-      <div
-        className={`static-search-box w-full ${
-          open ? "ring-4 ring-orange-500/15 border-orange-500/70 shadow-md" : ""
-        }`}
-      >
+      <div className="static-search-box w-full">
         <FaMagnifyingGlass className="search-icon" />
         <input
           ref={inputRef}

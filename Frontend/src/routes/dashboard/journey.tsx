@@ -97,7 +97,9 @@ function JourneyPage() {
     <DashboardShell>
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">Journey Ticket</h1>
+          <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">
+            <span className="text-railway-gradient">J</span>ourney <span className="text-railway-gradient">T</span>icket
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Single trip or monthly season pass — instantly issued.
           </p>
@@ -303,7 +305,7 @@ function Counter({
   min?: number;
 }) {
   return (
-    <div className="flex flex-1 items-center justify-between rounded-xl border border-orange-100 bg-white/80 px-3 py-2">
+    <div className="flex flex-1 items-center justify-between rounded-xl border border-black bg-white/80 px-3 py-2">
       <div>
         <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
         <div className="font-[Sora] text-lg font-bold leading-none">{value}</div>

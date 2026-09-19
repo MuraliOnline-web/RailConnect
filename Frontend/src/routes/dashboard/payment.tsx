@@ -140,9 +140,11 @@ function PaymentPage() {
 
   const summary = useMemo(() => {
     if (!draft) return { base: 0, categoryCharges: 0, conv: 0, total: 0 };
-    const surcharge = CATEGORY_SURCHARGE[draft.category];
-    const categoryCharges =
-      surcharge * Math.max(1, draft.adults) + Math.round(surcharge * 0.5) * draft.children;
+    let categoryCharges = 0;
+    if (draft.category) {
+      const surcharge = CATEGORY_SURCHARGE[draft.category];
+      categoryCharges = surcharge * Math.max(1, draft.adults) + Math.round(surcharge * 0.5) * draft.children;
+    }
     const seasonMult = draft.type === "season" ? 22 : 1;
     const base = draft.fare - categoryCharges * seasonMult;
     const conv = CONVENIENCE_FEE;
@@ -201,7 +203,7 @@ function PaymentPage() {
               ? "Card"
               : "UPI",
       ref: txnId,
-      note: `${draft.type} · ${CATEGORY_LABEL[draft.category]} · ${draft.fromName} → ${draft.toName}`,
+      note: `${draft.type} ${draft.category ? '· ' + CATEGORY_LABEL[draft.category] + ' ' : ''}· ${draft.fromName} → ${draft.toName}`,
       createdAt: now.toISOString(),
     });
     if (method === "wallet") setWallet(user.id, round2(balance - summary.total));
@@ -213,10 +215,10 @@ function PaymentPage() {
       amount: summary.total,
       fromName: ticket.from,
       toName: ticket.to,
-      category: ticket.category!,
+      category: ticket.category,
       adults: ticket.adults,
       children: ticket.children,
-      delivery: ticket.delivery!,
+      delivery: ticket.delivery,
       paidAt: now.toISOString(),
     });
     clearPaymentDraft();
@@ -298,10 +300,10 @@ function PaymentPage() {
             </div>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            <Mini k="Category" v={CATEGORY_LABEL[draft.category]} />
+            <Mini k="Category" v={draft.category ? CATEGORY_LABEL[draft.category] : "-"} />
             <Mini k="Passengers" v={`${draft.adults}A · ${draft.children}C`} />
             <Mini k="Type" v={draft.type} />
-            <Mini k="Delivery" v={draft.delivery === "digital" ? "QR" : "PDF"} />
+            <Mini k="Delivery" v={draft.delivery === "print" ? "PDF" : "QR"} />
           </div>
 
           <div className="mt-7">

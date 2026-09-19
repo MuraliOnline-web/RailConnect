@@ -2,7 +2,7 @@ import type { TrainCategory } from "./tickets";
 
 export type PaymentDraft = {
   userId: string;
-  type: "journey" | "season";
+  type: "journey" | "season" | "platform";
   fromCode: string;
   toCode: string;
   fromName: string;
@@ -12,8 +12,8 @@ export type PaymentDraft = {
   adults: number;
   children: number;
   fare: number;
-  delivery: "digital" | "print";
-  category: TrainCategory;
+  delivery?: "digital" | "print";
+  category?: TrainCategory;
   createdAt: string;
 };
 
@@ -69,10 +69,10 @@ export type Receipt = {
   amount: number;
   fromName: string;
   toName: string;
-  category: TrainCategory;
+  category?: TrainCategory;
   adults: number;
   children: number;
-  delivery: "digital" | "print";
+  delivery?: "digital" | "print";
   paidAt: string;
 };
 
