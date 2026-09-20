@@ -1,287 +1,512 @@
 # RailConnect
 
-**RailConnect** is a modern, mobile-first commuter rail ticketing platform that lets passengers book unreserved suburban rail tickets, season passes, and platform tickets — all in seconds. The project is structured as a monorepo with a single `Frontend` directory containing the complete web application.
+## Overview
+
+RailConnect is a modern, mobile-first railway ticketing frontend inspired by commuter/unreserved railway ticketing workflows.
+
+**IMPORTANT NOTE:** RailConnect is currently a frontend-focused project. It is **not** the official Indian Railways, IRCTC, UTS, or RailOne application. There is currently no backend, real production API, real payment processing, or railway verification integration. All current data, authentication, and logic are simulated purely through frontend state and routing.
 
 ---
 
-## Frontend
+## Current Project Status
 
-The frontend is a full-stack, server-side rendered (SSR) React application built with **TanStack Start** and deployed via **Nitro** to edge runtimes (Cloudflare Workers by default). It is located in the `Frontend/` directory.
-
----
-
-### Tech Stack
-
-| Layer | Technology | Version |
-|---|---|---|
-| Framework | TanStack Start | `^1.167.x` |
-| UI Library | React | `^19.2.0` |
-| Language | TypeScript | `^5.8.3` |
-| Styling | Tailwind CSS v4 | `^4.2.1` |
-| Component Library | shadcn/ui (New York style) | — |
-| Routing | TanStack Router | `^1.168.x` |
-| Server-side Fetching | TanStack Query | `^5.83.0` |
-| Build Tool | Vite | `^7.3.1` |
-| SSR / Edge Server | Nitro | `3.0.x-beta` |
-| Animations | Framer Motion | `^12.40.0` |
-| Charts | Recharts | `^2.15.4` |
-| PDF Generation | jsPDF | `^4.2.1` |
-| Forms | React Hook Form + Zod | `^7.71.2` / `^3.24.2` |
-| Icons | Lucide React + React Icons | `^0.575.0` / `^5.6.0` |
-| Toast Notifications | Sonner | `^2.0.7` |
-| Date Utilities | date-fns | `^4.1.0` |
-| Package Manager | Bun (lockfile) / npm | — |
-| Linting | ESLint `^9.x` + TypeScript ESLint | — |
-| Formatting | Prettier | `^3.7.3` |
+- Frontend application is implemented.
+- Major booking/ticket/payment/dashboard flows are implemented.
+- Data currently uses client-side localStorage/sessionStorage.
+- Real backend persistence is not yet connected.
+- Real payment gateway integration is not yet connected.
+- Real railway/QR verification APIs are not yet connected.
+- The current application is suitable as a frontend/demo/portfolio implementation.
+- Production deployment with real users requires backend/API/auth/payment infrastructure.
 
 ---
 
-### Project Structure
+## Tech Stack
 
-```
+The project relies on a modern React ecosystem:
+
+- React 19
+- TypeScript
+- TanStack Start
+- TanStack Router
+- TanStack Query
+- Vite
+- Tailwind CSS v4
+- shadcn/ui
+- Framer Motion
+- Lucide React / React Icons
+- jsPDF
+- React Hook Form
+- Zod
+- Recharts
+- Sonner
+- date-fns
+- Nitro
+- ESLint
+- Prettier
+- npm/Bun support
+
+---
+
+## Project Structure
+
 Frontend/
 ├── src/
-│   ├── components/             # Shared application components
-│   │   ├── ui/                 # shadcn/ui primitives (46 components)
-│   │   ├── AuthShell.tsx       # Wrapper layout for auth pages
-│   │   ├── DashboardShell.tsx  # Sidebar + header layout for dashboard
-│   │   ├── NotificationBell.tsx  # Live notification icon with badge
-│   │   ├── RailLogo.tsx        # Brand logo component
-│   │   ├── SearchField.tsx     # Reusable input search field
-│   │   ├── SiteChrome.tsx      # Public-facing nav/header
-│   │   └── StationSearch.tsx   # Station autocomplete combobox
-│   ├── hooks/                  # Custom React hooks
-│   │   ├── use-mobile.tsx      # Responsive breakpoint detection hook
-│   │   └── use-scroll-lock.ts  # Prevents body scroll when modals open
-│   ├── lib/                    # Business logic & utilities
-│   │   ├── api/                # TanStack Start server functions (RPC layer)
-│   │   ├── auth.tsx            # AuthContext + AuthProvider (localStorage-backed)
-│   │   ├── captcha.ts          # CAPTCHA helper utilities
-│   │   ├── config.server.ts    # Server-only environment config (never sent to browser)
-│   │   ├── currency.ts         # Indian Rupee formatting helpers
-│   │   ├── error-capture.ts    # SSR error interception for h3/Nitro
-│   │   ├── error-page.ts       # Static HTML fallback for catastrophic SSR errors
-│   │   ├── favorites.ts        # Favorite routes persistence (localStorage)
-│   │   ├── notifications.ts    # In-app notification store (localStorage)
-│   │   ├── payment.ts          # Payment draft / receipt session helpers
-│   │   ├── refund.ts           # Refund calculation logic
-│   │   ├── ticketPdf.ts        # PDF ticket generation via jsPDF
-│   │   ├── tickets.ts          # Ticket CRUD, fare calculator, station data
-│   │   ├── utils.ts            # cn() class-merge utility
-│   │   └── wallet.ts           # Wallet balance & transaction persistence
-│   ├── routes/                 # File-based routing (TanStack Router)
-│   │   ├── __root.tsx          # Root layout: providers, SEO meta, fonts
-│   │   ├── index.tsx           # Landing / home page
-│   │   ├── about.tsx           # About page
-│   │   ├── login.tsx           # Login page
-│   │   ├── register.tsx        # Registration page
-│   │   ├── network.tsx         # Rail network map page
-│   │   ├── why.tsx             # "Why RailConnect" marketing page
-│   │   └── dashboard/          # Authenticated dashboard sub-routes
-│   │       ├── index.tsx                  # Dashboard home / quick-book
-│   │       ├── book.tsx                   # Ticket booking form
-│   │       ├── tickets.tsx                # My tickets list
-│   │       ├── ticket.tsx                 # Single ticket detail + QR code
-│   │       ├── journey.tsx                # Journey planner
-│   │       ├── payment.tsx                # Payment page (UPI / card / wallet)
-│   │       ├── payment-success.tsx        # Post-payment confirmation
-│   │       ├── wallet.tsx                 # Wallet balance & recharge
-│   │       ├── wallet-recharge-success.tsx  # Recharge confirmation
-│   │       ├── transactions.tsx           # Transaction history
-│   │       ├── refunds.tsx                # Refund requests
-│   │       ├── refund-success.tsx         # Refund confirmation
-│   │       ├── qr.tsx                     # Live QR code display
-│   │       ├── platform.tsx               # Platform ticket booking
-│   │       ├── favorites.tsx              # Favourite routes
-│   │       ├── history.tsx                # Travel history
-│   │       ├── notifications.tsx          # Notification centre
-│   │       ├── profile.tsx                # User profile & account settings
-│   │       └── settings.tsx               # App preferences
-│   ├── routeTree.gen.ts        # Auto-generated route tree (do not edit manually)
-│   ├── router.tsx              # Router factory with QueryClient context
-│   ├── server.ts               # SSR server entry – Nitro/h3 fetch handler
-│   ├── start.ts                # Client entry point (hydration)
-│   └── styles.css              # Global CSS – Tailwind v4 theme tokens + base styles
-├── components.json             # shadcn/ui CLI configuration
-├── vite.config.ts              # Vite config (via @lovable.dev/vite-tanstack-config)
-├── tsconfig.json               # TypeScript compiler configuration
-├── eslint.config.js            # ESLint flat config
-├── .prettierrc                 # Prettier formatting rules
-├── bunfig.toml                 # Bun package manager configuration
-└── package.json                # Dependencies, scripts, and resolutions
-```
+│   ├── components/
+│   ├── hooks/
+│   ├── lib/
+│   ├── routes/
+│   ├── routeTree.gen.ts
+│   ├── router.tsx
+│   ├── server.ts
+│   ├── start.ts
+│   └── styles.css
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── eslint.config.js
+├── components.json
+├── .gitignore
+└── ...
 
 ---
 
-### Architecture Overview
+## Application Routes
 
-#### SSR with TanStack Start + Nitro
+Public Routes:
+/
+/why
+/network
+/about
+/login
+/register
 
-The application uses **TanStack Start** — a full-stack React meta-framework — in SSR mode. Each page is rendered on the server and then hydrated on the client. The server entry point is `src/server.ts`, which wraps the TanStack Start server entry with custom Nitro/h3 error handling to prevent swallowed SSR exceptions from serving malformed JSON 500 responses.
-
-```
-Request → Nitro Edge Worker → src/server.ts → TanStack Start SSR → React → Hydrate Client
-```
-
-#### File-Based Routing
-
-Routing is handled by **TanStack Router** with file-based route discovery. The `src/routes/` directory maps directly to URL paths. The route tree is auto-generated into `src/routeTree.gen.ts` during development by the Vite plugin (`@tanstack/router-plugin`).
-
-| Route Path | File | Description |
-|---|---|---|
-| `/` | `routes/index.tsx` | Landing / marketing home |
-| `/about` | `routes/about.tsx` | About the platform |
-| `/login` | `routes/login.tsx` | Authenticated login |
-| `/register` | `routes/register.tsx` | New user registration |
-| `/network` | `routes/network.tsx` | Rail network map |
-| `/why` | `routes/why.tsx` | Why RailConnect page |
-| `/dashboard` | `routes/dashboard/index.tsx` | Dashboard home |
-| `/dashboard/book` | `routes/dashboard/book.tsx` | Ticket booking |
-| `/dashboard/tickets` | `routes/dashboard/tickets.tsx` | All tickets list |
-| `/dashboard/ticket` | `routes/dashboard/ticket.tsx` | Ticket detail + QR |
-| `/dashboard/journey` | `routes/dashboard/journey.tsx` | Journey planner |
-| `/dashboard/payment` | `routes/dashboard/payment.tsx` | Payment checkout |
-| `/dashboard/wallet` | `routes/dashboard/wallet.tsx` | Wallet management |
-| `/dashboard/transactions` | `routes/dashboard/transactions.tsx` | Transaction history |
-| `/dashboard/refunds` | `routes/dashboard/refunds.tsx` | Refund management |
-| `/dashboard/qr` | `routes/dashboard/qr.tsx` | QR code display |
-| `/dashboard/platform` | `routes/dashboard/platform.tsx` | Platform tickets |
-| `/dashboard/favorites` | `routes/dashboard/favorites.tsx` | Saved routes |
-| `/dashboard/notifications` | `routes/dashboard/notifications.tsx` | Notification centre |
-| `/dashboard/profile` | `routes/dashboard/profile.tsx` | User profile |
-| `/dashboard/settings` | `routes/dashboard/settings.tsx` | Settings page |
-
-#### State & Data Management
-
-- **TanStack Query** (`QueryClient`) is instantiated per-request in the router factory and injected into the route context. All data-fetching and caching flows through it.
-- **Auth state** is managed via a React Context (`AuthProvider` in `src/lib/auth.tsx`). User sessions are persisted in `localStorage` under the key `railconnect.auth.user`. All registered user accounts are stored under `railconnect.auth.users`.
-- **Tickets, wallet, transactions, notifications, and favourites** are all persisted in `localStorage` using dedicated utility modules under `src/lib/`.
-
-#### UI Component System
-
-The project uses **shadcn/ui** (New York style) with **Tailwind CSS v4**. All primitives are copied into `src/components/ui/` and are fully customisable. The design system is defined in `src/styles.css` using CSS variables for theming (light and dark mode support).
-
-**Fonts loaded from Google Fonts:**
-- **Inter** (weights 400–800) — body and UI text
-- **Sora** (weights 600–800) — brand headings
-
-**shadcn/ui components included (46 total):**
-accordion, alert-dialog, alert, aspect-ratio, avatar, badge, breadcrumb, button, calendar, card, carousel, chart, checkbox, collapsible, command, context-menu, dialog, drawer, dropdown-menu, form, hover-card, input-otp, input, label, menubar, navigation-menu, pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet, sidebar, skeleton, slider, sonner, switch, table, tabs, textarea, toggle-group, toggle, tooltip.
-
-#### Fare Calculation Engine
-
-Fares are computed entirely client-side in `src/lib/tickets.ts`. The engine supports:
-
-- **Ticket types**: Journey, Season Pass (×22 monthly multiplier), Platform (flat ₹10)
-- **Class**: 1st class and 2nd class with distinct base fares and per-station rates
-- **Passengers**: Separate adult and child rates
-- **Train categories with surcharges:**
-
-| Category | Surcharge |
-|---|---|
-| Passenger | ₹0 |
-| Mail / Express | ₹20 |
-| Superfast Express | ₹45 |
-
-**Station dataset** covers major Indian rail hubs across Western, Central, Harbour, South Central, Southern, South Western, Northern, and Eastern lines (e.g. Churchgate, CSMT, Secunderabad, Chennai Central, New Delhi, Howrah).
-
-#### Payment System
-
-The payment flow is session-based, using `sessionStorage` for draft and receipt data (`src/lib/payment.ts`). Supported payment methods:
-
-| Method | Group |
-|---|---|
-| Google Pay, PhonePe, Paytm, BHIM UPI | UPI |
-| RailConnect Wallet | Wallet |
-| Credit Card, Debit Card | Card |
-| Net Banking (50+ banks) | Net Banking |
-
-A **₹5 convenience fee** is applied to all non-wallet payments (`CONVENIENCE_FEE = 5`).
-
-#### Wallet System
-
-The wallet (`src/lib/wallet.ts`) tracks per-user balance and transaction history. Each transaction (`Txn`) records:
-- **Type**: `recharge` | `booking` | `refund`
-- **Status**: `success` | `pending` | `failed`
-- **Payment method**, reference ID, notes, and ISO timestamp
-- Balances are stored with paise-level precision (2 decimal places).
-
-#### PDF Ticket Generation
-
-Downloadable ticket PDFs are generated in-browser using **jsPDF** via `src/lib/ticketPdf.ts`, embedding the PNR, journey details, QR code, and fare breakdown — no server round-trip required.
+Dashboard Routes:
+/dashboard
+/dashboard/book
+/dashboard/journey
+/dashboard/platform
+/dashboard/payment
+/dashboard/payment-success
+/dashboard/tickets
+/dashboard/ticket
+/dashboard/qr
+/dashboard/wallet
+/dashboard/wallet-recharge-success
+/dashboard/transactions
+/dashboard/refunds
+/dashboard/refund-success
+/dashboard/history
+/dashboard/favorites
+/dashboard/notifications
+/dashboard/profile
+/dashboard/settings
 
 ---
 
-### Key Configuration Files
+# Core Features
 
-| File | Purpose |
-|---|---|
-| `vite.config.ts` | Delegates to `@lovable.dev/vite-tanstack-config`, which bundles TanStack Start, React, Tailwind CSS v4, TypeScript paths, and Nitro |
-| `tsconfig.json` | Strict TypeScript, ES2022 target, `Bundler` module resolution, path alias `@/` → `src/` |
-| `components.json` | shadcn/ui CLI config — New York style, Lucide icons, slate base colour, CSS variables enabled |
-| `eslint.config.js` | ESLint flat config with TypeScript ESLint, React Hooks, and React Refresh rules |
-| `.prettierrc` | Prettier code formatting rules |
-| `bunfig.toml` | Bun package manager settings |
+## Authentication
+
+- Login
+- Registration
+- OTP-style frontend flow where implemented
+- Protected dashboard routes
+- Local client-side authentication state
+- localStorage persistence
+- Current limitation: no production authentication backend
 
 ---
 
-### Available Scripts
+## Dashboard
 
-Run all scripts from inside the `Frontend/` directory:
+- Sidebar navigation
+- Responsive mobile drawer
+- Overlay
+- Body scroll locking
+- Independent sidebar scrolling
+- Dashboard quick actions
+- Recent routes
+- Favorites
+- Notifications
+- Wallet summary
+- Ticket summary
 
-```bash
-# Start development server with Hot Module Replacement
+*Note: Mobile navigation was specifically hardened to prevent background scrolling.*
+
+---
+
+# Journey Ticket
+
+- Station search/autocomplete
+- FROM / TO station selection
+- Passenger counts
+- Adult/child support
+- Class selection
+- Train category
+- Journey/season ticket support
+- Fare calculation
+- Book & Travel / QR workflow where implemented
+- Book & Print / PDF workflow where implemented
+- Payment handoff
+- Book Again support
+
+*Note: The passenger counters use the intentionally approved static 1px black border.*
+
+---
+
+# Platform Ticket
+
+- Station search
+- Empty/default state
+- Adults and children
+- State-driven fare calculation
+- Summary remains neutral until station selection
+- Confirm & Pay disabled until required data is available
+- Payment handoff
+- Static 1px black counter borders
+
+---
+
+# Payment
+
+Supported simulated payment methods:
+- Google Pay
+- PhonePe
+- Paytm
+- BHIM UPI
+- RailConnect Wallet
+- Credit Card
+- Debit Card
+- Net Banking
+
+Payment method IDs are normalized into human-readable labels when displayed on tickets/PDFs. Note: There is no real payment gateway processing.
+
+---
+
+# Ticket Data Model
+
+Important fields included in the Ticket model:
+- id
+- userId
+- type
+- from
+- to
+- line
+- classType
+- adults
+- children
+- fare
+- createdAt
+- validUntil
+- status
+- pnr
+- delivery
+- category
+- fromCode
+- toCode
+- txnId
+- paymentMethod
+- cancellation/refund information
+
+Optional enriched ticket metadata where currently implemented:
+- via
+- distanceKm
+- journeyType
+- validityRule
+
+Optional fields are rendered only when real ticket data contains them. Railway information is never fabricated.
+
+---
+
+# My Tickets
+
+- Active Tickets
+- Expired Tickets
+- Cancelled Tickets
+- Search
+- Debounced search
+- Station/PNR/Transaction ID matching
+- Train category filtering
+- Ticket type filtering
+- Date filtering
+- Ticket Details navigation
+- Book Again
+
+---
+
+# Ticket Details
+
+- Complete ticket information
+- QR access
+- Download PDF
+- Book Again
+- Cancellation
+- Refund information
+- Payment information
+- Transaction ID
+- Ticket reference
+- Status
+
+*Architectural rule: Ticket cancellation is centralized through Ticket Details. QR Ticket does NOT duplicate cancellation/refund/wallet/transaction business logic.*
+
+---
+
+# QR Ticket
+
+The QR Ticket provides a premium, responsive presentation:
+- Premium responsive QR ticket presentation
+- Active ticket state
+- Empty state
+- QR code hero
+- Ticket ID
+- Ticket Reference
+- Transaction ID
+- Journey information
+- station codes where available
+- Via where available
+- Distance where available
+- Journey Type where available
+- passenger information
+- ticket details
+- payment method
+- total fare
+- booked time
+- validity
+- journey validity where available
+- railway-style journey connector
+- responsive mobile layout
+- desktop/tablet two-column information sets
+- equal-height two-set layout on wider screens
+- mobile stacking
+- three desktop actions: Download Ticket, Book Again, Cancel Ticket
+
+QR verification presentation:
+SCAN TO VERIFY
+Show this QR code for ticket verification.
+
+The current QR presentation is a frontend representation. Real verification remains a backend integration task. (No real backend verification, fake countdowns, or QR regeneration).
+
+---
+
+# Empty QR State
+
+When no ticket is active, the exact empty state reads:
+
+No Active Ticket
+Your active QR ticket will appear here after booking.
+
+---
+
+# PDF Ticket
+
+The PDF Ticket implementation features:
+- jsPDF
+- A4-style professional ticket layout
+- RailConnect branding
+- Digital Railway Ticket title
+- Ticket Reference
+- Transaction ID
+- QR section
+- ACTIVE status
+- SCAN TO VERIFY
+- Journey section
+- Passenger section
+- Ticket Details
+- Booking Details
+- Journey Validity where available
+- Payment Method
+- Total Fare
+- responsive/dynamic content positioning
+- optional fields omitted when unavailable
+- same Ticket object as QR Ticket
+
+*QR Ticket and PDF Ticket use the same Ticket data source to maintain information parity.*
+
+---
+
+# Cancellation & Refund
+
+- centralized cancellation
+- cancellation status
+- cancelledAt
+- refund calculation
+- refund percentage
+- cancellation charge
+- refund amount
+- refund transaction reference
+- wallet/transaction integration
+
+(Does not claim real bank/payment-provider refunds.)
+
+---
+
+# Wallet
+
+- balance
+- recharge
+- transaction history
+- ticket spending
+- refunds
+- payment methods
+- recharge validation
+- local persistence
+
+---
+
+# Transactions
+
+Booking, recharge, and refund transaction records and payment method presentation.
+
+---
+
+# Favorites
+
+- saved station pairs
+- Manage
+- Book Again
+- navigation into Journey Ticket
+- FROM/TO prefill
+
+---
+
+# Booking History
+
+Completed/previous booking visibility where implemented.
+
+---
+
+# Notifications
+
+Local in-app notifications and booking-related notifications.
+
+---
+
+# Profile & Settings
+
+Frontend profile/settings shell (frontend-only settings).
+
+---
+
+# UI / UX Design System
+
+- mobile-first responsive design
+- premium railway-inspired visual language
+- orange railway accent
+- glass cards
+- Sora headings
+- Inter body/UI text
+- shadcn/ui
+- Tailwind CSS v4
+- Lucide/React Icons
+- Framer Motion
+
+Protected UI decisions:
+1. Master Ticket alignment is frozen.
+2. Do not disturb the approved Master Ticket layout.
+3. Search boxes must NOT have travelling-border animations.
+4. Passenger counters use static 1px black borders.
+5. Dashboard mobile drawer uses scroll locking and an opaque drawer.
+6. Avoid unnecessary animation.
+7. Keep visual hierarchy clean and production-oriented.
+
+---
+
+# Responsive Behavior
+
+- Mobile
+- Tablet
+- Desktop
+- responsive dashboard sidebar
+- mobile drawer
+- QR card stacking
+- ticket information stacking
+- action button behavior
+- journey/platform layouts
+- equal-height desktop information sets where applicable
+
+---
+
+# Data Persistence
+
+Exact storage architecture:
+
+localStorage:
+- railconnect.auth.user
+- railconnect.auth.users
+- railconnect.tickets
+- railconnect.wallet
+- railconnect.txns
+- railconnect.notifications
+- railconnect.favorites
+
+sessionStorage:
+- railconnect.paymentDraft
+- railconnect.lastReceipt
+
+This is a frontend/demo persistence architecture.
+
+---
+
+# PDF / QR Data Integrity
+
+The QR Ticket, Ticket Details, My Tickets, Transactions and generated PDF are designed to consume the same Ticket/payment state rather than maintaining separate duplicated ticket records.
+
+---
+
+# Production Limitations / Future Backend
+
+- real authentication API
+- database persistence
+- real railway station/train APIs
+- real payment gateway
+- server-side ticket issuance
+- secure QR verification
+- real refund gateway
+- production notification infrastructure
+- server-side authorization
+- audit logging
+- secure secret management
+
+---
+
+# Validation / Audit
+
+Frontend production-readiness baseline verified:
+- production build passed
+- route smoke test passed
+- dashboard flows inspected
+- booking/payment/ticket flows inspected
+- QR flow inspected
+- PDF generation inspected
+- responsive behavior inspected
+- no critical runtime failure reported
+- no hardcoded payment/API secrets reported
+- protected dashboard routes inspected
+- final audit reported zero issues found/fixed
+
+---
+
+# Development Commands
+
 npm run dev
-
-# Production build (Nitro edge output)
 npm run build
-
-# Development build (non-minified)
 npm run build:dev
-
-# Preview the production build locally
 npm run preview
-
-# Lint the codebase with ESLint
 npm run lint
-
-# Format all files with Prettier
 npm run format
-```
 
 ---
 
-### Environment Variables
+# Environment Variables
 
-Server-only secrets are accessed via `process.env` inside server functions and are never bundled into the client. Public config uses the `VITE_` prefix and is injected by Vite, making it available on both client and server.
+NODE_ENV
+VITE_*
 
-| Variable | Scope | Purpose |
-|---|---|---|
-| `NODE_ENV` | Server only | Runtime environment (`development` / `production`) |
-| `VITE_*` | Public (client + server) | Public runtime config — analytics IDs, API base URLs, etc. |
-
-> **Warning:** Never put secrets in `VITE_`-prefixed variables — they are shipped to the browser bundle.
+(Warning: VITE_* values are public and must never contain secrets.)
 
 ---
 
-### Browser Storage Keys
+# Deployment
 
-The application uses `localStorage` and `sessionStorage` for data persistence. No external backend database is required for the current demo configuration.
-
-| Key | Storage | Contents |
-|---|---|---|
-| `railconnect.auth.user` | `localStorage` | Currently logged-in user (JSON) |
-| `railconnect.auth.users` | `localStorage` | All registered user accounts |
-| `railconnect.tickets` | `localStorage` | All booked tickets |
-| `railconnect.wallet` | `localStorage` | Per-user wallet balances |
-| `railconnect.txns` | `localStorage` | All wallet transactions |
-| `railconnect.notifications` | `localStorage` | In-app notification records |
-| `railconnect.favorites` | `localStorage` | Saved station route pairs |
-| `railconnect.paymentDraft` | `sessionStorage` | In-progress booking draft |
-| `railconnect.lastReceipt` | `sessionStorage` | Last completed payment receipt |
-
----
-
-### Deployment
-
-The frontend targets **Cloudflare Workers** by default (via Nitro). To change the deployment runtime, update the Nitro preset in `vite.config.ts`. The build output is emitted to the `.output/` directory.
+Current Nitro/Cloudflare-oriented deployment configuration (frontend deployment).

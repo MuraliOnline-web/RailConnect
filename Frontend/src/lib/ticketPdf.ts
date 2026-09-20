@@ -1,86 +1,255 @@
 import jsPDF from "jspdf";
 import { CATEGORY_LABEL, type Ticket } from "./tickets";
+import { getPaymentLabel } from "./payment";
 import { pushNotification } from "./notifications";
 import { toast } from "sonner";
 
 export function downloadTicketPdf(t: Ticket) {
-  const doc = new jsPDF({ unit: "pt", format: "a5" });
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
   const w = doc.internal.pageSize.getWidth();
-
-  // Header band
-  doc.setFillColor(232, 71, 14);
-  doc.rect(0, 0, w, 70, "F");
-  doc.setTextColor(255, 255, 255);
+  
+  let y = 40;
+  
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
-  doc.text("RailConnect", 24, 32);
+  doc.setTextColor(232, 71, 14); // RailConnect orange
+  doc.text("RAILCONNECT", 40, y);
+  
+  y += 16;
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.text("Digital Railway Ticket", 24, 50);
   doc.setFontSize(11);
-  doc.text(`PNR ${t.pnr}`, w - 24, 32, { align: "right" });
-  doc.text(t.type.toUpperCase(), w - 24, 50, { align: "right" });
-
-  // Body
-  doc.setTextColor(20, 20, 20);
-  let y = 110;
-  const row = (k: string, v: string) => {
+  doc.setTextColor(100, 100, 100);
+  doc.text("Digital Railway Ticket", 40, y);
+  
+  y += 35;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("Ticket Reference", 40, y);
+  if (t.txnId) {
+    doc.text("Transaction ID", w / 2, y);
+  }
+  
+  y += 14;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(40, 40, 40);
+  const ticketRef = t.pnr || t.id.slice(0, 8).toUpperCase();
+  doc.text(ticketRef, 40, y);
+  if (t.txnId) {
+    doc.text(t.txnId, w / 2, y);
+  }
+  
+  y += 25;
+  
+  // QR Box
+  const boxX = 40;
+  const boxW = w - 80;
+  const qrSize = 100;
+  const boxH = 140;
+  
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(1);
+  doc.rect(boxX, y, boxW, boxH);
+  
+  drawPseudoQr(doc, t.pnr, boxX + 25, y + 20, qrSize);
+  
+  // STATUS & SCAN inside box
+  const rightX = boxX + qrSize + 50;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  if (t.status === "active") {
+    doc.setTextColor(16, 185, 129); // emerald
+  } else {
+    doc.setTextColor(225, 29, 72); // rose
+  }
+  doc.text(t.status.toUpperCase(), rightX, y + 45);
+  
+  doc.setTextColor(40, 40, 40);
+  doc.setFontSize(12);
+  doc.text("SCAN TO VERIFY", rightX, y + 75);
+  
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("Show this QR code for ticket verification.", rightX, y + 92);
+  
+  y += boxH + 25;
+  
+  // Section divider function
+  const drawDivider = (yPos: number) => {
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(1);
+    doc.line(40, yPos, w - 40, yPos);
+  };
+  
+  drawDivider(y);
+  y += 25;
+  
+  // JOURNEY
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(40, 40, 40);
+  doc.text("JOURNEY", 40, y);
+  
+  y += 25;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("FROM", 40, y);
+  
+  y += 14;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(40, 40, 40);
+  doc.text(t.from, 65, y);
+  if (t.fromCode) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(120, 120, 120);
-    doc.text(k, 24, y);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    doc.setTextColor(20, 20, 20);
-    doc.text(v, w - 24, y, { align: "right" });
-    y += 24;
-  };
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  const route = `${t.from}${t.fromCode ? ` (${t.fromCode})` : ""}  →  ${t.to}${t.toCode ? ` (${t.toCode})` : ""}`;
-  doc.text(route, 24, y);
-  y += 28;
-
-  row("Ticket ID", t.id.slice(0, 8).toUpperCase());
-  row("PNR", t.pnr);
-  if (t.txnId) row("Transaction ID", t.txnId);
-  row("Issued", new Date(t.createdAt).toLocaleString());
-  row("Valid until", new Date(t.validUntil).toLocaleString());
-  row("Passengers", `${t.adults} adult · ${t.children} child`);
-  row("Train category", t.category ? CATEGORY_LABEL[t.category] : "Passenger");
-  row("Railway zone", t.line);
-  if (t.paymentMethod) row("Payment method", t.paymentMethod);
-  row("Amount paid", `INR ${t.fare}`);
-  row("Status", t.status.toUpperCase());
-
-  // QR block
-  y += 8;
-  const qrSize = 96;
-  const qrX = (w - qrSize) / 2;
-  drawPseudoQr(doc, t.pnr, qrX, y, qrSize);
-  y += qrSize + 14;
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(120, 120, 120);
-  doc.text("Scan at the gate to board", w / 2, y, { align: "center" });
-  y += 14;
-
-  // Footer note
-  y += 12;
+    doc.text(t.fromCode, 65, y + 14);
+  }
+  
+  // Journey Vertical Dots
   doc.setDrawColor(232, 71, 14);
+  doc.setFillColor(232, 71, 14);
+  doc.circle(50, y - 4, 3, "F"); 
   doc.setLineWidth(1);
-  doc.line(24, y, w - 24, y);
-  y += 22;
+  doc.line(50, y + 5, 50, y + 35);
+  doc.setFillColor(40, 40, 40);
+  doc.setDrawColor(40, 40, 40);
+  doc.circle(50, y + 44, 3, "F"); 
+  
+  y += 40;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.setTextColor(120, 120, 120);
-  doc.text(
-    "Generated by RailConnect · Carry a valid photo ID. Produce this ticket on demand.",
-    24,
-    y,
-  );
-
+  doc.setTextColor(100, 100, 100);
+  doc.text("TO", 40, y);
+  
+  y += 14;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(40, 40, 40);
+  doc.text(t.to, 65, y);
+  if (t.toCode) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(t.toCode, 65, y + 14);
+  }
+  
+  y += 28;
+  if (t.via || t.distanceKm || t.journeyType) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(40, 40, 40);
+    let lineText = "";
+    if (t.via) lineText += `Via: ${t.via}      `;
+    if (t.distanceKm) lineText += `Distance: ${t.distanceKm} KM      `;
+    if (t.journeyType) lineText += `Journey Type: ${t.journeyType}`;
+    doc.text(lineText, 40, y);
+    y += 20;
+  }
+  
+  drawDivider(y);
+  y += 25;
+  
+  // 3-Col Layout: PASSENGERS / TICKET DETAILS / BOOKING DETAILS
+  const col1 = 40;
+  const col2 = 200;
+  const col3 = 400;
+  
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(40, 40, 40);
+  doc.text("PASSENGERS", col1, y);
+  doc.text("TICKET DETAILS", col2, y);
+  doc.text("BOOKING DETAILS", col3, y);
+  
+  const formatDate = (iso: string) => {
+    const d = new Date(iso);
+    return `${d.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' })}, ${d.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' })}`;
+  };
+  
+  y += 20;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(`Adults: ${t.adults}`, col1, y);
+  doc.text(`Type: ${t.type === 'journey' ? 'Journey Ticket' : t.type === 'season' ? 'Season Ticket' : 'Platform Ticket'}`, col2, y);
+  
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("Booked On", col3, y);
+  
+  y += 14;
+  doc.setFontSize(10);
+  doc.setTextColor(40, 40, 40);
+  doc.text(`Children: ${t.children}`, col1, y);
+  doc.text(`Category: ${t.category ? CATEGORY_LABEL[t.category] : 'Passenger'}`, col2, y);
+  doc.text(formatDate(t.createdAt), col3, y);
+  
+  y += 14;
+  doc.text(`Class: ${t.classType === '1st' ? 'First Class' : 'Second Class'}`, col2, y);
+  
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("Valid Until", col3, y);
+  
+  y += 14;
+  doc.setFontSize(10);
+  doc.setTextColor(40, 40, 40);
+  doc.text(formatDate(t.validUntil), col3, y);
+  
+  y += 25;
+  drawDivider(y);
+  y += 25;
+  
+  // PAYMENT METHOD & TOTAL FARE
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("PAYMENT METHOD", col1, y);
+  doc.text("TOTAL FARE", w / 2, y);
+  
+  y += 16;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.setTextColor(40, 40, 40);
+  doc.text(getPaymentLabel(t.paymentMethod), col1, y);
+  doc.text(`INR ${t.fare}`, w / 2, y);
+  
+  y += 30;
+  
+  if (t.validityRule) {
+    drawDivider(y);
+    y += 25;
+    
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(40, 40, 40);
+    doc.text("JOURNEY VALIDITY", 40, y);
+    
+    y += 20;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    const splitRule = doc.splitTextToSize(t.validityRule, w - 80);
+    doc.text(splitRule, 40, y);
+    y += (splitRule.length * 14) + 11;
+  }
+  
+  drawDivider(y);
+  y += 20;
+  
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("Please retain this ticket for journey verification.", 40, y);
+  
+  y += 16;
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(40, 40, 40);
+  doc.text("Issued by RailConnect", 40, y);
+  doc.setFont("helvetica", "normal");
+  doc.text(" · Digital Railway Ticket", 40 + doc.getTextWidth("Issued by RailConnect"), y);
+  
   doc.save(`railconnect-${t.pnr}.pdf`);
 }
 

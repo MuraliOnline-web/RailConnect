@@ -19,6 +19,7 @@ import { computeRefund } from "../../lib/refund";
 import { getWallet, makeRef, saveTxn, setWallet } from "../../lib/wallet";
 import { formatINR } from "../../lib/currency";
 import { pushNotification } from "../../lib/notifications";
+import { getPaymentLabel } from "../../lib/payment";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -228,7 +229,7 @@ function TicketDetailPage() {
               <KV k="Issued" v={new Date(ticket.createdAt).toLocaleString()} />
               <KV k="Valid until" v={new Date(ticket.validUntil).toLocaleString()} />
               <KV k="Railway zone" v={ticket.line} />
-              <KV k="Payment method" v={ticket.paymentMethod || "—"} />
+              <KV k="Payment method" v={getPaymentLabel(ticket.paymentMethod)} />
             </div>
 
             <div className="mt-5 flex items-center justify-between rounded-2xl bg-orange-50 p-4">

@@ -38,6 +38,12 @@ export const PAYMENT_METHODS: {
   { id: "netbanking", label: "Net Banking", group: "netbanking", hint: "50+ banks supported" },
 ];
 
+export function getPaymentLabel(id?: string): string {
+  if (!id) return "—";
+  const match = PAYMENT_METHODS.find((m) => m.id === id);
+  return match ? match.label : id;
+}
+
 export const CONVENIENCE_FEE = 5;
 
 const DRAFT_KEY = "railconnect.paymentDraft";

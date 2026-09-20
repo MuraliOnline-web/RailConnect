@@ -17,6 +17,10 @@ export type Ticket = {
   category?: TrainCategory;
   fromCode?: string;
   toCode?: string;
+  via?: string;
+  distanceKm?: number;
+  journeyType?: "Single" | "Return";
+  validityRule?: string;
   txnId?: string;
   paymentMethod?: string;
   cancelledAt?: string;
