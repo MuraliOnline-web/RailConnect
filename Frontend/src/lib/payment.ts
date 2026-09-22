@@ -69,6 +69,7 @@ export function clearPaymentDraft() {
 
 export type Receipt = {
   ticketId: string;
+  type: "journey" | "season" | "platform";
   pnr: string;
   txnId: string;
   method: PaymentMethodId;

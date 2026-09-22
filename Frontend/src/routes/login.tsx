@@ -46,8 +46,8 @@ function LoginPage() {
       await login(email, password);
       refreshCaptcha();
       navigate({ to: "/dashboard" });
-    } catch (err: any) {
-      setError(err?.message ?? "Login failed");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }

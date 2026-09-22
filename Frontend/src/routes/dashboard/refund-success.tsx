@@ -33,7 +33,9 @@ function RefundSuccessPage() {
     try {
       const raw = sessionStorage.getItem("railconnect.lastRefundReceipt");
       if (raw) setR(JSON.parse(raw));
-    } catch {}
+    } catch {
+      // Ignore parse errors
+    }
   }, []);
 
   if (!r) {

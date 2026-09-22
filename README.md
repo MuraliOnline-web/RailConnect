@@ -1,176 +1,113 @@
 # RailConnect
 
-## Overview
+## A. PROJECT OVERVIEW
 
-RailConnect is a modern, mobile-first railway ticketing frontend inspired by commuter/unreserved railway ticketing workflows.
+RailConnect is a modern digital railway ticket booking frontend inspired by the type of workflows found in commuter/unreserved railway ticketing applications.
 
-**IMPORTANT NOTE:** RailConnect is currently a frontend-focused project. It is **not** the official Indian Railways, IRCTC, UTS, or RailOne application. There is currently no backend, real production API, real payment processing, or railway verification integration. All current data, authentication, and logic are simulated purely through frontend state and routing.
+**IMPORTANT NOTE:** RailConnect is currently a frontend-focused project and demo. It is **not** the official Indian Railways, IRCTC, UTS, or RailOne application. Do not imply any affiliation with government organizations. There is currently no backend, real production API, real payment processing, or railway verification integration. All current data, authentication, and logic are simulated purely through frontend state and routing.
 
----
+## B. LIVE DEMO
 
-## Current Project Status
+[Live Demo](https://railconnect-frontend-psi.vercel.app/)
 
-- Frontend application is implemented.
-- Major booking/ticket/payment/dashboard flows are implemented.
-- Data currently uses client-side localStorage/sessionStorage.
-- Real backend persistence is not yet connected.
-- Real payment gateway integration is not yet connected.
-- Real railway/QR verification APIs are not yet connected.
-- The current application is suitable as a frontend/demo/portfolio implementation.
-- Production deployment with real users requires backend/API/auth/payment infrastructure.
+## C. GITHUB REPOSITORY
 
----
+[https://github.com/MuraliOnline-web/RailConnect](https://github.com/MuraliOnline-web/RailConnect)
 
-## Tech Stack
+## D. TECH STACK
 
 The project relies on a modern React ecosystem:
-
 - React 19
 - TypeScript
 - TanStack Start
 - TanStack Router
-- TanStack Query
 - Vite
-- Tailwind CSS v4
-- shadcn/ui
+- Tailwind CSS (v4)
 - Framer Motion
-- Lucide React / React Icons
-- jsPDF
-- React Hook Form
-- Zod
-- Recharts
-- Sonner
-- date-fns
-- Nitro
-- ESLint
-- Prettier
-- npm/Bun support
+- jsPDF (PDF generation)
+- QR-related frontend functionality
+- localStorage / sessionStorage for client-side persistence
+- Vercel Deployment
 
----
+## E. APPLICATION MODULES
 
-## Project Structure
-
-Frontend/
-├── src/
-│   ├── components/
-│   ├── hooks/
-│   ├── lib/
-│   ├── routes/
-│   ├── routeTree.gen.ts
-│   ├── router.tsx
-│   ├── server.ts
-│   ├── start.ts
-│   └── styles.css
-├── package.json
-├── vite.config.ts
-├── tsconfig.json
-├── eslint.config.js
-├── components.json
-├── .gitignore
-└── ...
-
----
-
-## Application Routes
-
-Public Routes:
-/
-/why
-/network
-/about
-/login
-/register
-
-Dashboard Routes:
-/dashboard
-/dashboard/book
-/dashboard/journey
-/dashboard/platform
-/dashboard/payment
-/dashboard/payment-success
-/dashboard/tickets
-/dashboard/ticket
-/dashboard/qr
-/dashboard/wallet
-/dashboard/wallet-recharge-success
-/dashboard/transactions
-/dashboard/refunds
-/dashboard/refund-success
-/dashboard/history
-/dashboard/favorites
-/dashboard/notifications
-/dashboard/profile
-/dashboard/settings
-
----
-
-# Core Features
-
-## Authentication
-
+**PUBLIC:**
+- Home
+- Why RailConnect
+- Network
+- About
 - Login
-- Registration
-- OTP-style frontend flow where implemented
-- Protected dashboard routes
-- Local client-side authentication state
-- localStorage persistence
-- Current limitation: no production authentication backend
+- Register
 
----
-
-## Dashboard
-
-- Sidebar navigation
-- Responsive mobile drawer
-- Overlay
-- Body scroll locking
-- Independent sidebar scrolling
-- Dashboard quick actions
-- Recent routes
-- Favorites
+**DASHBOARD:**
+- Dashboard
+- Journey Ticket
+- Platform Ticket
+- QR Ticket
+- My Tickets
+- Booking History
+- Transactions
+- Refunds
+- Wallet
 - Notifications
-- Wallet summary
-- Ticket summary
+- Favorite Routes
+- Profile
+- Settings
 
-*Note: Mobile navigation was specifically hardened to prevent background scrolling.*
+## F. JOURNEY TICKET
 
----
-
-# Journey Ticket
-
-- Station search/autocomplete
-- FROM / TO station selection
-- Passenger counts
-- Adult/child support
-- Class selection
+The implemented Journey Ticket functionality includes:
+- Station search with smart station suggestions
+- Single Journey
+- Season Pass
+- Passenger selection
 - Train category
-- Journey/season ticket support
 - Fare calculation
-- Book & Travel / QR workflow where implemented
-- Book & Print / PDF workflow where implemented
-- Payment handoff
-- Book Again support
+- Book & Travel flow
+- Book & Print flow
+- Payment flow
+- Ticket generation
 
-*Note: The passenger counters use the intentionally approved static 1px black border.*
+## G. BOOK & TRAVEL / BOOK & PRINT
 
----
+**BOOK & TRAVEL:**
+- Ticket is issued for digital travel/QR flow.
+- Existing QR ticket workflow remains available.
 
-# Platform Ticket
+**BOOK & PRINT:**
+- Successful payment triggers the PDF ticket workflow.
+- Automatic PDF download is implemented.
+- Existing manual PDF download functionality remains where applicable.
 
-- Station search
-- Empty/default state
-- Adults and children
-- State-driven fare calculation
-- Summary remains neutral until station selection
-- Confirm & Pay disabled until required data is available
-- Payment handoff
-- Static 1px black counter borders
+*(Note: There is no backend PDF storage or server-side document generation.)*
 
----
+## H. PLATFORM TICKET
 
-# Payment
+Platform Ticket is a separate ticket workflow. Features include:
+- Station selection
+- Passenger count
+- Fare calculation
+- Payment
+- Platform-specific Payment Success presentation
 
-Supported simulated payment methods:
+*Platform Ticket success does not use Journey Ticket-specific source, destination, or train category information.*
+
+## I. TICKET MANAGEMENT
+
+- Active Tickets
+- Expired Tickets
+- Cancelled Tickets
+- Ticket Details
+- Book Again
+- Ticket search and filters
+- Ticket status handling
+- QR Ticket
+- PDF ticket generation
+- Cancellation/refund flow
+
+## J. PAYMENT
+
+Supported simulated frontend payment options include:
 - Google Pay
 - PhonePe
 - Paytm
@@ -180,333 +117,133 @@ Supported simulated payment methods:
 - Debit Card
 - Net Banking
 
-Payment method IDs are normalized into human-readable labels when displayed on tickets/PDFs. Note: There is no real payment gateway processing.
+*Note: These are frontend/demo payment flows. Real payment gateways do not process money in this application.*
 
----
+## K. WALLET / TRANSACTIONS / REFUNDS
 
-# Ticket Data Model
+**Wallet:** Balance, Recharge, Recharge amounts, Payment method selection.
+**Transactions:** Transaction records and state visualization.
+**Refunds:** Existing frontend refund and cancellation behavior.
 
-Important fields included in the Ticket model:
-- id
-- userId
-- type
-- from
-- to
-- line
-- classType
-- adults
-- children
-- fare
-- createdAt
-- validUntil
-- status
-- pnr
-- delivery
-- category
-- fromCode
-- toCode
-- txnId
-- paymentMethod
-- cancellation/refund information
+*(Does not claim real banking or payment settlement.)*
 
-Optional enriched ticket metadata where currently implemented:
-- via
-- distanceKm
-- journeyType
-- validityRule
+## L. QR TICKET
 
-Optional fields are rendered only when real ticket data contains them. Railway information is never fabricated.
-
----
-
-# My Tickets
-
-- Active Tickets
-- Expired Tickets
-- Cancelled Tickets
-- Search
-- Debounced search
-- Station/PNR/Transaction ID matching
-- Train category filtering
-- Ticket type filtering
-- Date filtering
-- Ticket Details navigation
-- Book Again
-
----
-
-# Ticket Details
-
-- Complete ticket information
-- QR access
-- Download PDF
-- Book Again
-- Cancellation
-- Refund information
-- Payment information
-- Transaction ID
-- Ticket reference
-- Status
-
-*Architectural rule: Ticket cancellation is centralized through Ticket Details. QR Ticket does NOT duplicate cancellation/refund/wallet/transaction business logic.*
-
----
-
-# QR Ticket
-
-The QR Ticket provides a premium, responsive presentation:
-- Premium responsive QR ticket presentation
-- Active ticket state
-- Empty state
-- QR code hero
-- Ticket ID
-- Ticket Reference
-- Transaction ID
+The QR Ticket functionality includes:
+- QR display
+- Ticket identity
 - Journey information
-- station codes where available
-- Via where available
-- Distance where available
-- Journey Type where available
-- passenger information
-- ticket details
-- payment method
-- total fare
-- booked time
-- validity
-- journey validity where available
-- railway-style journey connector
-- responsive mobile layout
-- desktop/tablet two-column information sets
-- equal-height two-set layout on wider screens
-- mobile stacking
-- three desktop actions: Download Ticket, Book Again, Cancel Ticket
+- Passenger information
+- Ticket details
+- Payment information
+- Ticket actions
+- Empty state
+- Cancellation navigation
+- PDF relationship where applicable
 
-QR verification presentation:
-SCAN TO VERIFY
-Show this QR code for ticket verification.
+*(There is no real QR verification or real railway backend validation.)*
 
-The current QR presentation is a frontend representation. Real verification remains a backend integration task. (No real backend verification, fake countdowns, or QR regeneration).
-
----
-
-# Empty QR State
-
-When no ticket is active, the exact empty state reads:
-
-No Active Ticket
-Your active QR ticket will appear here after booking.
-
----
-
-# PDF Ticket
+## M. PDF TICKET
 
 The PDF Ticket implementation features:
-- jsPDF
-- A4-style professional ticket layout
-- RailConnect branding
-- Digital Railway Ticket title
-- Ticket Reference
+- A4 PDF layout
+- RailConnect ticket layout
+- Ticket reference
 - Transaction ID
 - QR section
-- ACTIVE status
-- SCAN TO VERIFY
-- Journey section
-- Passenger section
-- Ticket Details
-- Booking Details
-- Journey Validity where available
-- Payment Method
-- Total Fare
-- responsive/dynamic content positioning
-- optional fields omitted when unavailable
-- same Ticket object as QR Ticket
+- Journey information (where applicable)
+- Passenger information
+- Booking details
+- Payment method
+- Total fare
+- Validity (where available)
+- Automatic Book & Print download
 
-*QR Ticket and PDF Ticket use the same Ticket data source to maintain information parity.*
+*Optional fields are included only when actual ticket data exists.*
 
----
+## N. RESPONSIVE DESIGN
 
-# Cancellation & Refund
-
-- centralized cancellation
-- cancellation status
-- cancelledAt
-- refund calculation
-- refund percentage
-- cancellation charge
-- refund amount
-- refund transaction reference
-- wallet/transaction integration
-
-(Does not claim real bank/payment-provider refunds.)
-
----
-
-# Wallet
-
-- balance
-- recharge
-- transaction history
-- ticket spending
-- refunds
-- payment methods
-- recharge validation
-- local persistence
-
----
-
-# Transactions
-
-Booking, recharge, and refund transaction records and payment method presentation.
-
----
-
-# Favorites
-
-- saved station pairs
-- Manage
-- Book Again
-- navigation into Journey Ticket
-- FROM/TO prefill
-
----
-
-# Booking History
-
-Completed/previous booking visibility where implemented.
-
----
-
-# Notifications
-
-Local in-app notifications and booking-related notifications.
-
----
-
-# Profile & Settings
-
-Frontend profile/settings shell (frontend-only settings).
-
----
-
-# UI / UX Design System
-
-- mobile-first responsive design
-- premium railway-inspired visual language
-- orange railway accent
-- glass cards
-- Sora headings
-- Inter body/UI text
-- shadcn/ui
-- Tailwind CSS v4
-- Lucide/React Icons
-- Framer Motion
-
-Protected UI decisions:
-1. Master Ticket alignment is frozen.
-2. Do not disturb the approved Master Ticket layout.
-3. Search boxes must NOT have travelling-border animations.
-4. Passenger counters use static 1px black borders.
-5. Dashboard mobile drawer uses scroll locking and an opaque drawer.
-6. Avoid unnecessary animation.
-7. Keep visual hierarchy clean and production-oriented.
-
----
-
-# Responsive Behavior
-
+The UI is designed for:
 - Mobile
 - Tablet
 - Desktop
-- responsive dashboard sidebar
-- mobile drawer
-- QR card stacking
-- ticket information stacking
-- action button behavior
-- journey/platform layouts
-- equal-height desktop information sets where applicable
 
----
+Responsive improvements include:
+- Dashboard statistic-card alignment
+- Mobile Journey selector with Single Journey / Season Pass side-by-side
+- Responsive Payment Success layouts
+- Responsive ticket/QR/PDF workflows
 
-# Data Persistence
+## O. UI/UX
 
-Exact storage architecture:
+Design characteristics:
+- Mobile-first, Modern, and Premium
+- Clean interfaces
+- Responsive design
+- Accessible interaction states
+- Controlled animations
+- Consistent RailConnect visual system
 
-localStorage:
-- railconnect.auth.user
-- railconnect.auth.users
-- railconnect.tickets
-- railconnect.wallet
-- railconnect.txns
-- railconnect.notifications
-- railconnect.favorites
+## P. DATA / STORAGE ARCHITECTURE
 
-sessionStorage:
-- railconnect.paymentDraft
-- railconnect.lastReceipt
+The current application uses client-side state and browser storage (localStorage and sessionStorage) for the demo/persistence behavior where applicable.
 
-This is a frontend/demo persistence architecture.
+The current project does NOT yet provide:
+- Real backend authentication
+- Server-side database persistence
+- Real railway booking APIs
+- Real payment gateway processing
+- Real QR verification backend
+- Production banking integration
 
----
+## Q. PROJECT STRUCTURE
 
-# PDF / QR Data Integrity
+```text
+Frontend/
+  src/
+    components/
+    hooks/
+    lib/
+    routes/
+    styles.css
+```
 
-The QR Ticket, Ticket Details, My Tickets, Transactions and generated PDF are designed to consume the same Ticket/payment state rather than maintaining separate duplicated ticket records.
+## R. DEVELOPMENT
 
----
+Development commands:
+- `npm install`
+- `npm run dev`
+- `npm run build`
+- `npm run lint`
 
-# Production Limitations / Future Backend
+## S. DEPLOYMENT
 
-- real authentication API
-- database persistence
-- real railway station/train APIs
-- real payment gateway
-- server-side ticket issuance
-- secure QR verification
-- real refund gateway
-- production notification infrastructure
-- server-side authorization
-- audit logging
-- secure secret management
+Current production deployment:
+[https://railconnect-frontend-psi.vercel.app/](https://railconnect-frontend-psi.vercel.app/)
+The application is deployed from the `Frontend` directory on Vercel.
 
----
+## T. TESTING / AUDIT
 
-# Validation / Audit
+The latest validation included:
+- TypeScript type check
+- ESLint
+- Production build
+- Browser smoke testing
+- Dashboard responsive verification
+- Journey selector responsive verification
+- Journey booking/payment flow
+- Platform Ticket Payment Success verification
+- QR verification
+- PDF regression testing
+- Book & Print implementation with automatic-download logic
 
-Frontend production-readiness baseline verified:
-- production build passed
-- route smoke test passed
-- dashboard flows inspected
-- booking/payment/ticket flows inspected
-- QR flow inspected
-- PDF generation inspected
-- responsive behavior inspected
-- no critical runtime failure reported
-- no hardcoded payment/API secrets reported
-- protected dashboard routes inspected
-- final audit reported zero issues found/fixed
+*Automatic PDF download logic is implemented and duplicate-trigger protection was verified; filesystem-level automatic download interception was not available in the automated browser environment.*
 
----
+## U. RECENT ENHANCEMENTS
 
-# Development Commands
-
-npm run dev
-npm run build
-npm run build:dev
-npm run preview
-npm run lint
-npm run format
-
----
-
-# Environment Variables
-
-NODE_ENV
-VITE_*
-
-(Warning: VITE_* values are public and must never contain secrets.)
-
----
-
-# Deployment
-
-Current Nitro/Cloudflare-oriented deployment configuration (frontend deployment).
+1. Dashboard statistic-card spacing/alignment improved.
+2. Book & Print automatic PDF download implemented.
+3. Platform Ticket Payment Success separation logic added.
+4. Journey Ticket "Season Pass" selector refined for mobile side-by-side display.
+5. StrictMode-safe one-time download guard implemented.
+6. Responsive layout refinements applied across viewport sizes.

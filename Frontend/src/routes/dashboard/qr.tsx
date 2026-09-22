@@ -8,7 +8,7 @@ import {
   FaDownload,
   FaRotateRight,
   FaCircleXmark,
-  FaArrowDown
+  FaArrowDown,
 } from "react-icons/fa6";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";
@@ -49,7 +49,9 @@ function QrPage() {
             <FaQrcode />
           </div>
           <h2 className="mt-4 font-[Sora] text-xl font-bold">No Active Ticket</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Your active QR ticket will appear here after booking.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your active QR ticket will appear here after booking.
+          </p>
         </div>
       </DashboardShell>
     );
@@ -84,17 +86,20 @@ function QrPage() {
         className="mx-auto max-w-5xl"
       >
         <div className="grid gap-6 lg:grid-cols-12 items-stretch">
-          
           {/* PRIMARY QR AREA */}
           <div className="lg:col-span-5 glass overflow-hidden rounded-3xl p-1 shadow-soft flex flex-col h-full">
             <div className="rounded-t-[1.4rem] bg-orange-50/50 p-4 px-6 border-b border-orange-100 flex items-center justify-between">
               <div>
-                <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">Digital Journey Ticket</div>
-                <div className="font-[Sora] text-sm font-extrabold text-foreground">Ticket Reference: {t.pnr || t.id.slice(0, 8).toUpperCase()}</div>
+                <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">
+                  Digital Journey Ticket
+                </div>
+                <div className="font-[Sora] text-sm font-extrabold text-foreground">
+                  Ticket Reference: {t.pnr || t.id.slice(0, 8).toUpperCase()}
+                </div>
               </div>
               <StatusBadge status={t.status} />
             </div>
-            
+
             <div className="rounded-b-[1.4rem] bg-white p-8 text-center flex-1 flex flex-col items-center justify-center">
               <div className="mb-4">
                 <div className="relative mx-auto flex h-64 w-64 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-50 to-amber-50 p-6 ring-1 ring-orange-200">
@@ -113,7 +118,6 @@ function QrPage() {
 
           {/* RIGHT COLUMN */}
           <div className="lg:col-span-7 flex flex-col gap-6 h-full">
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* JOURNEY INFORMATION */}
               <div className="glass overflow-hidden rounded-3xl p-1 shadow-soft flex flex-col h-full">
@@ -121,28 +125,40 @@ function QrPage() {
                   <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
                     Journey
                   </div>
-                  
+
                   <div className="flex-1 flex flex-col justify-center relative pl-6">
                     {/* Vertical Connector Line */}
                     <div className="absolute left-[7px] top-[14px] bottom-[14px] w-px bg-orange-200"></div>
-                    
+
                     <div className="relative">
                       {/* Station Dot */}
                       <div className="absolute left-[-24px] top-4 h-4 w-4 rounded-full border-[3px] border-orange-100 bg-orange-500"></div>
-                      <div className="font-[Sora] text-xl font-extrabold text-foreground">{t.from}</div>
-                      {t.fromCode && <div className="text-sm font-semibold text-muted-foreground">{t.fromCode}</div>}
+                      <div className="font-[Sora] text-xl font-extrabold text-foreground">
+                        {t.from}
+                      </div>
+                      {t.fromCode && (
+                        <div className="text-sm font-semibold text-muted-foreground">
+                          {t.fromCode}
+                        </div>
+                      )}
                     </div>
-                    
+
                     <div className="h-4"></div>
-                    
+
                     <div className="relative">
                       {/* Station Dot */}
                       <div className="absolute left-[-24px] top-4 h-4 w-4 rounded-full border-[3px] border-orange-100 bg-foreground"></div>
-                      <div className="font-[Sora] text-xl font-extrabold text-foreground">{t.to}</div>
-                      {t.toCode && <div className="text-sm font-semibold text-muted-foreground">{t.toCode}</div>}
+                      <div className="font-[Sora] text-xl font-extrabold text-foreground">
+                        {t.to}
+                      </div>
+                      {t.toCode && (
+                        <div className="text-sm font-semibold text-muted-foreground">
+                          {t.toCode}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  
+
                   <div className="mt-5 text-sm font-semibold text-muted-foreground flex flex-col gap-3">
                     <div className="flex items-center gap-2 uppercase tracking-wider">
                       <FaTrain className="text-orange-500" />
@@ -150,9 +166,30 @@ function QrPage() {
                     </div>
                     {(t.via || t.distanceKm || t.journeyType) && (
                       <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs">
-                        {t.via && <div><span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">Via</span> <span className="font-bold text-foreground">{t.via}</span></div>}
-                        {t.distanceKm && <div><span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">Distance</span> <span className="font-bold text-foreground">{t.distanceKm} KM</span></div>}
-                        {t.journeyType && <div><span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">Journey Type</span> <span className="font-bold text-foreground">{t.journeyType}</span></div>}
+                        {t.via && (
+                          <div>
+                            <span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">
+                              Via
+                            </span>{" "}
+                            <span className="font-bold text-foreground">{t.via}</span>
+                          </div>
+                        )}
+                        {t.distanceKm && (
+                          <div>
+                            <span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">
+                              Distance
+                            </span>{" "}
+                            <span className="font-bold text-foreground">{t.distanceKm} KM</span>
+                          </div>
+                        )}
+                        {t.journeyType && (
+                          <div>
+                            <span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">
+                              Journey Type
+                            </span>{" "}
+                            <span className="font-bold text-foreground">{t.journeyType}</span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -167,12 +204,20 @@ function QrPage() {
                   </div>
                   <div className="flex-1 flex flex-col justify-center gap-3">
                     <div className="flex justify-between items-center rounded-xl bg-slate-50 border border-slate-100 p-4">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Adults</span>
-                      <span className="font-[Sora] text-xl font-extrabold text-foreground">{t.adults}</span>
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Adults
+                      </span>
+                      <span className="font-[Sora] text-xl font-extrabold text-foreground">
+                        {t.adults}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center rounded-xl bg-slate-50 border border-slate-100 p-4">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Children</span>
-                      <span className="font-[Sora] text-xl font-extrabold text-foreground">{t.children}</span>
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Children
+                      </span>
+                      <span className="font-[Sora] text-xl font-extrabold text-foreground">
+                        {t.children}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -186,26 +231,42 @@ function QrPage() {
                   Ticket Details
                 </div>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                  <KV k="Ticket Type" v={t.type === 'journey' ? 'Journey Ticket' : t.type === 'season' ? 'Season Ticket' : 'Platform Ticket'} />
-                  <KV k="Train Category" v={t.category ? CATEGORY_LABEL[t.category] : "Passenger"} />
-                  <KV k="Class" v={t.classType === '1st' ? 'First Class' : 'Second Class'} />
-                  
+                  <KV
+                    k="Ticket Type"
+                    v={
+                      t.type === "journey"
+                        ? "Journey Ticket"
+                        : t.type === "season"
+                          ? "Season Ticket"
+                          : "Platform Ticket"
+                    }
+                  />
+                  <KV
+                    k="Train Category"
+                    v={t.category ? CATEGORY_LABEL[t.category] : "Passenger"}
+                  />
+                  <KV k="Class" v={t.classType === "1st" ? "First Class" : "Second Class"} />
+
                   <KV k="Ticket Reference" v={t.pnr || t.id.slice(0, 8).toUpperCase()} mono />
                   <KV k="Transaction ID" v={t.txnId || "—"} mono />
                   {t.journeyType && <KV k="Journey Type" v={t.journeyType} />}
-                  
+
                   <KV k="Booked On" v={formatDateTime(t.createdAt)} />
                   <KV k="Valid Until" v={formatDateTime(t.validUntil)} />
-                  {t.paymentMethod && <KV k="Payment Method" v={getPaymentLabel(t.paymentMethod)} />}
+                  {t.paymentMethod && (
+                    <KV k="Payment Method" v={getPaymentLabel(t.paymentMethod)} />
+                  )}
                 </div>
-                
+
                 {t.validityRule && (
                   <div className="mt-4 rounded-xl border border-orange-100 bg-orange-50/50 p-4">
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Journey Validity</div>
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                      Journey Validity
+                    </div>
                     <div className="text-sm font-semibold text-foreground/80">{t.validityRule}</div>
                   </div>
                 )}
-                
+
                 <div className="mt-5 flex items-center justify-between rounded-2xl bg-orange-50/60 p-5">
                   <div className="text-sm font-semibold uppercase tracking-wider text-orange-700">
                     Total Fare
@@ -216,19 +277,20 @@ function QrPage() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
         {/* ACTION BUTTONS */}
-        <div className={`mt-6 grid grid-cols-1 gap-4 ${t.status === "active" ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+        <div
+          className={`mt-6 grid grid-cols-1 gap-4 ${t.status === "active" ? "md:grid-cols-3" : "md:grid-cols-2"}`}
+        >
           <button
             onClick={() => downloadTicketAndNotify(t, user?.id)}
             className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200 bg-white px-5 py-3.5 text-sm font-semibold text-orange-700 shadow-sm transition-colors hover:bg-orange-50"
           >
             <FaDownload /> Download Ticket
           </button>
-          
+
           <button
             onClick={onBookAgain}
             className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200 bg-white px-5 py-3.5 text-sm font-semibold text-foreground/80 shadow-sm transition-colors hover:bg-orange-50/50"
@@ -252,16 +314,20 @@ function QrPage() {
 
 function formatDateTime(iso: string) {
   const d = new Date(iso);
-  const date = d.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
-  const time = d.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
+  const date = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+  const time = d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
   return `${date}, ${time}`;
 }
 
 function KV({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
     <div className="flex flex-col gap-1 rounded-xl bg-slate-50 border border-slate-100 px-4 py-3">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{k}</div>
-      <div className={`truncate font-[Sora] text-[15px] font-extrabold text-foreground ${mono ? "font-mono uppercase tracking-tight" : "capitalize"}`}>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {k}
+      </div>
+      <div
+        className={`truncate font-[Sora] text-[15px] font-extrabold text-foreground ${mono ? "font-mono uppercase tracking-tight" : "capitalize"}`}
+      >
         {v}
       </div>
     </div>
@@ -330,4 +396,3 @@ function QrSvg({ seed }: { seed: string }) {
     </svg>
   );
 }
-

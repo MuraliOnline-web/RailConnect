@@ -41,8 +41,8 @@ function RegisterPage() {
     try {
       await register(name, mobile, email, password);
       navigate({ to: "/dashboard" });
-    } catch (err: any) {
-      setError(err?.message ?? "Registration failed");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaCheck, FaDownload, FaHouse, FaTicket, FaTrain } from "react-icons/fa6";
 import { DashboardShell } from "../../components/DashboardShell";
@@ -23,11 +23,22 @@ function SuccessPage() {
     [user, receipt],
   );
 
+  const downloadedRef = useRef(false);
+
   useEffect(() => {
-    if (!receipt) navigate({ to: "/dashboard" });
-  }, [receipt, navigate]);
+    if (!receipt) {
+      navigate({ to: "/dashboard" });
+      return;
+    }
+
+    if (receipt.delivery === "print" && ticket && !downloadedRef.current) {
+      downloadedRef.current = true;
+      downloadTicketAndNotify(ticket, user?.id);
+    }
+  }, [receipt, ticket, user, navigate]);
 
   if (!receipt) return null;
+  const isPlatform = receipt.type === "platform";
   const methodLabel = PAYMENT_METHODS.find((m) => m.id === receipt.method)?.label ?? receipt.method;
   const paidAt = new Date(receipt.paidAt);
 
@@ -51,33 +62,41 @@ function SuccessPage() {
             Payment Successful
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Your RailConnect ticket has been issued. Have a safe journey.
+            {isPlatform
+              ? "Your RailConnect platform ticket has been issued successfully."
+              : "Your RailConnect ticket has been issued. Have a safe journey."}
           </p>
 
           <div className="mt-6 rounded-2xl border border-orange-100 bg-white/80 p-5 text-left">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-[Sora] text-lg font-bold">{receipt.fromName}</div>
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                  Source
+            {!isPlatform && (
+              <>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-[Sora] text-lg font-bold">{receipt.fromName}</div>
+                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                      Source
+                    </div>
+                  </div>
+                  <div className="bg-railway-gradient flex h-9 w-9 items-center justify-center rounded-full text-white">
+                    <FaTrain />
+                  </div>
+                  <div className="text-right">
+                    <div className="font-[Sora] text-lg font-bold">{receipt.toName}</div>
+                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                      Destination
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="bg-railway-gradient flex h-9 w-9 items-center justify-center rounded-full text-white">
-                <FaTrain />
-              </div>
-              <div className="text-right">
-                <div className="font-[Sora] text-lg font-bold">{receipt.toName}</div>
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                  Destination
-                </div>
-              </div>
-            </div>
-            <div className="my-4 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
+                <div className="my-4 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
+              </>
+            )}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <KV k="Ticket ID" v={receipt.pnr} />
               <KV k="Transaction ID" v={receipt.txnId} />
               <KV k="Method" v={methodLabel} />
-              <KV k="Category" v={CATEGORY_LABEL[receipt.category]} />
+              {!isPlatform && (
+                <KV k="Category" v={CATEGORY_LABEL[receipt.category ?? "passenger"]} />
+              )}
               <KV k="Passengers" v={`${receipt.adults}A · ${receipt.children}C`} />
               <KV k="Paid At" v={paidAt.toLocaleString()} />
             </div>

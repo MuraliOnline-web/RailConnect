@@ -34,7 +34,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) setUser(JSON.parse(raw));
-    } catch {}
+    } catch {
+      // Ignore parse errors
+    }
     setLoading(false);
   }, []);
 

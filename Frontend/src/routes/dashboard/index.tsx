@@ -183,7 +183,8 @@ function DashboardHome() {
                   </div>
                 </div>
                 {(() => {
-                  const fromCode = t.fromCode || STATIONS.find((s) => s.name === t.from)?.code || "";
+                  const fromCode =
+                    t.fromCode || STATIONS.find((s) => s.name === t.from)?.code || "";
                   const toCode = t.toCode || STATIONS.find((s) => s.name === t.to)?.code || "";
                   return (
                     <Link
@@ -235,7 +236,9 @@ function DashboardHome() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className={`text-sm font-extrabold ${t.amount >= 0 ? "text-emerald-600" : "text-orange-950"}`}>
+                  <div
+                    className={`text-sm font-extrabold ${t.amount >= 0 ? "text-emerald-600" : "text-orange-950"}`}
+                  >
                     {formatSignedINR(t.amount)}
                   </div>
                   <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
@@ -265,10 +268,7 @@ function DashboardHome() {
               const b = STATIONS.find((s) => s.code === f.toCode);
               if (!a || !b) return null;
               return (
-                <div
-                  key={f.id}
-                  className="flex items-center rounded-2xl bg-white/80 p-3.5"
-                >
+                <div key={f.id} className="flex items-center rounded-2xl bg-white/80 p-3.5">
                   <div className="flex items-center gap-2.5">
                     <FaHeart className="text-rose-500 shrink-0" />
                     <div className="text-sm font-bold text-orange-950">
@@ -349,7 +349,7 @@ function WalletCard({
               ? `Last recharge +${formatINR(lastRecharge.amount)} · ${new Date(lastRecharge.createdAt).toLocaleDateString()}`
               : "No recharges yet"}
           </div>
-          
+
           <Link
             to="/dashboard/wallet"
             className="w-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[10px] font-bold text-orange-700 shadow-soft hover:bg-orange-50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 sm:text-xs"
@@ -364,16 +364,16 @@ function WalletCard({
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="glass flex h-full flex-col justify-between rounded-3xl p-3.5 shadow-soft sm:p-5">
+    <div className="glass flex flex-col justify-center gap-3 rounded-3xl p-3.5 shadow-soft sm:h-full sm:justify-between sm:gap-0 sm:p-5">
       <div className="flex items-center justify-between">
         <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-orange-950/70 sm:whitespace-normal sm:text-xs">
           {label}
         </span>
-        <span className="bg-railway-gradient flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-white sm:h-9 sm:w-9 shadow-sm">
+        <span className="bg-railway-gradient flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-white shadow-sm sm:h-9 sm:w-9">
           {icon}
         </span>
       </div>
-      <div className="mt-2 font-[Sora] text-2xl font-extrabold tracking-tight text-orange-950 sm:mt-3 sm:text-3xl">
+      <div className="font-[Sora] text-2xl font-extrabold tracking-tight text-orange-950 sm:mt-3 sm:text-3xl">
         {value}
       </div>
     </div>

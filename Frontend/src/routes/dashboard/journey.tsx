@@ -13,7 +13,9 @@ import { formatINR } from "../../lib/currency";
 
 export const Route = createFileRoute("/dashboard/journey")({
   head: () => ({ meta: [{ title: "Journey Ticket · RailConnect" }] }),
-  validateSearch: (s: Record<string, unknown>): {
+  validateSearch: (
+    s: Record<string, unknown>,
+  ): {
     from?: string;
     to?: string;
     category?: TrainCategory;
@@ -34,7 +36,9 @@ function JourneyPage() {
   const navigate = useNavigate();
   const prefill = Route.useSearch();
   const isValidStation = (code: string) => STATIONS.some((s) => s.code === code);
-  const [from, setFrom] = useState(prefill.from && isValidStation(prefill.from) ? prefill.from : "");
+  const [from, setFrom] = useState(
+    prefill.from && isValidStation(prefill.from) ? prefill.from : "",
+  );
   const [to, setTo] = useState(prefill.to && isValidStation(prefill.to) ? prefill.to : "");
   const [category, setCategory] = useState<TrainCategory>(prefill.category ?? "passenger");
   const [adults, setAdults] = useState(prefill.adults ?? 1);
@@ -98,17 +102,18 @@ function JourneyPage() {
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
           <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">
-            <span className="text-railway-gradient">J</span>ourney <span className="text-railway-gradient">T</span>icket
+            <span className="text-railway-gradient">J</span>ourney{" "}
+            <span className="text-railway-gradient">T</span>icket
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Single trip or monthly season pass — instantly issued.
+            Single trip or season pass — instantly issued.
           </p>
         </div>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-3">
         <div className="glass rounded-3xl p-6 shadow-soft lg:col-span-2">
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-center">
             <button
               onClick={() => setSeason(false)}
               className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition ${
@@ -127,7 +132,7 @@ function JourneyPage() {
                   : "bg-white/80 text-foreground/70"
               }`}
             >
-              Monthly Season
+              Season Pass
             </button>
           </div>
 
@@ -233,7 +238,7 @@ function JourneyPage() {
             </div>
           </div>
           <div className="my-5 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
-          
+
           <div className="space-y-[18px]">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Type</span>
@@ -243,9 +248,7 @@ function JourneyPage() {
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Category</span>
-              <span className="font-semibold text-foreground">
-                {CATEGORY_LABEL[category]}
-              </span>
+              <span className="font-semibold text-foreground">{CATEGORY_LABEL[category]}</span>
             </div>
             <div className="flex items-start justify-between text-sm">
               <span className="text-muted-foreground">Passengers</span>
@@ -256,9 +259,7 @@ function JourneyPage() {
             </div>
             <div className="pt-1 flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Line</span>
-              <span className="font-semibold capitalize text-foreground">
-                {fromS?.line ?? "—"}
-              </span>
+              <span className="font-semibold capitalize text-foreground">{fromS?.line ?? "—"}</span>
             </div>
           </div>
 

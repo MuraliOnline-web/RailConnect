@@ -16,14 +16,14 @@ export const Route = createFileRoute("/dashboard/platform")({
 function PlatformPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   const [station, setStation] = useState("");
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const stationObj = STATIONS.find((s) => s.code === station);
-  
+
   const fare = useMemo(() => {
     if (!station) return 0;
     return calcFare({
@@ -61,7 +61,8 @@ function PlatformPage() {
     <DashboardShell>
       <div className="mb-6">
         <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">
-          <span className="text-railway-gradient">P</span>latform <span className="text-railway-gradient">T</span>icket
+          <span className="text-railway-gradient">P</span>latform{" "}
+          <span className="text-railway-gradient">T</span>icket
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Valid for 2 hours at the selected station.
@@ -92,9 +93,11 @@ function PlatformPage() {
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Summary
           </div>
-          
+
           <div className="mt-4 flex items-center gap-3">
-            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white ${stationObj ? 'bg-railway-gradient' : 'bg-orange-200'}`}>
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white ${stationObj ? "bg-railway-gradient" : "bg-orange-200"}`}
+            >
               <FaTrainSubway />
             </div>
             <div>
@@ -106,9 +109,9 @@ function PlatformPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="mt-5 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
-          
+
           <div className="my-5 space-y-3 text-sm">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Adults</span>
@@ -128,7 +131,7 @@ function PlatformPage() {
               {stationObj ? formatINR(fare) : "—"}
             </div>
           </div>
-          
+
           <button
             onClick={onBook}
             disabled={loading || !stationObj || adults < 1}
