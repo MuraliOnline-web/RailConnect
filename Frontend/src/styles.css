@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, :is(.dark *)));
 
 /*
  * Design system definition.
@@ -97,38 +97,38 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
+  --background: oklch(0.125 0.018 45);
+  --foreground: oklch(0.96 0.01 60);
+  --card: oklch(0.18 0.018 45);
+  --card-foreground: oklch(0.96 0.01 60);
+  --popover: oklch(0.18 0.018 45);
+  --popover-foreground: oklch(0.96 0.01 60);
+  --primary: oklch(0.70 0.19 45);
+  --primary-foreground: oklch(0.99 0.005 70);
+  --secondary: oklch(0.24 0.02 45);
+  --secondary-foreground: oklch(0.96 0.01 60);
+  --muted: oklch(0.22 0.018 45);
+  --muted-foreground: oklch(0.74 0.025 55);
+  --accent: oklch(0.24 0.02 45);
+  --accent-foreground: oklch(0.96 0.01 60);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
+  --border: oklch(0.35 0.025 50 / 50%);
+  --input: oklch(0.22 0.018 45);
+  --ring: oklch(0.70 0.19 45);
+  --chart-1: oklch(0.70 0.19 45);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --sidebar: oklch(0.16 0.018 45);
+  --sidebar-foreground: oklch(0.96 0.01 60);
+  --sidebar-primary: oklch(0.70 0.19 45);
+  --sidebar-primary-foreground: oklch(0.99 0.005 70);
+  --sidebar-accent: oklch(0.22 0.02 45);
+  --sidebar-accent-foreground: oklch(0.96 0.01 60);
+  --sidebar-border: oklch(0.35 0.025 50 / 40%);
+  --sidebar-ring: oklch(0.70 0.19 45);
 }
 
 @layer base {
@@ -163,12 +163,33 @@
       0 0 0 1px rgba(255, 138, 61, 0.12),
       0 8px 24px -10px rgba(232, 71, 14, 0.18);
   }
+  .dark .glass {
+    background: rgba(28, 20, 16, 0.78);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255, 138, 61, 0.25);
+    box-shadow:
+      0 0 0 1px rgba(255, 138, 61, 0.1),
+      0 12px 30px -10px rgba(0, 0, 0, 0.6);
+  }
   .glass-dark {
     background: rgba(30, 15, 5, 0.45);
     backdrop-filter: blur(18px) saturate(140%);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     border: 1px solid rgba(255, 138, 61, 0.22);
     box-shadow: 0 0 0 1px rgba(255, 138, 61, 0.1);
+  }
+  /* App Preferences: Reduced motion and Larger text */
+  .reduce-motion *,
+  .reduce-motion *::before,
+  .reduce-motion *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  html.text-scale-large {
+    font-size: 112.5%;
   }
   .shadow-soft {
     box-shadow:
@@ -792,11 +813,14 @@
   border: none;
   outline: none;
   width: 100%;
+  height: 100%;
+  min-height: 48px;
 }
 
 @media (min-width: 640px) {
   .static-search-box input {
     font-size: 1rem; /* 16px on tablet/desktop */
+    min-height: auto;
   }
 }
 
@@ -846,3 +870,83 @@
   transform: translateY(0);
   background: rgba(255, 138, 61, 0.15);
 }
+
+/* ---- Dark Mode Utilities & Component Tokens ---- */
+.dark .static-search-box {
+  background: #1c1511;
+  border-color: rgba(255, 138, 61, 0.28);
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.5);
+}
+
+.dark .static-search-box:hover:not(:focus-within) {
+  border-color: rgba(255, 138, 61, 0.55);
+}
+
+.dark .static-search-box:focus-within {
+  border-color: rgba(232, 71, 14, 1);
+  box-shadow: 0 0 0 2px rgba(255, 138, 61, 0.2);
+}
+
+.dark .btn-premium-action {
+  background: rgba(35, 25, 20, 0.85);
+  border-color: rgba(255, 138, 61, 0.45);
+  color: #ff8a3d;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+}
+
+.dark .btn-premium-action:hover {
+  background: rgba(255, 138, 61, 0.18);
+  border-color: rgba(255, 138, 61, 0.75);
+  color: #ff9d5c;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.6);
+}
+
+.dark .cta-outline {
+  background-color: rgba(28, 20, 16, 0.9);
+  border-color: rgba(255, 138, 61, 0.6);
+  color: #ff8a3d;
+}
+
+.dark .cta-outline:hover {
+  background-color: rgb(234, 88, 12);
+  border-color: rgb(234, 88, 12);
+  color: #fff;
+}
+
+.dark .nav-capsule::after {
+  background: #1c1511;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+}
+
+.dark .nav-login-capsule {
+  background: rgba(28, 20, 16, 0.85);
+  border-color: rgba(255, 138, 61, 0.35);
+}
+
+.dark .nav-login-inactive {
+  color: rgba(245, 237, 230, 0.75);
+}
+
+.dark .premium-border::after {
+  background: var(--premium-border-fill, #1c1511);
+}
+
+/* Custom dark scrollbars */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #140e0b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #382921;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4d392f;
+}
+

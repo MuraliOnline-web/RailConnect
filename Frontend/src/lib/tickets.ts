@@ -24,6 +24,7 @@ export type Ticket = {
   txnId?: string;
   paymentMethod?: string;
   cancelledAt?: string;
+  departureTime?: string; // scheduled journey departure date/time (ISO 8601)
   refund?: {
     originalFare: number;
     refundPercent: number;
@@ -84,6 +85,7 @@ export function cancelTicket(id: string, refund?: Ticket["refund"]) {
   const all: Ticket[] = JSON.parse(localStorage.getItem(KEY) || "[]");
   const i = all.findIndex((t) => t.id === id);
   if (i === -1) return;
+  if (all[i].status === "cancelled") return;
   all[i] = {
     ...all[i],
     status: "cancelled",

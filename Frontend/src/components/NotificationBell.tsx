@@ -61,13 +61,13 @@ export function NotificationBell({ className = "" }: { className?: string }) {
       <PopoverTrigger asChild>
         <button
           aria-label={count > 0 ? `Notifications, ${count} unread` : "Notifications"}
-          className={`relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-foreground shadow-soft transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${className}`}
+          className={`relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80 dark:bg-stone-800 text-foreground shadow-soft transition hover:bg-white dark:hover:bg-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${className}`}
         >
-          <FaBell className="h-4 w-4 text-orange-600" />
+          <FaBell className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           {count > 0 && (
             <span
               aria-hidden
-              className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-railway-gradient px-1 text-[10px] font-bold text-white ring-2 ring-white"
+              className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-railway-gradient px-1 text-[10px] font-bold text-white ring-2 ring-white dark:ring-stone-900"
             >
               {count > 9 ? "9+" : count}
             </span>
@@ -77,19 +77,21 @@ export function NotificationBell({ className = "" }: { className?: string }) {
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="w-[min(92vw,360px)] rounded-2xl border-orange-100 p-0 shadow-glow"
+        className="w-[min(92vw,360px)] rounded-2xl border-orange-100 dark:border-stone-800 bg-white dark:bg-stone-900 p-0 shadow-glow text-foreground"
       >
-        <div className="flex items-center justify-between border-b border-orange-100 px-4 py-3">
+        <div className="flex items-center justify-between border-b border-orange-100 dark:border-stone-800 px-4 py-3">
           <div>
-            <div className="font-[Sora] text-sm font-bold">Notifications</div>
-            <div className="text-[11px] text-muted-foreground">
+            <div className="font-[Sora] text-sm font-bold text-stone-900 dark:text-stone-100">
+              Notifications
+            </div>
+            <div className="text-[11px] text-muted-foreground dark:text-stone-400">
               {count > 0 ? `${count} unread` : "You're all caught up"}
             </div>
           </div>
           <button
             onClick={() => markAllAsRead(user.id)}
             disabled={count === 0}
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold text-orange-700 hover:bg-orange-50 disabled:opacity-40"
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-stone-800 disabled:opacity-40 cursor-pointer"
           >
             <FaCheckDouble className="h-3 w-3" /> Mark all
           </button>
@@ -97,21 +99,23 @@ export function NotificationBell({ className = "" }: { className?: string }) {
         <div className="max-h-80 overflow-y-auto">
           {items.length === 0 ? (
             <div className="px-4 py-8 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-50 text-orange-500">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-50 dark:bg-stone-800 text-orange-500">
                 <FaBell />
               </div>
-              <div className="mt-2 font-[Sora] text-sm font-semibold">No notifications yet</div>
-              <p className="mt-1 text-[11px] text-muted-foreground">
+              <div className="mt-2 font-[Sora] text-sm font-semibold text-stone-900 dark:text-stone-100">
+                No notifications yet
+              </div>
+              <p className="mt-1 text-[11px] text-muted-foreground dark:text-stone-400">
                 Booking, payment and refund updates will appear here.
               </p>
             </div>
           ) : (
-            <ul className="divide-y divide-orange-50">
+            <ul className="divide-y divide-orange-50 dark:divide-stone-800">
               {items.map((n) => (
                 <li
                   key={n.id}
                   className={`flex gap-3 px-4 py-3 transition ${
-                    n.read ? "bg-white" : "bg-orange-50/40"
+                    n.read ? "bg-white dark:bg-stone-900" : "bg-orange-50/40 dark:bg-stone-800/80"
                   }`}
                 >
                   <div className="pt-0.5">
@@ -119,7 +123,7 @@ export function NotificationBell({ className = "" }: { className?: string }) {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="font-[Sora] text-sm font-semibold leading-tight">
+                      <div className="font-[Sora] text-sm font-semibold leading-tight text-stone-900 dark:text-stone-100">
                         {n.title}
                       </div>
                       {!n.read && (
@@ -130,11 +134,11 @@ export function NotificationBell({ className = "" }: { className?: string }) {
                       )}
                     </div>
                     {n.body && (
-                      <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">
+                      <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground dark:text-stone-300">
                         {n.body}
                       </p>
                     )}
-                    <div className="mt-1 flex items-center justify-between text-[10px] text-muted-foreground">
+                    <div className="mt-1 flex items-center justify-between text-[10px] text-muted-foreground dark:text-stone-400">
                       <span className="uppercase tracking-wider">
                         {n.category} · {timeAgo(n.createdAt)}
                       </span>
@@ -142,14 +146,14 @@ export function NotificationBell({ className = "" }: { className?: string }) {
                         {!n.read && (
                           <button
                             onClick={() => markAsRead(user.id, n.id)}
-                            className="font-semibold text-orange-700 hover:underline"
+                            className="font-semibold text-orange-700 dark:text-orange-400 hover:underline cursor-pointer"
                           >
                             Mark read
                           </button>
                         )}
                         <button
                           onClick={() => removeNotification(user.id, n.id)}
-                          className="inline-flex items-center gap-1 font-semibold text-rose-600 hover:underline"
+                          className="inline-flex items-center gap-1 font-semibold text-rose-600 dark:text-rose-400 hover:underline cursor-pointer"
                           aria-label="Dismiss notification"
                         >
                           <FaTrash className="h-2.5 w-2.5" />
@@ -162,11 +166,11 @@ export function NotificationBell({ className = "" }: { className?: string }) {
             </ul>
           )}
         </div>
-        <div className="border-t border-orange-100 px-4 py-2.5 text-center">
+        <div className="border-t border-orange-100 dark:border-stone-800 px-4 py-2.5 text-center">
           <Link
             to="/dashboard/notifications"
             onClick={() => setOpen(false)}
-            className="text-xs font-semibold text-orange-700 hover:underline"
+            className="text-xs font-semibold text-orange-700 dark:text-orange-400 hover:underline"
           >
             View all notifications →
           </Link>

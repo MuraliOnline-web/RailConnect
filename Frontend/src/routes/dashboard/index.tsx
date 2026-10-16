@@ -18,6 +18,7 @@ import { loadTickets, STATIONS } from "../../lib/tickets";
 import { getWallet, loadTxns } from "../../lib/wallet";
 import { loadFavorites } from "../../lib/favorites";
 import { formatINR, formatSignedINR } from "../../lib/currency";
+import { useTranslation } from "../../lib/i18n";
 
 export const Route = createFileRoute("/dashboard/")({
   head: () => ({ meta: [{ title: "Dashboard · RailConnect" }] }),
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/dashboard/")({
 
 function DashboardHome() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const tickets = useMemo(() => (user ? loadTickets(user.id) : []), [user]);
   const txns = useMemo(() => (user ? loadTxns(user.id) : []), [user]);
   const favs = useMemo(() => (user ? loadFavorites(user.id) : []), [user]);
@@ -49,9 +51,9 @@ function DashboardHome() {
   ).slice(0, 4);
   const greeting = (() => {
     const h = new Date().getHours();
-    if (h < 12) return "Good morning";
-    if (h < 18) return "Good afternoon";
-    return "Good evening";
+    if (h < 12) return t("dashboard.greetingMorning");
+    if (h < 18) return t("dashboard.greetingAfternoon");
+    return t("dashboard.greetingEvening");
   })();
 
   return (
@@ -67,9 +69,11 @@ function DashboardHome() {
         />
         <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="text-sm font-medium text-white/80">{greeting},</div>
+            <div className="text-sm font-medium text-white/80 whitespace-nowrap">
+              {greeting}, 👋
+            </div>
             <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight sm:text-4xl">
-              {user?.name?.split(" ")[0] ?? "Commuter"} 👋
+              {user?.name?.split(" ")[0] ?? "Commuter"}
             </h1>
             <p className="mt-2 max-w-md text-sm text-white/85">
               Ready to ride? Book a journey ticket, renew your season pass or grab a platform ticket
@@ -80,17 +84,23 @@ function DashboardHome() {
             to="/dashboard/journey"
             className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-orange-700 shadow-soft transition hover:bg-orange-50"
           >
-            Book a ticket <FaArrowRight className="h-3.5 w-3.5" />
+            {t("dashboard.bookNow")} <FaArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </section>
 
-      <section className="mt-6 grid grid-cols-2 gap-3 auto-rows-fr sm:grid-cols-3 sm:gap-4">
-        <StatCard icon={<FaTicket />} label="Active Tickets" value={active.length.toString()} />
+      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 sm:auto-rows-fr">
+        <StatCard
+          icon={<FaTicket />}
+          label={t("dashboard.activeTickets")}
+          value={active.length.toString()}
+          compactCenteredMobile
+        />
         <StatCard
           icon={<FaCalendarCheck />}
-          label="Total Bookings"
+          label={t("history.title")}
           value={tickets.length.toString()}
+          compactCenteredMobile
         />
         <StatCard
           icon={<FaClockRotateLeft />}
@@ -104,8 +114,8 @@ function DashboardHome() {
       <section className="mt-6 grid gap-5 lg:grid-cols-3">
         <div className="glass relative overflow-hidden rounded-3xl p-6 shadow-soft lg:col-span-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-orange-950/70">
-              <FaTicket className="text-orange-500" /> Active Ticket
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-orange-950/70 dark:text-stone-300">
+              <FaTicket className="text-orange-500 dark:text-orange-400" /> Active Ticket
             </div>
             <Link to="/dashboard/tickets" className="btn-premium-action">
               Open QR
@@ -118,13 +128,13 @@ function DashboardHome() {
                   <FaQrcode />
                 </div>
                 <div>
-                  <div className="font-[Sora] text-xl font-bold text-orange-950">
+                  <div className="font-[Sora] text-xl font-bold text-orange-950 dark:text-stone-100">
                     {activeTicket.from} → {activeTicket.to}
                   </div>
                   <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
                     {activeTicket.type} · {activeTicket.line} · {activeTicket.pnr}
                   </div>
-                  <div className="mt-0.5 text-xs font-semibold text-emerald-700">
+                  <div className="mt-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     Valid until {new Date(activeTicket.validUntil).toLocaleString()}
                   </div>
                 </div>
@@ -138,7 +148,7 @@ function DashboardHome() {
               </Link>
             </div>
           ) : (
-            <div className="mt-4 rounded-2xl border border-dashed border-orange-200 bg-white/60 p-6 text-center">
+            <div className="mt-4 rounded-2xl border border-dashed border-orange-200 dark:border-stone-800 bg-white/60 dark:bg-stone-900/60 p-6 text-center">
               <p className="text-sm text-muted-foreground">
                 No active ticket. Book one in seconds.
               </p>
@@ -158,7 +168,9 @@ function DashboardHome() {
       <section className="mt-6 grid gap-5">
         <div className="glass rounded-3xl p-6 shadow-soft">
           <div className="flex items-center justify-between">
-            <h2 className="font-[Sora] text-lg font-bold text-orange-950">Recent Routes</h2>
+            <h2 className="font-[Sora] text-lg font-bold text-orange-950 dark:text-stone-100">
+              Recent Routes
+            </h2>
             <Link to="/dashboard/history" className="btn-premium-action">
               View All
             </Link>
@@ -167,17 +179,17 @@ function DashboardHome() {
             {recentRoutes.map((t) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between rounded-2xl bg-white/80 p-3.5 transition hover:bg-white"
+                className="flex items-center justify-between rounded-2xl bg-white/80 dark:bg-stone-900/80 border border-transparent dark:border-stone-800/80 p-3 sm:p-3.5 transition hover:bg-white dark:hover:bg-stone-800/90 gap-2 sm:gap-3"
               >
-                <div className="flex items-center gap-3">
-                  <div className="bg-railway-gradient flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-sm">
-                    <FaTrain />
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                  <div className="bg-railway-gradient flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-sm">
+                    <FaTrain className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </div>
-                  <div>
-                    <div className="text-sm font-bold text-orange-950">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs sm:text-sm font-bold text-orange-950 dark:text-stone-100 leading-tight">
                       {t.from} → {t.to}
                     </div>
-                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                    <div className="text-[10px] sm:text-[11px] uppercase tracking-wider text-muted-foreground mt-0.5 truncate">
                       {t.line} · last {formatINR(t.fare)}
                     </div>
                   </div>
@@ -190,7 +202,7 @@ function DashboardHome() {
                     <Link
                       to="/dashboard/journey"
                       search={{ from: fromCode, to: toCode }}
-                      className="rounded-full bg-orange-50 px-3.5 py-1.5 text-xs font-bold text-orange-700 transition hover:bg-orange-100 hover:scale-[1.02] active:scale-[0.98]"
+                      className="shrink-0 inline-flex items-center justify-center text-center whitespace-nowrap rounded-full bg-orange-50 dark:bg-stone-800 px-3.5 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold text-orange-700 dark:text-orange-400 transition hover:bg-orange-100 dark:hover:bg-stone-700 hover:scale-[1.02] active:scale-[0.98] border border-orange-100/60 dark:border-stone-700"
                     >
                       Book Again
                     </Link>
@@ -199,7 +211,7 @@ function DashboardHome() {
               </div>
             ))}
             {recentRoutes.length === 0 && (
-              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-orange-200 dark:border-stone-800 bg-white/60 dark:bg-stone-900/60 p-8 text-center text-sm text-muted-foreground">
                 No recent routes yet — book your first journey.
               </div>
             )}
@@ -211,44 +223,51 @@ function DashboardHome() {
       <section className="mt-6 grid gap-5 lg:grid-cols-3">
         <div className="glass rounded-3xl p-6 shadow-soft lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="font-[Sora] text-lg font-bold text-orange-950">Recent Transactions</h2>
-            <Link to="/dashboard/transactions" className="btn-premium-action">
+            <h2 className="font-[Sora] text-lg font-bold text-orange-950 dark:text-stone-100">
+              Recent Transactions
+            </h2>
+            <Link
+              to="/dashboard/transactions"
+              className="rounded-full border border-orange-300/80 dark:border-stone-700 bg-white/80 dark:bg-stone-800 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-stone-700 transition-colors shadow-2xs"
+            >
               View All
             </Link>
           </div>
-          <div className="mt-4 space-y-3">
+          <div className="mt-4 space-y-2.5 sm:space-y-3">
             {txns.slice(0, 4).map((t) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between rounded-2xl bg-white/80 p-3.5"
+                className="flex items-center justify-between rounded-2xl bg-white/90 dark:bg-stone-900/90 border border-transparent dark:border-stone-800/80 p-3 sm:p-3.5 shadow-2xs hover:bg-white dark:hover:bg-stone-800/90 transition-colors gap-2.5 sm:gap-3"
               >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-sm ${t.amount >= 0 ? "bg-emerald-500" : "bg-railway-gradient"}`}
-                  >
-                    <FaReceipt />
+                <div className="bg-railway-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-xs">
+                  <FaReceipt className="h-3.5 w-3.5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="font-[Sora] text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug capitalize truncate sm:whitespace-normal">
+                    {t.note}
                   </div>
-                  <div>
-                    <div className="text-sm font-bold text-orange-950 capitalize">{t.note}</div>
-                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                      {t.method} · {t.ref}
-                    </div>
+                  <div className="text-[10px] sm:text-[11px] font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider mt-0.5 truncate">
+                    {t.method} · {t.ref}
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="shrink-0 text-right">
                   <div
-                    className={`text-sm font-extrabold ${t.amount >= 0 ? "text-emerald-600" : "text-orange-950"}`}
+                    className={`font-[Sora] text-xs sm:text-sm font-extrabold ${
+                      t.amount >= 0
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-stone-900 dark:text-stone-100"
+                    }`}
                   >
                     {formatSignedINR(t.amount)}
                   </div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+                  <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 leading-tight mt-0.5">
                     {t.status}
                   </div>
                 </div>
               </div>
             ))}
             {txns.length === 0 && (
-              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-orange-200 dark:border-stone-800 bg-white/60 dark:bg-stone-900/60 p-8 text-center text-sm text-muted-foreground">
                 No transactions yet. Recharge your wallet to get started.
               </div>
             )}
@@ -257,7 +276,9 @@ function DashboardHome() {
 
         <div className="glass rounded-3xl p-6 shadow-soft">
           <div className="flex items-center justify-between">
-            <h2 className="font-[Sora] text-lg font-bold text-orange-950">Favorites</h2>
+            <h2 className="font-[Sora] text-lg font-bold text-orange-950 dark:text-stone-100">
+              Favorites
+            </h2>
             <Link to="/dashboard/favorites" className="btn-premium-action">
               Manage
             </Link>
@@ -268,10 +289,13 @@ function DashboardHome() {
               const b = STATIONS.find((s) => s.code === f.toCode);
               if (!a || !b) return null;
               return (
-                <div key={f.id} className="flex items-center rounded-2xl bg-white/80 p-3.5">
+                <div
+                  key={f.id}
+                  className="flex items-center rounded-2xl bg-white/80 dark:bg-stone-900/80 border border-transparent dark:border-stone-800/80 p-3.5"
+                >
                   <div className="flex items-center gap-2.5">
                     <FaHeart className="text-rose-500 shrink-0" />
-                    <div className="text-sm font-bold text-orange-950">
+                    <div className="text-sm font-bold text-orange-950 dark:text-stone-100">
                       {a.name} → {b.name}
                     </div>
                   </div>
@@ -279,7 +303,7 @@ function DashboardHome() {
               );
             })}
             {favs.length === 0 && (
-              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-6 text-center text-xs text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-orange-200 dark:border-stone-800 bg-white/60 dark:bg-stone-900/60 p-6 text-center text-xs text-muted-foreground">
                 Save your most-used routes for one-tap booking.
               </div>
             )}
@@ -362,18 +386,61 @@ function WalletCard({
   );
 }
 
-function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function StatCard({
+  icon,
+  label,
+  value,
+  compactCenteredMobile = false,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  compactCenteredMobile?: boolean;
+}) {
+  if (compactCenteredMobile) {
+    return (
+      <div className="glass flex flex-col justify-center rounded-3xl p-3.5 shadow-soft h-full sm:justify-between sm:p-5">
+        {/* Mobile View: Centered title and icon */}
+        <div className="flex sm:hidden items-center justify-center gap-1.5 text-center">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-orange-950/75 dark:text-stone-300">
+            {label}
+          </span>
+          <span className="bg-railway-gradient flex h-5 w-5 shrink-0 items-center justify-center rounded-lg text-white shadow-xs text-[10px]">
+            {icon}
+          </span>
+        </div>
+        {/* Mobile View: Centered count directly below */}
+        <div className="block sm:hidden text-center font-[Sora] text-2xl font-extrabold tracking-tight text-orange-950 dark:text-stone-100 mt-1">
+          {value}
+        </div>
+
+        {/* Desktop / Tablet View: Unchanged layout */}
+        <div className="hidden sm:flex items-center justify-between">
+          <span className="text-xs font-bold uppercase tracking-wider text-orange-950/70 dark:text-stone-300">
+            {label}
+          </span>
+          <span className="bg-railway-gradient flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-sm">
+            {icon}
+          </span>
+        </div>
+        <div className="hidden sm:block font-[Sora] text-3xl font-extrabold tracking-tight text-orange-950 dark:text-stone-100 sm:mt-3">
+          {value}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="glass flex flex-col justify-center gap-3 rounded-3xl p-3.5 shadow-soft sm:h-full sm:justify-between sm:gap-0 sm:p-5">
+    <div className="glass flex flex-col justify-center gap-3 rounded-3xl p-3.5 shadow-soft h-full sm:justify-between sm:gap-0 sm:p-5">
       <div className="flex items-center justify-between">
-        <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-orange-950/70 sm:whitespace-normal sm:text-xs">
+        <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-orange-950/70 dark:text-stone-300 sm:whitespace-normal sm:text-xs">
           {label}
         </span>
         <span className="bg-railway-gradient flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-white shadow-sm sm:h-9 sm:w-9">
           {icon}
         </span>
       </div>
-      <div className="font-[Sora] text-2xl font-extrabold tracking-tight text-orange-950 sm:mt-3 sm:text-3xl">
+      <div className="font-[Sora] text-2xl font-extrabold tracking-tight text-orange-950 dark:text-stone-100 sm:mt-3 sm:text-3xl">
         {value}
       </div>
     </div>

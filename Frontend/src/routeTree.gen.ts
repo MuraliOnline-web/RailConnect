@@ -34,6 +34,9 @@ import { Route as DashboardTicketsRouteImport } from './routes/dashboard/tickets
 import { Route as DashboardTransactionsRouteImport } from './routes/dashboard/transactions'
 import { Route as DashboardWalletRouteImport } from './routes/dashboard/wallet'
 import { Route as DashboardWalletRechargeSuccessRouteImport } from './routes/dashboard/wallet-recharge-success'
+import { Route as DashboardProfileChangePasswordRouteImport } from './routes/dashboard/profile_.change-password'
+import { Route as DashboardProfileEditRouteImport } from './routes/dashboard/profile_.edit'
+import { Route as DashboardProfileLoginActivityRouteImport } from './routes/dashboard/profile_.login-activity'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -161,6 +164,23 @@ const DashboardWalletRechargeSuccessRoute =
     path: '/dashboard/wallet-recharge-success',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DashboardProfileChangePasswordRoute =
+  DashboardProfileChangePasswordRouteImport.update({
+    id: '/dashboard/profile_/change-password',
+    path: '/dashboard/profile/change-password',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DashboardProfileEditRoute = DashboardProfileEditRouteImport.update({
+  id: '/dashboard/profile_/edit',
+  path: '/dashboard/profile/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardProfileLoginActivityRoute =
+  DashboardProfileLoginActivityRouteImport.update({
+    id: '/dashboard/profile_/login-activity',
+    path: '/dashboard/profile/login-activity',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -188,6 +208,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/wallet': typeof DashboardWalletRoute
   '/dashboard/wallet-recharge-success': typeof DashboardWalletRechargeSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/profile/change-password': typeof DashboardProfileChangePasswordRoute
+  '/dashboard/profile/edit': typeof DashboardProfileEditRoute
+  '/dashboard/profile/login-activity': typeof DashboardProfileLoginActivityRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -215,6 +238,9 @@ export interface FileRoutesByTo {
   '/dashboard/wallet': typeof DashboardWalletRoute
   '/dashboard/wallet-recharge-success': typeof DashboardWalletRechargeSuccessRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/profile/change-password': typeof DashboardProfileChangePasswordRoute
+  '/dashboard/profile/edit': typeof DashboardProfileEditRoute
+  '/dashboard/profile/login-activity': typeof DashboardProfileLoginActivityRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -243,6 +269,9 @@ export interface FileRoutesById {
   '/dashboard/wallet': typeof DashboardWalletRoute
   '/dashboard/wallet-recharge-success': typeof DashboardWalletRechargeSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/profile_/change-password': typeof DashboardProfileChangePasswordRoute
+  '/dashboard/profile_/edit': typeof DashboardProfileEditRoute
+  '/dashboard/profile_/login-activity': typeof DashboardProfileLoginActivityRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -272,6 +301,9 @@ export interface FileRouteTypes {
     | '/dashboard/wallet'
     | '/dashboard/wallet-recharge-success'
     | '/dashboard/'
+    | '/dashboard/profile/change-password'
+    | '/dashboard/profile/edit'
+    | '/dashboard/profile/login-activity'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -299,6 +331,9 @@ export interface FileRouteTypes {
     | '/dashboard/wallet'
     | '/dashboard/wallet-recharge-success'
     | '/dashboard'
+    | '/dashboard/profile/change-password'
+    | '/dashboard/profile/edit'
+    | '/dashboard/profile/login-activity'
   id:
     | '__root__'
     | '/'
@@ -326,6 +361,9 @@ export interface FileRouteTypes {
     | '/dashboard/wallet'
     | '/dashboard/wallet-recharge-success'
     | '/dashboard/'
+    | '/dashboard/profile_/change-password'
+    | '/dashboard/profile_/edit'
+    | '/dashboard/profile_/login-activity'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -354,6 +392,9 @@ export interface RootRouteChildren {
   DashboardWalletRoute: typeof DashboardWalletRoute
   DashboardWalletRechargeSuccessRoute: typeof DashboardWalletRechargeSuccessRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardProfileChangePasswordRoute: typeof DashboardProfileChangePasswordRoute
+  DashboardProfileEditRoute: typeof DashboardProfileEditRoute
+  DashboardProfileLoginActivityRoute: typeof DashboardProfileLoginActivityRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -533,6 +574,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardWalletRechargeSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/profile_/change-password': {
+      id: '/dashboard/profile_/change-password'
+      path: '/dashboard/profile/change-password'
+      fullPath: '/dashboard/profile/change-password'
+      preLoaderRoute: typeof DashboardProfileChangePasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/profile_/edit': {
+      id: '/dashboard/profile_/edit'
+      path: '/dashboard/profile/edit'
+      fullPath: '/dashboard/profile/edit'
+      preLoaderRoute: typeof DashboardProfileEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/profile_/login-activity': {
+      id: '/dashboard/profile_/login-activity'
+      path: '/dashboard/profile/login-activity'
+      fullPath: '/dashboard/profile/login-activity'
+      preLoaderRoute: typeof DashboardProfileLoginActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -562,6 +624,9 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardWalletRoute: DashboardWalletRoute,
   DashboardWalletRechargeSuccessRoute: DashboardWalletRechargeSuccessRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardProfileChangePasswordRoute: DashboardProfileChangePasswordRoute,
+  DashboardProfileEditRoute: DashboardProfileEditRoute,
+  DashboardProfileLoginActivityRoute: DashboardProfileLoginActivityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

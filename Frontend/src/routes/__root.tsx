@@ -124,15 +124,30 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+import { SettingsProvider } from "../lib/settings";
+import { I18nProvider } from "../lib/i18n";
+import { useAuth } from "../lib/auth";
+
+function SettingsAndI18nWrapper({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  return (
+    <SettingsProvider userId={user?.id}>
+      <I18nProvider>{children}</I18nProvider>
+    </SettingsProvider>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-        <Toaster richColors closeButton position="top-right" />
+        <SettingsAndI18nWrapper>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+          <Toaster richColors closeButton position="top-right" />
+        </SettingsAndI18nWrapper>
       </AuthProvider>
     </QueryClientProvider>
   );

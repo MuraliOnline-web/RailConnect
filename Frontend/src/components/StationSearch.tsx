@@ -29,7 +29,7 @@ function Highlight({ text, q }: { text: string; q: string }) {
   return (
     <>
       {text.slice(0, i)}
-      <mark className="rounded bg-orange-100 px-0.5 text-orange-800">
+      <mark className="rounded bg-orange-100 dark:bg-orange-950/80 px-0.5 text-orange-800 dark:text-orange-300">
         {text.slice(i, i + s.length)}
       </mark>
       {text.slice(i + s.length)}
@@ -129,7 +129,7 @@ export function StationSearch({
               if (open) inputRef.current?.focus();
               else onChange("");
             }}
-            className="rounded-full p-1 text-muted-foreground hover:bg-orange-50 hover:text-orange-700"
+            className="rounded-full p-1 text-muted-foreground hover:bg-orange-50 dark:hover:bg-stone-800 hover:text-orange-700 dark:hover:text-orange-400"
             aria-label="Clear"
           >
             <FaXmark className="h-3 w-3" />
@@ -138,7 +138,7 @@ export function StationSearch({
       </div>
 
       {open && (
-        <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-glow animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-orange-100 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-glow animate-in fade-in zoom-in-95 duration-150">
           {results.length === 0 ? (
             <div className="px-4 py-6 text-center text-xs text-muted-foreground">
               No stations match “{debounced}”.
@@ -153,9 +153,10 @@ export function StationSearch({
                       e.preventDefault();
                       pick(s);
                     }}
+                    onClick={() => pick(s)}
                     onMouseEnter={() => setActive(i)}
                     className={`flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition ${
-                      active === i ? "bg-orange-50" : "bg-white"
+                      active === i ? "bg-orange-50 dark:bg-stone-800" : "bg-white dark:bg-stone-900"
                     }`}
                   >
                     <div className="flex min-w-0 items-center gap-3">
@@ -163,7 +164,7 @@ export function StationSearch({
                         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs ${
                           active === i
                             ? "bg-railway-gradient text-white"
-                            : "bg-orange-50 text-orange-700"
+                            : "bg-orange-50 dark:bg-stone-800 text-orange-700 dark:text-orange-400"
                         }`}
                       >
                         <FaTrainSubway />
@@ -177,7 +178,7 @@ export function StationSearch({
                         </div>
                       </div>
                     </div>
-                    <span className="shrink-0 rounded-md bg-orange-50 px-2 py-0.5 font-mono text-[11px] font-bold text-orange-700">
+                    <span className="shrink-0 rounded-md bg-orange-50 dark:bg-stone-800 px-2 py-0.5 font-mono text-[11px] font-bold text-orange-700 dark:text-orange-400">
                       <Highlight text={s.code} q={debounced} />
                     </span>
                   </button>

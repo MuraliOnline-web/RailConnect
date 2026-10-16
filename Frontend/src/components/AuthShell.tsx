@@ -25,7 +25,7 @@ export function AuthShell({
         <div className="relative">
           <Link to="/" className="inline-flex">
             <div className="rounded-2xl bg-white/15 p-1 backdrop-blur">
-              <div className="rounded-xl bg-white p-2">
+              <div className="rounded-xl bg-white dark:bg-stone-900 p-2">
                 <RailLogo size={32} />
               </div>
             </div>
@@ -81,7 +81,7 @@ export function AuthShell({
           <div className="mt-5 text-center">
             <Link
               to="/"
-              className="inline-flex items-center gap-1.5 rounded-full border border-orange-200/80 bg-white px-4 py-2 text-xs font-semibold text-orange-600 shadow-sm transition-all duration-200 hover:border-orange-300 hover:bg-orange-50/60 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40 active:scale-[0.97]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-orange-200/80 bg-white dark:bg-card dark:border-border dark:text-orange-400 px-4 py-2 text-xs font-semibold text-orange-600 shadow-sm transition-all duration-200 hover:border-orange-300 hover:bg-orange-50/60 dark:hover:bg-neutral-800 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40 active:scale-[0.97]"
             >
               <span>←</span> Back to home
             </Link>
@@ -103,7 +103,7 @@ export function FormField({
       </span>
       <input
         {...props}
-        className="input-premium w-full rounded-xl border border-orange-100 bg-white/80 px-4 py-3 text-sm shadow-sm outline-none placeholder:text-muted-foreground"
+        className="input-premium w-full rounded-xl border border-orange-100 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 dark:text-foreground px-4 py-3 text-sm shadow-sm outline-none placeholder:text-muted-foreground"
       />
     </label>
   );

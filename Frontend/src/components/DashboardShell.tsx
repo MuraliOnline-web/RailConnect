@@ -23,55 +23,126 @@ import { RailLogo } from "./RailLogo";
 import { useAuth } from "../lib/auth";
 import { NotificationBell } from "./NotificationBell";
 import { useScrollLock } from "../hooks/use-scroll-lock";
+import { useTranslation, type TranslationKey } from "../lib/i18n";
+import { evaluateJourneyReminders } from "../lib/notifications";
 
-const NAV = [
-  { to: "/dashboard", label: "Dashboard", icon: FaHouse, exact: true, group: "main" },
-  { to: "/dashboard/journey", label: "Journey Ticket", icon: FaTrain, exact: false, group: "book" },
+const NAV: Array<{
+  to: string;
+  key: TranslationKey;
+  fallback: string;
+  icon: typeof FaHouse;
+  exact: boolean;
+  group: string;
+}> = [
+  {
+    to: "/dashboard",
+    key: "nav.dashboard",
+    fallback: "Dashboard",
+    icon: FaHouse,
+    exact: true,
+    group: "main",
+  },
+  {
+    to: "/dashboard/journey",
+    key: "nav.journey",
+    fallback: "Journey Ticket",
+    icon: FaTrain,
+    exact: false,
+    group: "book",
+  },
   {
     to: "/dashboard/platform",
-    label: "Platform Ticket",
+    key: "nav.platform",
+    fallback: "Platform Ticket",
     icon: FaTrainSubway,
     exact: false,
     group: "book",
   },
-  { to: "/dashboard/qr", label: "QR Ticket", icon: FaQrcode, exact: false, group: "book" },
-  { to: "/dashboard/tickets", label: "My Tickets", icon: FaTicket, exact: false, group: "manage" },
+  {
+    to: "/dashboard/qr",
+    key: "nav.qr",
+    fallback: "QR Ticket",
+    icon: FaQrcode,
+    exact: false,
+    group: "book",
+  },
+  {
+    to: "/dashboard/tickets",
+    key: "nav.tickets",
+    fallback: "My Tickets",
+    icon: FaTicket,
+    exact: false,
+    group: "manage",
+  },
   {
     to: "/dashboard/history",
-    label: "Booking History",
+    key: "nav.history",
+    fallback: "Booking History",
     icon: FaClockRotateLeft,
     exact: false,
     group: "manage",
   },
   {
     to: "/dashboard/transactions",
-    label: "Transactions",
+    key: "nav.transactions",
+    fallback: "Transactions",
     icon: FaReceipt,
     exact: false,
     group: "manage",
   },
-  { to: "/dashboard/refunds", label: "Refunds", icon: FaRotateLeft, exact: false, group: "manage" },
-  { to: "/dashboard/wallet", label: "Wallet", icon: FaWallet, exact: false, group: "manage" },
+  {
+    to: "/dashboard/refunds",
+    key: "nav.refunds",
+    fallback: "Refunds",
+    icon: FaRotateLeft,
+    exact: false,
+    group: "manage",
+  },
+  {
+    to: "/dashboard/wallet",
+    key: "nav.wallet",
+    fallback: "Wallet",
+    icon: FaWallet,
+    exact: false,
+    group: "manage",
+  },
   {
     to: "/dashboard/notifications",
-    label: "Notifications",
+    key: "nav.notifications",
+    fallback: "Notifications",
     icon: FaBell,
     exact: false,
     group: "manage",
   },
   {
     to: "/dashboard/favorites",
-    label: "Favorite Routes",
+    key: "nav.favorites",
+    fallback: "Favorite Routes",
     icon: FaHeart,
     exact: false,
     group: "manage",
   },
-  { to: "/dashboard/profile", label: "Profile", icon: FaUser, exact: false, group: "account" },
-  { to: "/dashboard/settings", label: "Settings", icon: FaGear, exact: false, group: "account" },
-] as const;
+  {
+    to: "/dashboard/profile",
+    key: "nav.profile",
+    fallback: "Profile",
+    icon: FaUser,
+    exact: false,
+    group: "account",
+  },
+  {
+    to: "/dashboard/settings",
+    key: "nav.settings",
+    fallback: "Settings",
+    icon: FaGear,
+    exact: false,
+    group: "account",
+  },
+];
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   const { user, loading, logout } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const matches = useRouterState({ select: (s) => s.matches });
@@ -86,6 +157,13 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   }, [loading, user, navigate]);
 
   useEffect(() => setOpen(false), [pathname]);
+
+  // Evaluate journey reminders if user has upcoming journeys
+  useEffect(() => {
+    if (user?.id) {
+      evaluateJourneyReminders(user.id);
+    }
+  }, [user?.id]);
 
   if (loading || !user) {
     return (
@@ -103,11 +181,11 @@ export function DashboardShell({ children }: { children: ReactNode }) {
     .toUpperCase();
 
   return (
-    <div className="relative min-h-screen bg-[#fff8f1]">
+    <div className="relative min-h-screen bg-[#fff8f1] dark:bg-[#0f0906] text-foreground overflow-x-hidden transition-colors duration-200">
       {/* Ambient bg */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-20 -left-10 h-72 w-72 rounded-full bg-orange-200/50 blur-3xl" />
-        <div className="absolute top-1/2 -right-24 h-96 w-96 rounded-full bg-amber-200/40 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-20 -left-10 h-72 w-72 rounded-full bg-orange-200/50 dark:bg-orange-950/25 blur-3xl" />
+        <div className="absolute top-1/2 -right-24 h-96 w-96 rounded-full bg-amber-200/40 dark:bg-amber-950/20 blur-3xl" />
       </div>
 
       {/* Topbar mobile */}
@@ -117,7 +195,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           <NotificationBell />
           <button
             onClick={() => setOpen(true)}
-            className="rounded-full bg-white/80 p-2.5 text-foreground shadow-soft"
+            className="rounded-full bg-white/80 dark:bg-stone-800 p-2.5 text-foreground shadow-soft"
             aria-label="Open menu"
           >
             <FaBars />
@@ -135,7 +213,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
               </Link>
               <NotificationBell />
             </div>
-            <nav className="mt-6 flex-1 space-y-1 overflow-y-auto pr-1">
+            <nav className="mt-5 flex-1 space-y-1 overflow-y-auto pr-1 pb-1.5">
               {NAV.map((n) => {
                 const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
                 const Icon = n.icon;
@@ -146,34 +224,37 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                     className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                       active
                         ? "bg-railway-gradient text-white shadow-soft"
-                        : "text-foreground/70 hover:bg-white/70 hover:text-foreground"
+                        : "text-foreground/75 hover:bg-white/70 hover:text-foreground dark:hover:bg-stone-800/60 dark:hover:text-stone-100"
                     }`}
                   >
                     <Icon className={active ? "text-white" : "text-orange-500"} />
-                    {n.label}
+                    {t(n.key, n.fallback)}
                   </Link>
                 );
               })}
             </nav>
-            <div className="mt-auto">
-              <div className="rounded-2xl bg-white/70 p-3">
+            <div className="mt-auto shrink-0 pt-4.5">
+              <div className="rounded-2xl border border-orange-200/80 bg-white/90 p-3.5 shadow-2xs dark:border-stone-700/80 dark:bg-stone-900/90 dark:shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
                 <div className="flex items-center gap-3">
-                  <div className="bg-railway-gradient flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white">
+                  <div className="bg-railway-gradient flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white shadow-sm">
                     {initials || "RC"}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold">{user.name}</div>
+                    <div className="truncate text-sm font-semibold text-foreground">
+                      {user.name}
+                    </div>
                     <div className="truncate text-xs text-muted-foreground">{user.email}</div>
                   </div>
                 </div>
                 <button
+                  data-testid="logout-button"
                   onClick={() => {
                     logout();
                     navigate({ to: "/" });
                   }}
-                  className="mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-orange-200 bg-white px-3 py-2 text-xs font-semibold text-orange-700 transition-all duration-200 hover:scale-[1.02] hover:border-orange-300 hover:bg-orange-50 hover:text-orange-800 active:scale-[0.98]"
+                  className="mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-orange-200/90 bg-white px-3 py-2 text-xs font-semibold text-orange-700 shadow-2xs transition-all duration-200 hover:scale-[1.02] hover:border-orange-300 hover:bg-orange-50 hover:text-orange-800 active:scale-[0.98] dark:border-stone-700 dark:bg-stone-800/80 dark:text-orange-400 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-orange-300"
                 >
-                  <FaArrowRightFromBracket /> Log out
+                  <FaArrowRightFromBracket /> {t("nav.logout")}
                 </button>
               </div>
             </div>
@@ -189,7 +270,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setOpen(false)}
-                className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm md:hidden"
+                className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
                 aria-hidden
               />
               <motion.aside
@@ -197,7 +278,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "spring", damping: 26, stiffness: 240 }}
-                className="fixed inset-y-0 right-0 z-50 flex w-80 max-w-[88vw] flex-col overflow-y-auto overscroll-contain bg-white p-5 shadow-2xl [will-change:transform] md:hidden"
+                className="fixed inset-y-0 right-0 z-50 flex w-80 max-w-[88vw] flex-col overflow-y-auto overscroll-contain bg-white dark:bg-stone-900 p-5 shadow-2xl [will-change:transform] md:hidden"
                 role="dialog"
                 aria-modal="true"
               >
@@ -205,7 +286,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                   <RailLogo />
                   <button
                     onClick={() => setOpen(false)}
-                    className="rounded-full bg-orange-50 p-2 text-foreground"
+                    className="rounded-full bg-orange-50 dark:bg-stone-800 p-2 text-foreground"
                     aria-label="Close menu"
                   >
                     <FaXmark />
@@ -221,24 +302,25 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                         to={n.to}
                         className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
                           active
-                            ? "bg-railway-gradient text-white"
-                            : "text-foreground/70 hover:bg-orange-50"
+                            ? "bg-railway-gradient text-white shadow-sm"
+                            : "text-foreground/75 hover:bg-orange-50 dark:hover:bg-stone-800"
                         }`}
                       >
                         <Icon className={active ? "text-white" : "text-orange-500"} />
-                        {n.label}
+                        {t(n.key, n.fallback)}
                       </Link>
                     );
                   })}
                 </nav>
                 <button
+                  data-testid="logout-button-mobile"
                   onClick={() => {
                     logout();
                     navigate({ to: "/" });
                   }}
-                  className="mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-orange-200 bg-white px-3 py-2.5 text-xs font-semibold text-orange-700 transition-all duration-200 hover:scale-[1.02] hover:border-orange-300 hover:bg-orange-50 hover:text-orange-800 active:scale-[0.98]"
+                  className="mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-orange-200 dark:border-stone-800 bg-white dark:bg-stone-900 px-3 py-2.5 text-xs font-semibold text-orange-700 dark:text-orange-400 transition-all duration-200 hover:scale-[1.02] hover:border-orange-300 dark:hover:border-stone-700 hover:bg-orange-50 dark:hover:bg-stone-800 hover:text-orange-800 dark:hover:text-orange-300 active:scale-[0.98]"
                 >
-                  <FaArrowRightFromBracket /> Log out
+                  <FaArrowRightFromBracket /> {t("nav.logout")}
                 </button>
               </motion.aside>
             </>

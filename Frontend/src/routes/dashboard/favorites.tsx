@@ -61,7 +61,7 @@ function FavoritesPage() {
                 setFrom(e.target.value);
                 if (e.target.value === to) setTo("");
               }}
-              className="w-full rounded-xl border border-orange-100 bg-white/90 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
+              className="w-full rounded-xl border border-orange-100 dark:border-stone-700 bg-white/90 dark:bg-stone-800/90 text-stone-900 dark:text-stone-100 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
             >
               <option value="" disabled hidden>
                 Select source station
@@ -77,7 +77,7 @@ function FavoritesPage() {
             <select
               value={to}
               onChange={(e) => setTo(e.target.value)}
-              className="w-full rounded-xl border border-orange-100 bg-white/90 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
+              className="w-full rounded-xl border border-orange-100 dark:border-stone-700 bg-white/90 dark:bg-stone-800/90 text-stone-900 dark:text-stone-100 px-4 py-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
             >
               <option value="" disabled hidden>
                 Select destination station
@@ -105,8 +105,10 @@ function FavoritesPage() {
             <div className="bg-railway-gradient mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-sm">
               <FaHeart />
             </div>
-            <h2 className="mt-4 font-[Sora] text-xl font-bold text-orange-950">No favorites yet</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h2 className="mt-4 font-[Sora] text-xl font-bold text-orange-950 dark:text-stone-100">
+              No favorites yet
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground dark:text-stone-400">
               Add the routes you ride most for one-tap bookings.
             </p>
           </div>
@@ -125,10 +127,10 @@ function FavoritesPage() {
                       <FaTrain />
                     </div>
                     <div>
-                      <div className="font-[Sora] text-lg font-bold text-orange-950">
+                      <div className="font-[Sora] text-lg font-bold text-orange-950 dark:text-stone-100">
                         {fromS.name} → {toS.name}
                       </div>
-                      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                      <div className="text-[11px] uppercase tracking-wider text-muted-foreground dark:text-stone-400">
                         {fromS.line} line
                       </div>
                     </div>
@@ -140,7 +142,7 @@ function FavoritesPage() {
                         refresh();
                       }
                     }}
-                    className="rounded-full bg-rose-50 p-2 text-rose-600 hover:bg-rose-100 transition active:scale-95"
+                    className="rounded-full bg-rose-50 dark:bg-rose-950/40 p-2 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition active:scale-95"
                     aria-label="Remove"
                   >
                     <FaTrash className="h-3 w-3" />
@@ -167,7 +169,7 @@ function FavoritesPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70">
+      <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/70 dark:text-stone-300">
         {label}
       </div>
       {children}

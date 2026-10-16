@@ -18,7 +18,11 @@ dist-ssr
 .vinxi
 .tanstack/**
 .nitro
+.vercel/
 *.local
+
+# Diagnostic / Scratch Testing
+scratch/
 
 # Wrangler / Cloudflare
 .wrangler/
@@ -41,3 +45,4 @@ dist-ssr
 # Environment Variables
 .env
 .env.*
+!.env.example

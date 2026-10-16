@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -9,6 +9,7 @@ import {
   FaRotateRight,
   FaCircleXmark,
   FaArrowDown,
+  FaArrowRight,
 } from "react-icons/fa6";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";
@@ -45,13 +46,21 @@ function QrPage() {
           <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">QR Ticket</h1>
         </div>
         <div className="glass rounded-3xl p-10 text-center shadow-soft max-w-lg mx-auto">
-          <div className="bg-railway-gradient mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-white">
-            <FaQrcode />
+          <div className="bg-railway-gradient mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-soft">
+            <FaQrcode className="h-6 w-6" />
           </div>
           <h2 className="mt-4 font-[Sora] text-xl font-bold">No Active Ticket</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Your active QR ticket will appear here after booking.
           </p>
+          <div className="mt-6">
+            <Link
+              to="/dashboard/journey"
+              className="bg-railway-gradient inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold text-white shadow-soft transition hover:shadow-glow"
+            >
+              Book a ticket <FaArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
         </div>
       </DashboardShell>
     );
@@ -88,9 +97,9 @@ function QrPage() {
         <div className="grid gap-6 lg:grid-cols-12 items-stretch">
           {/* PRIMARY QR AREA */}
           <div className="lg:col-span-5 glass overflow-hidden rounded-3xl p-1 shadow-soft flex flex-col h-full">
-            <div className="rounded-t-[1.4rem] bg-orange-50/50 p-4 px-6 border-b border-orange-100 flex items-center justify-between">
+            <div className="rounded-t-[1.4rem] bg-orange-50/50 dark:bg-stone-800 p-4 px-6 border-b border-orange-100 dark:border-stone-800 flex items-center justify-between">
               <div>
-                <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">
+                <div className="text-[10px] font-semibold text-muted-foreground dark:text-stone-400 uppercase tracking-wider mb-0.5">
                   Digital Journey Ticket
                 </div>
                 <div className="font-[Sora] text-sm font-extrabold text-foreground">
@@ -100,9 +109,9 @@ function QrPage() {
               <StatusBadge status={t.status} />
             </div>
 
-            <div className="rounded-b-[1.4rem] bg-white p-8 text-center flex-1 flex flex-col items-center justify-center">
+            <div className="rounded-b-[1.4rem] bg-white dark:bg-stone-900 p-8 text-center flex-1 flex flex-col items-center justify-center">
               <div className="mb-4">
-                <div className="relative mx-auto flex h-64 w-64 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-50 to-amber-50 p-6 ring-1 ring-orange-200">
+                <div className="relative mx-auto flex h-64 w-64 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-50 to-amber-50 dark:from-stone-800 dark:to-stone-900 p-6 ring-1 ring-orange-200 dark:ring-stone-700">
                   <QrSvg seed={t.pnr} />
                 </div>
               </div>
@@ -110,7 +119,7 @@ function QrPage() {
               <h3 className="mt-6 font-[Sora] text-xl font-extrabold text-foreground tracking-tight">
                 SCAN TO VERIFY
               </h3>
-              <p className="mt-1 text-sm font-medium text-muted-foreground">
+              <p className="mt-1 text-sm font-medium text-muted-foreground dark:text-stone-400">
                 Show this QR code for ticket verification.
               </p>
             </div>
@@ -121,23 +130,23 @@ function QrPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* JOURNEY INFORMATION */}
               <div className="glass overflow-hidden rounded-3xl p-1 shadow-soft flex flex-col h-full">
-                <div className="rounded-[1.4rem] bg-white p-6 flex-1 flex flex-col">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                <div className="rounded-[1.4rem] bg-white dark:bg-stone-900 dark:border dark:border-stone-800 p-6 flex-1 flex flex-col">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground dark:text-stone-400 mb-4">
                     Journey
                   </div>
 
                   <div className="flex-1 flex flex-col justify-center relative pl-6">
                     {/* Vertical Connector Line */}
-                    <div className="absolute left-[7px] top-[14px] bottom-[14px] w-px bg-orange-200"></div>
+                    <div className="absolute left-[7px] top-[14px] bottom-[14px] w-px bg-orange-200 dark:bg-stone-700"></div>
 
                     <div className="relative">
                       {/* Station Dot */}
-                      <div className="absolute left-[-24px] top-4 h-4 w-4 rounded-full border-[3px] border-orange-100 bg-orange-500"></div>
+                      <div className="absolute left-[-24px] top-4 h-4 w-4 rounded-full border-[3px] border-orange-100 dark:border-stone-800 bg-orange-500"></div>
                       <div className="font-[Sora] text-xl font-extrabold text-foreground">
                         {t.from}
                       </div>
                       {t.fromCode && (
-                        <div className="text-sm font-semibold text-muted-foreground">
+                        <div className="text-sm font-semibold text-muted-foreground dark:text-stone-400">
                           {t.fromCode}
                         </div>
                       )}
@@ -147,19 +156,19 @@ function QrPage() {
 
                     <div className="relative">
                       {/* Station Dot */}
-                      <div className="absolute left-[-24px] top-4 h-4 w-4 rounded-full border-[3px] border-orange-100 bg-foreground"></div>
+                      <div className="absolute left-[-24px] top-4 h-4 w-4 rounded-full border-[3px] border-orange-100 dark:border-stone-800 bg-foreground"></div>
                       <div className="font-[Sora] text-xl font-extrabold text-foreground">
                         {t.to}
                       </div>
                       {t.toCode && (
-                        <div className="text-sm font-semibold text-muted-foreground">
+                        <div className="text-sm font-semibold text-muted-foreground dark:text-stone-400">
                           {t.toCode}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="mt-5 text-sm font-semibold text-muted-foreground flex flex-col gap-3">
+                  <div className="mt-5 text-sm font-semibold text-muted-foreground dark:text-stone-400 flex flex-col gap-3">
                     <div className="flex items-center gap-2 uppercase tracking-wider">
                       <FaTrain className="text-orange-500" />
                       {t.line}
@@ -168,7 +177,7 @@ function QrPage() {
                       <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs">
                         {t.via && (
                           <div>
-                            <span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">
+                            <span className="text-muted-foreground/60 dark:text-stone-400 uppercase tracking-wider text-[10px] block mb-0.5">
                               Via
                             </span>{" "}
                             <span className="font-bold text-foreground">{t.via}</span>
@@ -176,7 +185,7 @@ function QrPage() {
                         )}
                         {t.distanceKm && (
                           <div>
-                            <span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">
+                            <span className="text-muted-foreground/60 dark:text-stone-400 uppercase tracking-wider text-[10px] block mb-0.5">
                               Distance
                             </span>{" "}
                             <span className="font-bold text-foreground">{t.distanceKm} KM</span>
@@ -184,7 +193,7 @@ function QrPage() {
                         )}
                         {t.journeyType && (
                           <div>
-                            <span className="text-muted-foreground/60 uppercase tracking-wider text-[10px] block mb-0.5">
+                            <span className="text-muted-foreground/60 dark:text-stone-400 uppercase tracking-wider text-[10px] block mb-0.5">
                               Journey Type
                             </span>{" "}
                             <span className="font-bold text-foreground">{t.journeyType}</span>
@@ -198,21 +207,21 @@ function QrPage() {
 
               {/* PASSENGER INFORMATION */}
               <div className="glass overflow-hidden rounded-3xl p-1 shadow-soft flex flex-col h-full">
-                <div className="rounded-[1.4rem] bg-white p-6 flex-1 flex flex-col">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                <div className="rounded-[1.4rem] bg-white dark:bg-stone-900 dark:border dark:border-stone-800 p-6 flex-1 flex flex-col">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground dark:text-stone-400 mb-4">
                     Passengers
                   </div>
                   <div className="flex-1 flex flex-col justify-center gap-3">
-                    <div className="flex justify-between items-center rounded-xl bg-slate-50 border border-slate-100 p-4">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <div className="flex justify-between items-center rounded-xl bg-slate-50 dark:bg-stone-800/60 border border-slate-100 dark:border-stone-700 p-4">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground dark:text-stone-400">
                         Adults
                       </span>
                       <span className="font-[Sora] text-xl font-extrabold text-foreground">
                         {t.adults}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center rounded-xl bg-slate-50 border border-slate-100 p-4">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <div className="flex justify-between items-center rounded-xl bg-slate-50 dark:bg-stone-800/60 border border-slate-100 dark:border-stone-700 p-4">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground dark:text-stone-400">
                         Children
                       </span>
                       <span className="font-[Sora] text-xl font-extrabold text-foreground">
@@ -226,8 +235,8 @@ function QrPage() {
 
             {/* TICKET INFORMATION */}
             <div className="glass overflow-hidden rounded-3xl p-1 shadow-soft">
-              <div className="rounded-[1.4rem] bg-white p-6">
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+              <div className="rounded-[1.4rem] bg-white dark:bg-stone-900 dark:border dark:border-stone-800 p-6">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground dark:text-stone-400 mb-4">
                   Ticket Details
                 </div>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -259,16 +268,18 @@ function QrPage() {
                 </div>
 
                 {t.validityRule && (
-                  <div className="mt-4 rounded-xl border border-orange-100 bg-orange-50/50 p-4">
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                  <div className="mt-4 rounded-xl border border-orange-100 dark:border-stone-700 bg-orange-50/50 dark:bg-stone-800/60 p-4">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground dark:text-stone-400 mb-1">
                       Journey Validity
                     </div>
-                    <div className="text-sm font-semibold text-foreground/80">{t.validityRule}</div>
+                    <div className="text-sm font-semibold text-foreground/80 dark:text-stone-200">
+                      {t.validityRule}
+                    </div>
                   </div>
                 )}
 
-                <div className="mt-5 flex items-center justify-between rounded-2xl bg-orange-50/60 p-5">
-                  <div className="text-sm font-semibold uppercase tracking-wider text-orange-700">
+                <div className="mt-5 flex items-center justify-between rounded-2xl bg-orange-50/60 dark:bg-stone-800/60 border border-transparent dark:border-stone-700/50 p-5">
+                  <div className="text-sm font-semibold uppercase tracking-wider text-orange-700 dark:text-orange-400">
                     Total Fare
                   </div>
                   <div className="font-[Sora] text-2xl font-extrabold text-railway-gradient">
@@ -286,14 +297,14 @@ function QrPage() {
         >
           <button
             onClick={() => downloadTicketAndNotify(t, user?.id)}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200 bg-white px-5 py-3.5 text-sm font-semibold text-orange-700 shadow-sm transition-colors hover:bg-orange-50"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200 dark:border-stone-700 bg-white dark:bg-stone-800/90 px-5 py-3.5 text-sm font-semibold text-orange-700 dark:text-orange-400 shadow-sm transition-colors hover:bg-orange-50 dark:hover:bg-stone-700 cursor-pointer"
           >
             <FaDownload /> Download Ticket
           </button>
 
           <button
             onClick={onBookAgain}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200 bg-white px-5 py-3.5 text-sm font-semibold text-foreground/80 shadow-sm transition-colors hover:bg-orange-50/50"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200 dark:border-stone-700 bg-white dark:bg-stone-800/90 px-5 py-3.5 text-sm font-semibold text-foreground/80 dark:text-stone-200 shadow-sm transition-colors hover:bg-orange-50/50 dark:hover:bg-stone-700 cursor-pointer"
           >
             <FaRotateRight /> Book Again
           </button>
@@ -301,7 +312,7 @@ function QrPage() {
           {t.status === "active" && (
             <button
               onClick={onCancel}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-5 py-3.5 text-sm font-semibold text-rose-700 shadow-sm transition-colors hover:bg-rose-100"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 px-5 py-3.5 text-sm font-semibold text-rose-700 dark:text-rose-300 shadow-sm transition-colors hover:bg-rose-100 dark:hover:bg-rose-900/50 cursor-pointer"
             >
               <FaCircleXmark /> Cancel Ticket
             </button>
@@ -321,8 +332,8 @@ function formatDateTime(iso: string) {
 
 function KV({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
-    <div className="flex flex-col gap-1 rounded-xl bg-slate-50 border border-slate-100 px-4 py-3">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+    <div className="flex flex-col gap-1 rounded-xl bg-slate-50 dark:bg-stone-800/60 border border-slate-100 dark:border-stone-700/60 px-4 py-3">
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground dark:text-stone-400">
         {k}
       </div>
       <div
@@ -336,9 +347,12 @@ function KV({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
 
 function StatusBadge({ status }: { status: Ticket["status"] }) {
   const map = {
-    active: "bg-emerald-100 text-emerald-700 ring-emerald-300",
-    expired: "bg-gray-100 text-gray-600 ring-gray-300",
-    cancelled: "bg-rose-100 text-rose-700 ring-rose-300",
+    active:
+      "bg-emerald-100 text-emerald-700 ring-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:ring-emerald-800",
+    expired:
+      "bg-red-50/90 text-red-700 ring-red-400 dark:bg-red-950/60 dark:text-red-300 dark:ring-red-800",
+    cancelled:
+      "bg-rose-100 text-rose-700 ring-rose-300 dark:bg-rose-950/60 dark:text-rose-300 dark:ring-rose-800",
   } as const;
   return (
     <span
@@ -349,7 +363,7 @@ function StatusBadge({ status }: { status: Ticket["status"] }) {
           status === "active"
             ? "bg-emerald-500"
             : status === "expired"
-              ? "bg-gray-400"
+              ? "bg-red-500"
               : "bg-rose-500"
         }`}
       />

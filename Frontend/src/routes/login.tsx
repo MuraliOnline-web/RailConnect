@@ -62,7 +62,7 @@ function LoginPage() {
           <span>New to RailConnect?</span>
           <Link
             to="/register"
-            className="inline-flex items-center justify-center rounded-full border border-orange-200/80 bg-white px-3.5 py-1.5 text-xs font-semibold text-orange-600 shadow-sm transition-all duration-200 hover:border-orange-300 hover:bg-orange-50/60 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40 active:scale-[0.97]"
+            className="inline-flex items-center justify-center rounded-full border border-orange-200/80 bg-white dark:bg-card dark:border-border dark:text-orange-400 px-3.5 py-1.5 text-xs font-semibold text-orange-600 shadow-sm transition-all duration-200 hover:border-orange-300 hover:bg-orange-50/60 dark:hover:bg-neutral-800 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40 active:scale-[0.97]"
           >
             Create an account
           </Link>
@@ -95,7 +95,7 @@ function LoginPage() {
           <div className="flex items-center gap-2">
             <div
               aria-label="CAPTCHA code"
-              className="select-none rounded-xl border border-orange-100 bg-gradient-to-r from-orange-50 to-amber-50 px-4 py-3 font-[Sora] text-lg font-bold tracking-[0.35em] text-foreground shadow-sm"
+              className="select-none rounded-xl border border-orange-100 dark:border-neutral-800 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-neutral-900 dark:to-neutral-800 px-4 py-3 font-[Sora] text-lg font-bold tracking-[0.35em] text-foreground shadow-sm"
               style={{
                 fontFamily: "Sora, ui-monospace, monospace",
                 textDecoration: "line-through",
@@ -108,7 +108,7 @@ function LoginPage() {
               type="button"
               onClick={refreshCaptcha}
               aria-label="Refresh CAPTCHA"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-orange-100 bg-white/80 text-orange-600 shadow-sm transition hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-300/50"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-orange-100 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 text-orange-600 dark:text-orange-400 shadow-sm transition hover:bg-orange-50 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-orange-300/50"
             >
               <RefreshCw className="h-4 w-4" />
             </button>
@@ -120,7 +120,7 @@ function LoginPage() {
             placeholder="Enter CAPTCHA"
             value={captchaInput}
             onChange={(e) => setCaptchaInput(e.target.value)}
-            className="mt-2 w-full rounded-xl border border-orange-100 bg-white/80 px-4 py-3 text-sm shadow-sm outline-none ring-orange-300/50 transition placeholder:text-muted-foreground focus:border-orange-300 focus:ring-2"
+            className="input-premium mt-2 w-full rounded-xl border border-orange-100 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 dark:text-foreground px-4 py-3 text-sm shadow-sm outline-none ring-orange-300/50 transition placeholder:text-muted-foreground focus:border-orange-300 focus:ring-2"
           />
         </div>
         {error && (
@@ -128,6 +128,10 @@ function LoginPage() {
             {error}
           </div>
         )}
+        <div className="rounded-xl border border-amber-200/80 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/30 p-2.5 text-center text-xs text-amber-800 dark:text-amber-300">
+          <strong>Prototype Notice:</strong> Authentication is simulated in browser-local storage
+          for demonstration. Do not enter real or sensitive passwords.
+        </div>
         <PrimaryButton loading={loading} type="submit">
           Log in to RailConnect
         </PrimaryButton>

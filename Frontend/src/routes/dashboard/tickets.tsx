@@ -4,9 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   FaTrain,
   FaArrowRight,
-  FaFilePdf,
-  FaQrcode,
-  FaMagnifyingGlass,
   FaSliders,
   FaTicket,
   FaCircleXmark,
@@ -16,11 +13,11 @@ import { SearchField } from "../../components/SearchField";
 import { DashboardShell } from "../../components/DashboardShell";
 import { useAuth } from "../../lib/auth";
 import { loadTickets, CATEGORY_LABEL, type Ticket, type TrainCategory } from "../../lib/tickets";
-import { downloadTicketAndNotify } from "../../lib/ticketPdf";
 import { formatINR } from "../../lib/currency";
+import { useTranslation } from "../../lib/i18n";
 
 export const Route = createFileRoute("/dashboard/tickets")({
-  head: () => ({ meta: [{ title: "My tickets · RailConnect" }] }),
+  head: () => ({ meta: [{ title: "My Tickets · RailConnect" }] }),
   component: TicketsPage,
 });
 
@@ -31,6 +28,7 @@ const PAGE_SIZE = 8;
 
 function TicketsPage() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [version, setVersion] = useState(0);
   const tickets = useMemo(() => (user ? loadTickets(user.id) : []), [user, version]);
@@ -97,52 +95,57 @@ function TicketsPage() {
 
   useEffect(() => setLimit(PAGE_SIZE), [tab, debounced, fCategory, fType, fRange, fFrom, fTo]);
 
+  const isFiltered = fCategory !== "all" || fType !== "all" || fRange !== "all" || fFrom || fTo;
+  const resetFilters = () => {
+    setFCategory("all");
+    setFType("all");
+    setFRange("all");
+    setFFrom("");
+    setFTo("");
+  };
+
   const visible = filtered.slice(0, limit);
 
   return (
     <DashboardShell>
-      <div className="mb-6 flex items-end justify-between">
-        <div>
-          <h1 className="font-[Sora] text-3xl font-extrabold tracking-tight">My tickets</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage every active, expired and cancelled journey.
-          </p>
-        </div>
-        <Link
-          to="/dashboard/journey"
-          className="bg-railway-gradient inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-soft"
-        >
-          New <FaArrowRight className="h-3 w-3" />
-        </Link>
+      <div className="mb-6">
+        <h1 className="font-[Sora] text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+          {t("tickets.title")}
+        </h1>
+        <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+          Manage every active, expired and cancelled journey.
+        </p>
       </div>
 
       {/* Tabs */}
       <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
         {(
           [
-            { key: "active", label: "Active" },
-            { key: "expired", label: "Expired" },
-            { key: "cancelled", label: "Cancelled" },
+            { key: "active", label: t("common.active") },
+            { key: "expired", label: t("common.expired") },
+            { key: "cancelled", label: t("common.cancelled") },
           ] as { key: TabKey; label: string }[]
-        ).map((t) => {
-          const selected = tab === t.key;
+        ).map((tabItem) => {
+          const selected = tab === tabItem.key;
           return (
             <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`relative shrink-0 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
+              key={tabItem.key}
+              onClick={() => setTab(tabItem.key)}
+              className={`relative shrink-0 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-2xs ${
                 selected
-                  ? "bg-railway-gradient text-white shadow-soft"
-                  : "bg-white/80 text-foreground/70 hover:bg-white"
+                  ? "bg-railway-gradient text-white shadow-soft border-2 border-orange-500"
+                  : "bg-white/95 dark:bg-stone-900 text-foreground border border-stone-300 dark:border-stone-800 hover:border-stone-400 hover:bg-white"
               }`}
             >
-              {t.label}
+              {tabItem.label}
               <span
-                className={`ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] ${
-                  selected ? "bg-white/25 text-white" : "bg-orange-50 text-orange-700"
+                className={`ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
+                  selected
+                    ? "bg-white/25 text-white border border-white/30"
+                    : "bg-orange-50 dark:bg-stone-800 text-foreground border border-stone-200 dark:border-stone-700"
                 }`}
               >
-                {counts[t.key]}
+                {counts[tabItem.key]}
               </span>
             </button>
           );
@@ -156,17 +159,17 @@ function TicketsPage() {
             value={query}
             onChange={setQuery}
             placeholder="Search by station, ticket ID or transaction ID…"
-            className="flex-1"
+            className="w-full flex-1 min-w-0"
           />
           <button
             onClick={() => setShowFilters((v) => !v)}
-            className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold uppercase tracking-wider transition ${
+            className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 sm:py-2.5 text-xs font-semibold uppercase tracking-wider transition shrink-0 ${
               showFilters
                 ? "bg-railway-gradient text-white shadow-soft"
-                : "border border-orange-200 bg-white text-orange-700"
+                : "border border-orange-200 bg-white text-orange-700 hover:bg-orange-50"
             }`}
           >
-            <FaSliders className="h-3 w-3" /> Filters
+            <FaSliders className="h-3.5 w-3.5" /> Filters
           </button>
         </div>
 
@@ -179,32 +182,79 @@ function TicketsPage() {
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <FilterGroup label="Train category">
-                  {(["all", "passenger", "mail_express", "superfast"] as const).map((c) => (
-                    <Chip key={c} selected={fCategory === c} onClick={() => setFCategory(c)}>
-                      {c === "all" ? "All" : CATEGORY_LABEL[c as TrainCategory]}
-                    </Chip>
-                  ))}
-                </FilterGroup>
-                <FilterGroup label="Ticket type">
-                  {(["all", "journey", "season", "platform"] as const).map((c) => (
-                    <Chip key={c} selected={fType === c} onClick={() => setFType(c)}>
-                      {c}
-                    </Chip>
-                  ))}
-                </FilterGroup>
-                <FilterGroup label="Date range">
-                  {(["all", "today", "7d", "30d", "custom"] as const).map((c) => (
-                    <Chip key={c} selected={fRange === c} onClick={() => setFRange(c)}>
-                      {c === "all" ? "All" : c === "7d" ? "Last 7d" : c === "30d" ? "Last 30d" : c}
-                    </Chip>
-                  ))}
-                </FilterGroup>
+              <div className="mt-4 pt-3.5 border-t border-orange-100/70">
+                <div className="grid gap-3.5 sm:grid-cols-3">
+                  {/* Dropdown 1: Train Category */}
+                  <div>
+                    <label className="mb-2 block text-center text-xs font-bold uppercase tracking-wider text-stone-900">
+                      Train Category
+                    </label>
+                    <select
+                      value={fCategory}
+                      onChange={(e) => setFCategory(e.target.value as TrainCategory | "all")}
+                      className="w-full h-10 rounded-xl border border-stone-200 bg-white px-3 text-xs font-semibold text-stone-800 outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 cursor-pointer shadow-2xs"
+                    >
+                      <option value="all">All</option>
+                      <option value="passenger">Passenger</option>
+                      <option value="mail_express">Mail / Express</option>
+                      <option value="superfast">Superfast Express</option>
+                    </select>
+                  </div>
+
+                  {/* Dropdown 2: Ticket Type */}
+                  <div>
+                    <label className="mb-2 block text-center text-xs font-bold uppercase tracking-wider text-stone-900 dark:text-stone-100">
+                      Ticket Type
+                    </label>
+                    <select
+                      value={fType}
+                      onChange={(e) =>
+                        setFType(e.target.value as "all" | "journey" | "season" | "platform")
+                      }
+                      className="w-full h-10 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-3 text-xs font-semibold text-stone-800 dark:text-stone-100 outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 cursor-pointer shadow-2xs"
+                    >
+                      <option value="all">All</option>
+                      <option value="journey">Journey</option>
+                      <option value="season">Season</option>
+                      <option value="platform">Platform</option>
+                    </select>
+                  </div>
+
+                  {/* Dropdown 3: Date Range */}
+                  <div>
+                    <label className="mb-2 block text-center text-xs font-bold uppercase tracking-wider text-stone-900 dark:text-stone-100">
+                      Date Range
+                    </label>
+                    <select
+                      value={fRange}
+                      onChange={(e) => setFRange(e.target.value as DateRange)}
+                      className="w-full h-10 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-3 text-xs font-semibold text-stone-800 dark:text-stone-100 outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 cursor-pointer shadow-2xs"
+                    >
+                      <option value="all">All</option>
+                      <option value="today">Today</option>
+                      <option value="7d">Last 7 Days</option>
+                      <option value="30d">Last 30 Days</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                  </div>
+                </div>
+
                 {fRange === "custom" && (
-                  <div className="sm:col-span-2 lg:col-span-3 grid gap-3 sm:grid-cols-2">
-                    <DateField label="From" value={fFrom} onChange={setFFrom} />
-                    <DateField label="To" value={fTo} onChange={setFTo} />
+                  <div className="mt-3.5 grid gap-3 sm:grid-cols-2">
+                    <DateField label="From Date" value={fFrom} onChange={setFFrom} />
+                    <DateField label="To Date" value={fTo} onChange={setFTo} />
+                  </div>
+                )}
+
+                {isFiltered && (
+                  <div className="mt-3 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={resetFilters}
+                      className="text-[11px] font-semibold text-orange-700 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-300 hover:underline cursor-pointer"
+                    >
+                      Reset all filters to All
+                    </button>
                   </div>
                 )}
               </div>
@@ -222,7 +272,7 @@ function TicketsPage() {
           />
         ) : (
           <>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 items-stretch">
               <AnimatePresence mode="popLayout">
                 {visible.map((t) => (
                   <motion.div
@@ -232,6 +282,7 @@ function TicketsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.18 }}
+                    className="h-full flex flex-col"
                   >
                     <TicketCard
                       t={t}
@@ -245,7 +296,7 @@ function TicketsPage() {
               <div className="mt-5 flex justify-center">
                 <button
                   onClick={() => setLimit((l) => l + PAGE_SIZE)}
-                  className="rounded-full border border-orange-200 bg-white px-5 py-2 text-xs font-semibold text-orange-700 hover:bg-orange-50"
+                  className="rounded-full border border-orange-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-5 py-2 text-xs font-semibold text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-stone-700 cursor-pointer shadow-2xs"
                 >
                   Load more ({filtered.length - visible.length})
                 </button>
@@ -260,16 +311,25 @@ function TicketsPage() {
 
 function StatusBadge({ status }: { status: Ticket["status"] }) {
   const map = {
-    active: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-    expired: "bg-gray-100 text-gray-600 ring-gray-200",
-    cancelled: "bg-rose-50 text-rose-700 ring-rose-200",
+    active:
+      "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 ring-emerald-200 dark:ring-emerald-800 border border-emerald-300/60 dark:border-emerald-800",
+    expired:
+      "bg-red-50/80 dark:bg-red-950/40 text-red-700 dark:text-red-400 ring-red-400 dark:ring-red-800 border border-red-300/60 dark:border-red-800",
+    cancelled:
+      "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 ring-rose-200 dark:ring-rose-800 border border-rose-300/60 dark:border-rose-800",
   } as const;
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ring-1 ${map[status]}`}
+      className={`inline-flex h-10 sm:h-11 items-center gap-1.5 rounded-full px-3.5 text-xs font-bold uppercase tracking-wider shadow-2xs ${map[status]}`}
     >
       <span
-        className={`h-1.5 w-1.5 rounded-full ${status === "active" ? "bg-emerald-500" : status === "expired" ? "bg-gray-400" : "bg-rose-500"}`}
+        className={`h-2 w-2 rounded-full ${
+          status === "active"
+            ? "bg-emerald-500"
+            : status === "expired"
+              ? "bg-red-500"
+              : "bg-rose-500"
+        }`}
       />
       {status}
     </span>
@@ -277,124 +337,159 @@ function StatusBadge({ status }: { status: Ticket["status"] }) {
 }
 
 function TicketCard({ t, onOpen }: { t: Ticket; onOpen: () => void }) {
+  const isPlatform = t.type === "platform";
+
   return (
-    <div className="glass overflow-hidden rounded-3xl p-1 shadow-soft transition hover:shadow-glow">
-      <div className="rounded-[1.4rem] bg-white p-5">
-        <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
-          <span className="font-semibold">
-            {t.type} · {t.line}
-          </span>
-          <span className="font-mono">{t.pnr}</span>
-        </div>
-        {t.category && (
-          <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-orange-700">
-            {CATEGORY_LABEL[t.category]}
+    <div className="glass overflow-hidden rounded-3xl p-1 shadow-soft transition hover:shadow-glow h-full flex flex-col">
+      <div className="rounded-[1.4rem] bg-white dark:bg-stone-900 p-5 h-full flex flex-col justify-between flex-1">
+        {/* Top Header Region */}
+        <div>
+          <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
+            <span className="font-semibold text-stone-700 dark:text-stone-300">
+              {isPlatform
+                ? `PLATFORM · ${t.line || "WESTERN"}`
+                : `${t.type} · ${t.line || "WESTERN"}`}
+            </span>
+            <span className="font-mono text-[11px] font-semibold text-stone-500 dark:text-stone-400">
+              {t.pnr}
+            </span>
           </div>
-        )}
-        <button onClick={onOpen} className="mt-4 flex w-full items-end justify-between text-left">
-          <div>
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">From</div>
-            <div className="font-[Sora] text-xl font-bold">{t.from}</div>
-            {t.fromCode && (
-              <div className="text-[10px] font-mono text-muted-foreground">{t.fromCode}</div>
+
+          {/* Sub-badge: Category for Journey, or Platform Ticket identification */}
+          <div className="mt-2 min-h-[24px] flex items-center">
+            {isPlatform ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100/80 dark:bg-orange-950/60 text-orange-800 dark:text-orange-300 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                PLATFORM TICKET
+              </span>
+            ) : t.category ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
+                {CATEGORY_LABEL[t.category]}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
+                {t.type === "season" ? "Season Pass" : "Ordinary"}
+              </span>
             )}
           </div>
-          <div className="bg-railway-gradient flex h-9 w-9 items-center justify-center rounded-full text-white">
-            <FaTrain />
-          </div>
-          <div className="text-right">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">To</div>
-            <div className="font-[Sora] text-xl font-bold">{t.to}</div>
-            {t.toCode && (
-              <div className="text-[10px] font-mono text-muted-foreground">{t.toCode}</div>
-            )}
-          </div>
-        </button>
-        <div className="my-4 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent" />
-        <div className="flex items-center justify-between text-xs">
-          <div>
-            <div className="text-muted-foreground">Valid until</div>
-            <div className="font-semibold">{new Date(t.validUntil).toLocaleString()}</div>
-          </div>
-          <div className="text-right">
-            <div className="text-muted-foreground">Fare</div>
-            <div className="font-[Sora] font-bold text-railway-gradient">{formatINR(t.fare)}</div>
-          </div>
         </div>
-        <div className="mt-3 flex items-center justify-between">
-          <StatusBadge status={t.status} />
-          <button
-            onClick={onOpen}
-            className="inline-flex items-center gap-1 rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-[11px] font-semibold text-orange-700 hover:bg-orange-100"
-          >
-            View details →
-          </button>
-        </div>
-        <div className="mt-4 flex gap-2">
-          {t.status === "active" && t.delivery !== "print" && (
-            <Link
-              to="/dashboard/qr"
-              search={{ id: t.id } as never}
-              className="bg-railway-gradient inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-white shadow-soft"
+
+        {/* Middle Content Region: Journey Route vs Platform Ticket Layout */}
+        <div className="my-auto py-2">
+          {isPlatform ? (
+            /* Dedicated Platform Ticket Layout: NO FROM/TO, Station-centric */
+            <button
+              type="button"
+              onClick={onOpen}
+              className="flex w-full items-center justify-between rounded-2xl bg-orange-50/50 dark:bg-stone-800/60 border border-orange-100/70 dark:border-stone-700 p-3.5 text-left transition hover:bg-orange-50 dark:hover:bg-stone-800 hover:border-orange-200 dark:hover:border-stone-600 cursor-pointer group"
             >
-              <FaQrcode /> Show QR
-            </Link>
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] uppercase tracking-wider font-bold text-orange-800/80 dark:text-orange-300">
+                  Station
+                </div>
+                <div className="font-[Sora] text-xl font-bold text-stone-900 dark:text-stone-100 truncate">
+                  {t.from}
+                </div>
+                <div className="mt-1 flex items-center gap-2 text-[11px] text-stone-600 dark:text-stone-300 font-medium">
+                  {t.fromCode && (
+                    <span className="font-mono text-[10px] font-bold bg-white dark:bg-stone-900 px-1.5 py-0.5 rounded border border-orange-200/80 dark:border-stone-700 text-stone-700 dark:text-stone-200">
+                      {t.fromCode}
+                    </span>
+                  )}
+                  <span>{t.adults || 1} Person(s)</span>
+                  <span>·</span>
+                  <span className="text-orange-700 dark:text-orange-400 font-semibold">
+                    2 hrs validity
+                  </span>
+                </div>
+              </div>
+              <div className="ml-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#f97316] to-[#ea580c] text-white shadow-xs group-hover:scale-105 transition-transform">
+                <FaTicket className="h-5 w-5" />
+              </div>
+            </button>
+          ) : (
+            /* Journey Ticket Layout: Preserved railway route */
+            <button
+              type="button"
+              onClick={onOpen}
+              className="flex w-full items-center justify-between text-left cursor-pointer group py-1"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                  From
+                </div>
+                <div className="font-[Sora] text-lg sm:text-xl font-bold text-stone-900 dark:text-stone-100 truncate">
+                  {t.from}
+                </div>
+                {t.fromCode && (
+                  <div className="text-[10px] font-mono font-medium text-muted-foreground">
+                    {t.fromCode}
+                  </div>
+                )}
+              </div>
+              <div className="mx-2 bg-railway-gradient flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white shadow-xs group-hover:scale-105 transition-transform">
+                <FaTrain className="h-3.5 w-3.5" />
+              </div>
+              <div className="min-w-0 flex-1 text-right">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                  To
+                </div>
+                <div className="font-[Sora] text-lg sm:text-xl font-bold text-stone-900 dark:text-stone-100 truncate">
+                  {t.to}
+                </div>
+                {t.toCode && (
+                  <div className="text-[10px] font-mono font-medium text-muted-foreground">
+                    {t.toCode}
+                  </div>
+                )}
+              </div>
+            </button>
           )}
-          <button
-            onClick={() => downloadTicketAndNotify(t, t.userId)}
-            className={`inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold ${
-              t.status === "active" && t.delivery !== "print"
-                ? "border border-orange-200 bg-white text-orange-700 hover:bg-orange-50"
-                : "bg-railway-gradient text-white shadow-soft"
-            }`}
-          >
-            <FaFilePdf /> PDF
-          </button>
         </div>
-        {t.status === "active" && (
-          <button
-            onClick={onOpen}
-            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-100"
-          >
-            <FaCircleXmark /> Cancel ticket
-          </button>
-        )}
+
+        {/* Lower Info & Actions Region (Pinned to bottom for equal outer heights) */}
+        <div className="mt-auto pt-3">
+          <div className="mb-3.5 h-px bg-gradient-to-r from-transparent via-orange-300/60 dark:via-orange-700/60 to-transparent" />
+          <div className="flex items-center justify-between text-xs">
+            <div>
+              <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                {isPlatform ? "Valid for 2 hours only" : "Valid until"}
+              </div>
+              <div className="font-semibold text-stone-800 dark:text-stone-200 text-[11px] sm:text-xs">
+                {new Date(t.validUntil).toLocaleString([], {
+                  month: "numeric",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: true,
+                })}
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                Fare
+              </div>
+              <div className="font-[Sora] font-bold text-sm sm:text-base text-orange-600 dark:text-orange-400">
+                {formatINR(t.fare)}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Row: Status Badge bottom-left and View Details button bottom-right */}
+          <div className="mt-4 flex items-center justify-between gap-3 pt-1">
+            <StatusBadge status={t.status} />
+            <button
+              type="button"
+              onClick={onOpen}
+              className="inline-flex h-10 sm:h-11 items-center justify-center gap-1.5 rounded-full border border-orange-300/90 dark:border-stone-700 bg-orange-50/70 dark:bg-stone-800 px-4 text-xs font-bold text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-stone-700 hover:border-orange-400 dark:hover:border-stone-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 cursor-pointer transition-all shadow-2xs active:scale-[0.98]"
+            >
+              View details →
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  );
-}
-
-function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-foreground/70">
-        {label}
-      </div>
-      <div className="flex flex-wrap gap-1.5">{children}</div>
-    </div>
-  );
-}
-
-function Chip({
-  selected,
-  onClick,
-  children,
-}: {
-  selected: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider capitalize transition ${
-        selected
-          ? "bg-railway-gradient text-white shadow-soft"
-          : "border border-orange-100 bg-white text-foreground/70 hover:bg-orange-50"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 
@@ -416,7 +511,7 @@ function DateField({
         type="date"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-orange-100 bg-white/90 py-2 px-3 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-300/50"
+        className="w-full rounded-xl border border-orange-100 dark:border-stone-700 bg-white/90 dark:bg-stone-900 text-stone-900 dark:text-stone-100 py-2 px-3 text-sm outline-none focus:border-orange-300 dark:focus:border-orange-500 focus:ring-2 focus:ring-orange-300/50"
       />
     </div>
   );
